@@ -828,16 +828,65 @@
 <!-- DATA SEEDING (冬季範例資料) -->
 <script>
   window.__FULL_ITINERARY_DATA__ = [
-    { id: 1, date: '2026-12-05', category: 'flight', name: '航班 IT-280 KHH->NRT', time: '06:55', travelTime: 0, transportType: 'flight', note: '起飛 06:55 / 抵達 11:10', description: '準備飛往東京成田機場，感受日本冬日風情！' },
-    { id: 2, date: '2026-12-05', category: 'transport', name: '成田機場前往市區', time: '13:00', travelTime: 60, transportType: 'transit', note: '搭乘 Skyliner', description: '轉乘至飯店放行李。' },
-    { id: 3, date: '2026-12-06', category: 'attraction', name: '六本木 聖誕點燈', time: '18:00', travelTime: 0, transportType: 'walk', note: '東京必看浪漫夜景', description: '整條街掛滿閃耀的藍白燈飾，搭配遠處的東京鐵塔，是冬季限定的絕美景色。記得穿戴保暖毛帽喔！' },
-    { id: 10, date: '2026-12-07', category: 'attraction', name: '淺草雷門 & 晴空塔', time: '10:00', travelTime: 0, transportType: 'walk', note: '經典東京行程', description: '早晨在淺草寺參拜，下午前往晴空塔俯瞰東京市景。' },
-    { id: 4, date: '2026-12-08', category: 'attraction', name: '橫濱 紅磚倉庫聖誕市集', time: '15:30', travelTime: 0, transportType: 'walk', note: '喝杯熱紅酒', description: '濃濃異國風情的聖誕市集！可以在這裡品嚐德國香腸、熱紅酒，感受橫濱港灣的冷空氣與溫暖燈光。' },
-    { id: 5, date: '2026-12-09', category: 'attraction', name: '鎌倉 鶴岡八幡宮 & 大佛', time: '10:00', travelTime: 0, transportType: 'walk', note: '古都漫遊', description: '搭乘江之電漫遊湘南海岸，冬天的海風非常強烈，請務必戴上圍巾與手套。' },
-    { id: 6, date: '2026-12-10', category: 'attraction', name: '富士山 河口湖', time: '09:00', travelTime: 0, transportType: 'walk', note: '冬季富士山能見度最高', description: '12月是看到富士山全貌機率最高的月份！山頂的白雪搭配清澈的藍天，絕對是此行亮點。(請注意當地可能氣溫為零下)' },
-    { id: 7, date: '2026-12-11', category: 'attraction', name: '忍野八海 & 富士急樂園', time: '10:00', travelTime: 0, transportType: 'walk', note: '富士山周邊', description: '欣賞清澈的湧泉與壯麗的富士山景。' },
-    { id: 8, date: '2026-12-12', category: 'shopping', name: '新宿 / 澀谷 採買', time: '11:00', travelTime: 0, transportType: 'walk', note: '最後衝刺', description: '把握最後一天在東京市區大採購！' },
-    { id: 9, date: '2026-12-13', category: 'flight', name: '航班 IT-281 NRT->KHH', time: '13:00', travelTime: 0, transportType: 'flight', note: '起飛 13:00 / 抵達 16:40', description: '帶著滿滿的雪國回憶準備回家囉！' }
+    // Day 1
+    { id: 1, date: '2026-12-05', category: 'flight', name: '航班 IT-280 KHH ➔ NRT', time: '06:55', travelTime: 195, transportType: 'flight', note: '起飛 06:55 / 抵達 11:10', description: '準備飛往東京成田機場，感受日本冬日風情！' },
+    { id: 2, date: '2026-12-05', category: 'transport', name: '成田機場 ➔ 淺草', time: '12:30', travelTime: 60, transportType: 'transit', note: '搭乘 京成Access特急', description: '直接抵達淺草站，前往飯店放行李。' },
+    { id: 3, date: '2026-12-05', category: 'attraction', name: '淺草 (雷門/仲見世通)', time: '14:30', travelTime: 0, transportType: 'walk', note: '經典東京起點', description: '品嚐淺草小吃，感受傳統氛圍。' },
+    { id: 4, date: '2026-12-05', category: 'transport', name: '淺草 ➔ 押上(晴空塔)', time: '18:00', travelTime: 5, transportType: 'transit', note: '搭乘 都營淺草線 (1站)', description: '只要搭一站就能直達晴空塔底下。' },
+    { id: 5, date: '2026-12-05', category: 'attraction', name: '晴空塔 Skytree', time: '18:30', travelTime: 0, transportType: 'walk', note: '看東京夜景', description: '俯瞰百萬夜景與聖誕點燈。' },
+
+    // Day 2 (龜有深度探索 & 秋葉原)
+    { id: 6, date: '2026-12-06', category: 'transport', name: '市區(上野) ➔ 龜有', time: '09:30', travelTime: 30, transportType: 'transit', note: '搭乘 JR 常磐線', description: '出發前往阿兩的故鄉！記得在車站拿一張「銅像巡遊地圖」。' },
+    { id: 7, date: '2026-12-06', category: 'attraction', name: '龜有車站南北口 (銅像巡禮)', time: '10:00', travelTime: 0, transportType: 'walk', note: '收集阿兩、中川、麗子', description: '一出車站就有金色的兩津勘吉像迎賓！南口還有真實的龜有派出所原型可以拍照合影。' },
+    { id: 71, date: '2026-12-06', category: 'attraction', name: '龜有銀座商店街 (Youroad)', time: '11:00', travelTime: 0, transportType: 'walk', note: '下町風情', description: '漫步在充滿昭和氣息的商店街，沿途尋找少年阿兩與本田的銅像，還能買些當地小吃當點心。' },
+    { id: 72, date: '2026-12-06', category: 'attraction', name: 'Ario 龜有 (烏龍派出所遊樂場)', time: '12:00', travelTime: 0, transportType: 'walk', note: 'こち亀遊戲公園', description: '在 Ario 購物中心吃午餐後，直奔 3 樓的烏龍派出所主題遊樂場！裡面有實體大小的派出所場景、阿兩的辦公桌，絕對是粉絲必朝聖之地。' },
+    { id: 8, date: '2026-12-06', category: 'transport', name: '龜有 ➔ 秋葉原', time: '14:30', travelTime: 35, transportType: 'transit', note: 'JR 常磐線轉山手線', description: '依依不捨離開龜有，前往動漫聖地。' },
+    { id: 9, date: '2026-12-06', category: 'attraction', name: '秋葉原 (動漫與電器街)', time: '15:15', travelTime: 0, transportType: 'walk', note: '御宅族聖地', description: '感受日本獨特的動漫文化、扭蛋機與女僕咖啡廳。' },
+    { id: 10, date: '2026-12-06', category: 'food', name: '秋葉原車站 喝牛奶', time: '18:00', travelTime: 0, transportType: 'walk', note: '總武線第5月台', description: '尋找「酪 農協同直營 牛奶攤」，體驗日本上班族站著喝瓶裝牛奶的道地文化！' },
+
+    // Day 3
+    { id: 11, date: '2026-12-07', category: 'transport', name: '東京/上野 ➔ 長野', time: '08:00', travelTime: 90, transportType: 'transit', note: '搭乘 北陸新幹線', description: '買個鐵路便當在車上享用，欣賞沿途逐漸變白的雪景。' },
+    { id: 12, date: '2026-12-07', category: 'transport', name: '長野車站 ➔ 志賀高原', time: '10:00', travelTime: 45, transportType: 'transit', note: '搭乘 志賀高原急行巴士', description: '前往地獄谷野猿公苑入口。' },
+    { id: 13, date: '2026-12-07', category: 'attraction', name: '地獄谷野猿公苑', time: '11:30', travelTime: 30, transportType: 'walk', note: '看猴子泡溫泉', description: '世界唯一猴子泡湯的奇景！(入口需步行約30分鐘雪地山路，務必穿防滑雪靴)' },
+    { id: 14, date: '2026-12-07', category: 'transport', name: '長野 ➔ 東京/上野', time: '17:00', travelTime: 90, transportType: 'transit', note: '搭乘 北陸新幹線 (回程)', description: '搭乘新幹線回到溫暖的東京市區。' },
+
+    // Day 4
+    { id: 15, date: '2026-12-08', category: 'transport', name: '新宿 ➔ 河口湖', time: '08:30', travelTime: 115, transportType: 'transit', note: '搭乘 富士回遊 特急', description: '強烈建議提前劃位！直達河口湖免換車。' },
+    { id: 16, date: '2026-12-08', category: 'attraction', name: '富士山 河口湖大石公園', time: '10:30', travelTime: 20, transportType: 'transit', note: '搭乘 河口湖紅線巴士', description: '欣賞毫無遮蔽的富士山與湖面倒影，冬季早晨的山景最為清晰。' },
+    { id: 161, date: '2026-12-08', category: 'transport', name: '河口湖 ➔ 忍野八海', time: '12:00', travelTime: 25, transportType: 'transit', note: '搭乘 富士急巴士', description: '前往清澈見底的湧泉群。' },
+    { id: 162, date: '2026-12-08', category: 'attraction', name: '忍野八海', time: '12:30', travelTime: 0, transportType: 'walk', note: '富士山雪水湧泉', description: '欣賞八個清澈見底的池子，品嚐烤草餅、名水豆腐等當地小吃當午餐！' },
+    { id: 17, date: '2026-12-08', category: 'transport', name: '忍野八海 ➔ 下吉田', time: '14:30', travelTime: 30, transportType: 'transit', note: '搭乘 路線巴士/電車', description: '前往淺間神社的入口車站。' },
+    { id: 18, date: '2026-12-08', category: 'attraction', name: '新倉山淺間神社', time: '15:00', travelTime: 15, transportType: 'walk', note: '需爬 398 階階梯', description: '明信片上最經典的五重塔與富士山同框畫面！(剛好可欣賞傍晚的富士山色)' },
+    { id: 19, date: '2026-12-08', category: 'transport', name: '下吉田 ➔ 新宿', time: '17:30', travelTime: 115, transportType: 'transit', note: '搭乘 富士回遊 / 高速巴士', description: '看著夕陽富士山，回到東京市區吃晚餐。' },
+
+    // Day 5
+    { id: 20, date: '2026-12-09', category: 'transport', name: '市區(新宿) ➔ 鎌倉', time: '09:00', travelTime: 60, transportType: 'transit', note: '搭乘 JR 湘南新宿線', description: '前往充滿歷史氣息的古都鎌倉。' },
+    { id: 21, date: '2026-12-09', category: 'attraction', name: '鎌倉 (鶴岡八幡宮/小町通)', time: '10:30', travelTime: 0, transportType: 'walk', note: '古都漫遊', description: '逛小町通吃美食，參拜鶴岡八幡宮。' },
+    { id: 22, date: '2026-12-09', category: 'transport', name: '鎌倉 ➔ 鎌倉高校前', time: '13:30', travelTime: 20, transportType: 'transit', note: '搭乘 江之電', description: '沿著湘南海岸行駛的復古路面電車。' },
+    { id: 23, date: '2026-12-09', category: 'attraction', name: '鎌倉櫻木花道平交道', time: '14:00', travelTime: 0, transportType: 'walk', note: '灌籃高手聖地', description: '江之電「鎌倉高校前」站，櫻木花道經典場景！(海風很大請注意保暖)' },
+    { id: 24, date: '2026-12-09', category: 'transport', name: '鎌倉高校前 ➔ 橫濱(櫻木町)', time: '15:30', travelTime: 45, transportType: 'transit', note: '江之電轉 JR 根岸線', description: '傍晚前往橫濱看夜景。' },
+    { id: 25, date: '2026-12-09', category: 'attraction', name: '橫濱 (紅磚倉庫/夜景)', time: '16:30', travelTime: 0, transportType: 'walk', note: '浪漫港灣', description: '剛好可以逛冬季限定的聖誕市集，欣賞摩天輪與絕美夜景。' },
+
+    // Day 6
+    { id: 26, date: '2026-12-10', category: 'transport', name: '市區 ➔ 濱町', time: '09:30', travelTime: 20, transportType: 'transit', note: '搭乘 都營新宿線', description: '準備前往博物館。' },
+    { id: 27, date: '2026-12-10', category: 'attraction', name: '東京按鈕博物館', time: '10:00', travelTime: 0, transportType: 'walk', note: '特色博物館 (僅平日開放)', description: 'Iris Button Museum，收藏來自世界各地的珍貴精緻按鈕。' },
+    { id: 28, date: '2026-12-10', category: 'transport', name: '濱町 ➔ 赤羽橋(東京鐵塔)', time: '14:00', travelTime: 25, transportType: 'transit', note: '搭乘 都營大江戶線', description: '直達拍攝東京鐵塔的最佳車站。' },
+    { id: 29, date: '2026-12-10', category: 'attraction', name: '東京鐵塔', time: '14:30', travelTime: 0, transportType: 'walk', note: '經典地標', description: '近距離仰望壯觀的紅色鐵塔，可到芝公園附近拍下美照。' },
+    { id: 30, date: '2026-12-10', category: 'transport', name: '赤羽橋 ➔ 六本木', time: '17:00', travelTime: 5, transportType: 'transit', note: '搭乘 都營大江戶線 (2站)', description: '馬上就到六本木商圈。' },
+    { id: 31, date: '2026-12-10', category: 'attraction', name: '六本木聖誕點燈', time: '17:30', travelTime: 0, transportType: 'walk', note: '浪漫燈海', description: '櫸坂通 (Keyakizaka) 的藍白聖誕點燈，搭配遠方的東京鐵塔，是冬季必看！' },
+
+    // Day 7
+    { id: 32, date: '2026-12-11', category: 'transport', name: '新橋 ➔ 台場', time: '10:30', travelTime: 15, transportType: 'transit', note: '搭乘 百合鷗號', description: '無人駕駛電車，沿途欣賞跨越東京灣的景色。' },
+    { id: 33, date: '2026-12-11', category: 'attraction', name: '台場', time: '11:00', travelTime: 0, transportType: 'walk', note: '海濱與鋼彈', description: '逛 DiverCity 看巨大獨角獸鋼彈，傍晚欣賞彩虹大橋與自由女神像。' },
+
+    // Day 8
+    { id: 34, date: '2026-12-12', category: 'transport', name: '市區 ➔ 澀谷', time: '10:30', travelTime: 20, transportType: 'transit', note: '搭乘 山手線/銀座線', description: '前往東京潮流中心。' },
+    { id: 35, date: '2026-12-12', category: 'attraction', name: '澀谷', time: '11:00', travelTime: 0, transportType: 'walk', note: '潮流文化', description: '朝聖澀谷十字路口、忠犬八公，也可預約 Shibuya Sky 觀景台。' },
+    { id: 36, date: '2026-12-12', category: 'shopping', name: '最後採買', time: '15:00', travelTime: 0, transportType: 'walk', note: '藥妝與伴手禮', description: '把握最後一天在市區把清單上的東西買齊！' },
+
+    // Day 9
+    { id: 37, date: '2026-12-13', category: 'transport', name: '上野/日暮里 ➔ 成田機場', time: '09:00', travelTime: 45, transportType: 'transit', note: '搭乘 Keisei Skyliner', description: '快速抵達機場，準備報到。' },
+    { id: 38, date: '2026-12-13', category: 'flight', name: '航班 IT-281 NRT ➔ KHH', time: '13:00', travelTime: 280, transportType: 'flight', note: '起飛 13:00 / 抵達 16:40', description: '帶著滿滿的雪國與關東回憶準備回家囉！' }
   ];
 </script>
 
@@ -905,15 +954,15 @@
       const travelers = ref(['翔', '君']);
       const packingPeople = ref(['翔', '君']);
 
-      // 設定 12月份的東京、橫濱、鎌倉、富士山 (共 9 天)
+      // 設定 12月份的東京、橫濱、鎌倉、富士山、長野 (共 9 天)
       const days = [
         { dateStr: '2026-12-05', displayDate: '12/05', dayOfWeek: '週六', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
         { dateStr: '2026-12-06', displayDate: '12/06', dayOfWeek: '週日', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-07', displayDate: '12/07', dayOfWeek: '週一', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-08', displayDate: '12/08', dayOfWeek: '週二', mainCity: '橫濱', locations: [{name:'橫濱', lat:35.4437, lng:139.6380}, {name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-09', displayDate: '12/09', dayOfWeek: '週三', mainCity: '鎌倉', locations: [{name:'鎌倉', lat:35.3192, lng:139.5467}] },
-        { dateStr: '2026-12-10', displayDate: '12/10', dayOfWeek: '週四', mainCity: '富士山', locations: [{name:'富士山', lat:35.3606, lng:138.7274}] },
-        { dateStr: '2026-12-11', displayDate: '12/11', dayOfWeek: '週五', mainCity: '富士山', locations: [{name:'富士山', lat:35.3606, lng:138.7274}] },
+        { dateStr: '2026-12-07', displayDate: '12/07', dayOfWeek: '週一', mainCity: '長野', locations: [{name:'長野', lat:36.6485, lng:138.1942}] },
+        { dateStr: '2026-12-08', displayDate: '12/08', dayOfWeek: '週二', mainCity: '富士山', locations: [{name:'富士山', lat:35.3606, lng:138.7274}] },
+        { dateStr: '2026-12-09', displayDate: '12/09', dayOfWeek: '週三', mainCity: '鎌倉', locations: [{name:'鎌倉', lat:35.3192, lng:139.5467}, {name:'橫濱', lat:35.4437, lng:139.6380}] },
+        { dateStr: '2026-12-10', displayDate: '12/10', dayOfWeek: '週四', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-11', displayDate: '12/11', dayOfWeek: '週五', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
         { dateStr: '2026-12-12', displayDate: '12/12', dayOfWeek: '週六', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
         { dateStr: '2026-12-13', displayDate: '12/13', dayOfWeek: '週日', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] }
       ];
