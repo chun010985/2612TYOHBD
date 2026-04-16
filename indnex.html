@@ -192,7 +192,7 @@
     <!-- TAB 1: Itinerary -->
     <div v-if="currentTab === 'itinerary'">
       
-      <!-- Dates -->
+      <!-- Dates (加入滑鼠拖曳與滾動支援) -->
       <div ref="dateContainer"
            @mousedown="startDrag"
            @mouseleave="stopDrag"
@@ -550,7 +550,7 @@
           <span><i class="fa-solid fa-suitcase-rolling mr-2 text-winter"></i>行李檢查清單</span>
         </h3>
 
-        <div class="grid grid-cols-3 gap-2 mb-3">
+        <div class="grid grid-cols-2 gap-2 mb-3">
           <button v-for="person in packingPeople" :key="person" @click="currentPackingFilter = person"
             :class="['w-full py-1.5 rounded-full text-sm font-bold transition-colors border', (currentPackingFilter === person) ? 'bg-winter text-white border-winter shadow-md' : 'bg-white text-gray-500 border-gray-200']">
             {{ person }}
@@ -586,7 +586,7 @@
       </div>
     </div>
 
-    <!-- TAB 4: Shopping -->
+    <!-- TAB 3: Shopping -->
     <div v-if="currentTab === 'shopping'">
       <div class="bg-cyan-50 text-cyan-700 text-[13px] px-4 py-2 rounded-xl mb-4 flex items-center border border-cyan-100 mx-2 shadow-sm animate-pulse mt-2">
         <i class="fa-solid fa-wallet mr-2 text-cyan-500"></i>
@@ -620,7 +620,7 @@
       <button @click="openModal('shopping')" class="fixed bottom-24 right-6 w-14 h-14 bg-winter text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-winter-dark transition-colors z-20"><i class="fa-solid fa-plus"></i></button>
     </div>
 
-    <!-- TAB 5: Expense -->
+    <!-- TAB 4: Expense -->
     <div v-if="currentTab === 'expense'">
       <div class="animate-slide-up mt-2">
           <div class="bg-gradient-to-r from-winter to-winter-dark rounded-2xl p-6 text-white shadow-soft mb-6 text-center transition-all duration-300">
@@ -653,7 +653,7 @@
       <button @click="openModal('expense')" class="fixed bottom-24 right-6 w-14 h-14 bg-winter text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-winter-dark transition-colors z-20"><i class="fa-solid fa-plus"></i></button>
     </div>
 
-    <!-- TAB 6: Notebook -->
+    <!-- TAB 5: Notebook -->
     <div v-if="currentTab === 'notebook'">
       <div class="grid gap-3 pb-24 animate-slide-up mt-2">
         <div v-if="filteredNotebookList.length === 0" class="text-center py-10 text-gray-400">
