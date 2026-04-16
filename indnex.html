@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>冬日關東之旅</title>
+
+  <!-- Global Error Handler -->
+  <script>
+    window.addEventListener('error', function(e) {
+      console.error("Global Error:", e.error);
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) splash.style.display = 'none';
+      }, 1000);
+    });
+
+    // Force enter after 4 seconds to prevent splash screen stuck
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash && splash.style.display !== 'none') {
+        splash.style.display = 'none';
+      }
+    }, 4000);
+  </script>
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Cropper.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+  <!-- Vue 3 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <script>
+    // 冬季主題顏色設定區 (冰藍色系)
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            winter: { light: '#e8f0fe', DEFAULT: '#6da3eb', dark: '#2b65c3', text: '#143163' }
+          },
+          fontFamily: { sans: ['"Zen Maru Gothic"', 'sans-serif'] },
+          boxShadow: { 'soft': '0 4px 20px -2px rgba(109, 163, 235, 0.4)', 'card': '0 2px 10px rgba(0,0,0,0.05)' },
+          animation: {
+            'float': 'float 3s ease-in-out infinite',
+            'fade-in': 'fadeIn 0.3s ease-out forwards',
+            'slide-up': 'slideUp 0.3s ease-out forwards',
+            'fall-1': 'snow-fall 6s linear infinite',
+            'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'marquee': 'marquee 15s linear infinite',
+            'run': 'run 0.4s ease-in-out infinite',
+          },
+          keyframes: {
+            float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { transform: 'translateY(100%)' }, '100%': { transform: 'translateY(0)' } },
+            'snow-fall': {
+              '0%': { top: '-10%', left: 'var(--start-left)', transform: 'rotate(0deg) translateX(0)', opacity: '0' },
+              '10%': { opacity: '0.9' },
+              '50%': { transform: 'rotate(180deg) translateX(15px)' },
+              '90%': { opacity: '0.9' },
+              '100%': { top: '110%', left: 'calc(var(--start-left) + 10%)', transform: 'rotate(360deg) translateX(-15px)', opacity: '0' }
+            },
+            marquee: {
+              '0%': { transform: 'translateX(100%)' },
+              '100%': { transform: 'translateX(-100%)' }
+            },
+            run: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-2px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #f5f9ff; -webkit-tap-highlight-color: transparent; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .app-container { max-width: 480px; margin: 0 auto; background-color: #fafafa; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); padding-bottom: 80px; }
+    
+    /* 雪花樣式 */
+    .snowflake { 
+      position: absolute; 
+      background-color: #ffffff; 
+      border-radius: 50%; 
+      opacity: 0; 
+      top: -20px; 
+      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
+    }
+    
+    .blur-sm { filter: blur(1px); }
+    .glass-modal { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+  </style>
+</head>
+
+<body>
+<div id="app" class="app-container">
+
+  <!-- Splash Screen -->
+  <div id="splash-screen" v-if="showSplash" class="fixed inset-0 z-[100] bg-gradient-to-b from-[#e8f0fe] to-white flex flex-col items-center justify-center overflow-hidden transition-opacity duration-700">
+    <div class="absolute inset-0 pointer-events-none z-10 w-full h-full overflow-hidden">
+      <!-- 裝飾雪花飄落 -->
+      <span class="snowflake w-2 h-2 animate-fall-1" style="--start-left: 15%; animation-duration: 5s;"></span>
+      <span class="snowflake w-3 h-3 animate-fall-1" style="--start-left: 35%; animation-duration: 7s; animation-delay: 1s;"></span>
+      <span class="snowflake w-2.5 h-2.5 animate-fall-1" style="--start-left: 65%; animation-duration: 6s; animation-delay: 2s;"></span>
+      <span class="snowflake w-4 h-4 animate-fall-1" style="--start-left: 85%; animation-duration: 8s; animation-delay: 0.5s;"></span>
+    </div>
+    <div class="relative z-10 text-center animate-float">
+      <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft border-4 border-white">
+        <i class="fa-solid fa-mountain-sun text-4xl text-winter-dark"></i>
+      </div>
+      <h1 class="text-3xl font-bold text-winter-text tracking-[0.2em] mb-3 ml-2">冬日關東之旅</h1>
+      <div class="inline-block px-4 py-1 bg-white/70 rounded-full backdrop-blur-sm mt-2">
+        <p class="text-sm font-bold text-winter-dark tracking-widest">WINTER TRIP ❄️</p>
+      </div>
+    </div>
+    <div class="absolute bottom-12 text-winter-text/50 text-sm font-bold animate-pulse text-center w-full">
+      <span v-if="migrationStatus">{{ migrationStatus }}</span>
+      <span v-else>正在為您準備雪國行程...</span>
+    </div>
+  </div>
+
+  <!-- Top Bar -->
+  <div class="sticky top-0 z-40 bg-white/95 backdrop-blur-md shadow-sm py-3 px-4 flex flex-col justify-center items-center border-b border-gray-100">
+      <h1 class="text-xl font-bold tracking-[0.1em] text-winter-text flex items-center gap-2 mb-1">
+          <i class="fa-solid fa-train-subway text-winter"></i>
+          東京・富士山 冬季之旅
+          <span class="text-lg text-blue-200">❄️</span>
+      </h1>
+      <div class="flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-500 uppercase">
+          <span>Tokyo</span>
+          <span class="text-winter">•</span>
+          <span>Yokohama</span>
+          <span class="text-winter">•</span>
+          <span>Kamakura</span>
+          <span class="text-winter">•</span>
+          <span>Fuji</span>
+      </div>
+      <div class="text-xs font-medium text-gray-400 tracking-widest mt-0.5">
+          2026.12.05 - 12.13
+      </div>
+  </div>
+
+  <!-- Header Banner -->
+  <header class="relative h-[200px] w-full overflow-hidden bg-gray-100 group">
+    <img :src="bannerImage" class="w-full h-full object-cover object-bottom origin-center opacity-100" @error="handleImageError">
+    
+    <!-- Countdown Badge -->
+    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/50 shadow-lg flex items-center gap-3 z-20">
+      <div class="flex items-center gap-2 text-xs font-bold whitespace-nowrap text-gray-600">
+        <i class="fa-regular fa-clock text-winter"></i>
+        <span v-if="daysUntilTrip > 0">距離出發 <b class="text-winter-dark">{{ daysUntilTrip }}</b> 天</span>
+        <span v-else-if="daysUntilTrip >= -8">旅程第 {{ Math.abs(daysUntilTrip) + 1 }} 天</span>
+        <span v-else>旅程已圓滿結束</span>
+      </div>
+      
+      <!-- Progress Bar (Winter colors) -->
+      <div v-if="daysUntilTrip > 0" class="w-20 h-3.5 bg-gray-200 rounded-full relative overflow-hidden shadow-inner">
+        <div class="h-full bg-gradient-to-r from-blue-200 via-blue-400 to-indigo-500 rounded-full transition-all duration-1000 relative flex items-center justify-end pr-1" :style="{ width: tripProgress + '%' }">
+           <div class="transform -scale-x-100">
+               <!-- 換成滑雪的小人 -->
+               <i class="fa-solid fa-person-skiing text-[10px] text-white drop-shadow-md animate-run block"></i>
+           </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="relative -mt-6 bg-[#fafafa] rounded-t-[30px] px-4 pt-6 min-h-[500px] z-10 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
+
+    <!-- Cloud Status -->
+    <div class="fixed top-4 left-4 z-50 flex items-center gap-2 cursor-pointer" @click="reconnectFirebase">
+      <div class="w-3 h-3 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.2)] border border-white transition-all duration-500"
+           :class="isSaving ? 'bg-yellow-400 animate-pulse' : (firebaseStatus === 'error' ? 'bg-red-500' : (firebaseStatus === 'connected' ? 'bg-green-400' : 'bg-yellow-400'))">
+      </div>
+    </div>
+
+    <!-- TAB 1: Itinerary -->
+    <div v-if="currentTab === 'itinerary'">
+      
+      <!-- Dates -->
+      <div ref="dateContainer"
+           @mousedown="startDrag"
+           @mouseleave="stopDrag"
+           @mouseup="stopDrag"
+           @mousemove="doDrag"
+           class="flex overflow-x-auto no-scrollbar gap-3 mb-6 pb-4 px-4 -mx-4 justify-start pt-3 cursor-grab active:cursor-grabbing w-full snap-x">
+        <button v-for="(day, index) in days" :key="index" @click="selectDate(day.dateStr)"
+          class="flex-shrink-0 flex flex-col items-center justify-center w-[72px] h-[88px] transition-all duration-300 relative focus:outline-none rounded-[22px] border group snap-start"
+          :class="selectedDate === day.dateStr ? 'bg-gradient-to-b from-winter to-winter-dark border-transparent shadow-[0_8px_20px_-4px_rgba(43,101,195,0.5)] transform -translate-y-2 scale-105' : 'bg-white border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:-translate-y-1 hover:border-winter-light'">
+          
+          <!-- 雪花標記 (選中時顯示) -->
+          <div class="absolute -top-3 transition-opacity duration-300" :class="selectedDate === day.dateStr ? 'opacity-100' : 'opacity-0'">
+              <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-md animate-bounce" style="animation-duration: 2s;">
+                  <i class="fa-solid fa-snowflake text-winter text-[11px] animate-pulse"></i>
+              </div>
+          </div>
+          
+          <!-- 城市小標籤 (選中時顯示) -->
+          <span v-if="selectedDate === day.dateStr" class="absolute -bottom-2 bg-white text-winter-dark text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm border border-winter-light whitespace-nowrap z-10">
+              {{ day.mainCity }}
+          </span>
+          
+          <span class="text-[10px] font-bold tracking-widest uppercase mb-1" :class="selectedDate === day.dateStr ? 'text-blue-100 mt-1' : 'text-gray-400'">Day {{ index + 1 }}</span>
+          <span class="text-[20px] font-bold leading-none tracking-tight mb-1" :class="selectedDate === day.dateStr ? 'text-white drop-shadow-sm' : 'text-gray-800'">{{ day.displayDate }}</span>
+          <span class="text-[10px] font-bold" :class="selectedDate === day.dateStr ? 'text-white' : 'text-winter'">{{ day.dayOfWeek }}</span>
+          
+        </button>
+      </div>
+
+      <!-- Weather Card -->
+      <div class="relative bg-gradient-to-b from-white to-[#f5f9ff] rounded-3xl p-4 shadow-[0_10px_30px_-10px_rgba(109,163,235,0.3)] mb-4 border border-white overflow-hidden group transition-all duration-300">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-100 via-indigo-200 to-sky-100 opacity-50"></div>
+        <div class="absolute -right-6 -top-6 w-24 h-24 bg-blue-100/30 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -left-6 top-16 w-24 h-24 bg-indigo-50/50 rounded-full blur-2xl pointer-events-none"></div>
+        
+        <div v-if="weatherLoading" class="absolute inset-0 bg-white/80 backdrop-blur-md z-30 flex items-center justify-center rounded-3xl">
+          <div class="text-winter-dark animate-pulse flex flex-col items-center gap-2">
+            <i class="fa-solid fa-cloud-sun text-4xl animate-bounce"></i>
+            <span class="text-sm font-bold tracking-widest uppercase text-gray-400">Loading...</span>
+          </div>
+        </div>
+
+        <div @click="toggleWeather" class="relative z-10 cursor-pointer">
+          <div class="flex items-center justify-between px-2 pt-1">
+            <div class="flex items-center gap-3">
+                 <div class="w-14 h-14 flex items-center justify-center filter drop-shadow-md animate-float">
+                    <i :class="weatherData.icon" class="text-5xl transition-all duration-500" :style="{color: weatherData.iconColor}"></i>
+                 </div>
+                 <div class="flex flex-col">
+                    <div class="flex items-baseline">
+                        <span class="text-4xl font-bold text-gray-800 tracking-tighter leading-none">{{ weatherData.temp }}°</span>
+                        <div class="flex flex-col text-[11px] font-bold text-gray-400 ml-1.5 leading-none gap-0.5">
+                            <span class="flex items-center"><i class="fa-solid fa-arrow-up text-red-300 text-[10px] mr-0.5"></i>{{ weatherData.maxTemp }}°</span>
+                            <span class="flex items-center"><i class="fa-solid fa-arrow-down text-blue-300 text-[10px] mr-0.5"></i>{{ weatherData.minTemp }}°</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 font-medium mt-0.5">體感 {{ weatherData.apparentTemp }}°C</p>
+                 </div>
+            </div>
+
+            <div class="flex flex-col items-end">
+                 <div v-if="currentDayCities.length > 1" class="bg-gray-100/80 p-0.5 rounded-full flex gap-1 shadow-inner mb-1.5" @click.stop>
+                     <button v-for="city in currentDayCities" :key="city.name" @click.stop="changeWeatherCity(city)"
+                    :class="['text-[11px] px-2.5 py-1 rounded-full font-bold transition-all', weatherData.city === city.name ? 'bg-white text-winter-dark shadow-sm' : 'text-gray-400 hover:text-gray-600']">
+                    {{ city.name }}
+                  </button>
+                 </div>
+                 <h2 v-else class="text-lg font-bold text-gray-700 tracking-wide flex items-center gap-1 mb-1.5">
+                    {{ weatherData.city }}
+                    <i class="fa-solid fa-location-dot text-winter text-sm"></i>
+                 </h2>
+                 
+                 <div class="flex items-center gap-2">
+                     <span class="text-sm text-gray-500 font-bold">{{ weatherData.description }}</span>
+                     <div class="w-6 h-6 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-gray-300">
+                        <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-500" :class="{'rotate-180': isWeatherExpanded}"></i>
+                     </div>
+                 </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="isWeatherExpanded" class="mt-3 pt-3 border-t border-gray-100 animate-fade-in relative z-10 space-y-3">
+          <div class="flex gap-2 items-start bg-winter-light/40 p-2.5 rounded-xl border border-winter-light/60">
+            <div class="w-6 h-6 rounded-full bg-white flex items-center justify-center text-winter-dark shrink-0 shadow-sm mt-0.5">
+                <i class="fa-solid fa-shirt text-xs"></i>
+            </div>
+            <div class="flex-1">
+               <p class="text-sm text-gray-600 leading-relaxed font-medium">{{ weatherData.clothing }}</p>
+            </div>
+          </div>
+
+          <div>
+            <h5 class="text-xs font-bold text-gray-400 mb-2 pl-1 flex items-center"><i class="fa-regular fa-clock mr-1"></i>24小時預報</h5>
+            <div class="flex overflow-x-auto no-scrollbar gap-2 pb-1 -mx-2 px-2">
+                <div v-for="(hour, hIdx) in weatherData.hourly" :key="hIdx" class="flex-shrink-0 flex flex-col items-center justify-between bg-white rounded-2xl py-2 w-12 h-24 border border-gray-100 shadow-sm">
+                    <span class="text-[11px] text-gray-400 font-bold">{{ hour.time.split(':')[0] }}時</span>
+                    <i :class="hour.icon" class="text-lg my-0.5" :style="{color: hour.color}"></i>
+                    <div class="flex flex-col items-center">
+                        <span class="text-sm font-bold text-gray-700">{{ hour.temp }}°</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+             <div class="bg-gray-50/80 rounded-xl flex flex-col items-center justify-center p-1.5 text-center h-16">
+                 <i class="fa-solid fa-droplet text-blue-400 text-sm mb-0.5"></i>
+                 <span class="text-[11px] text-gray-400 font-bold scale-90">濕度</span>
+                 <span class="text-sm font-bold text-gray-700 leading-none">{{ weatherData.humidity }}%</span>
+             </div>
+             <div class="bg-gray-50/80 rounded-xl flex flex-col items-center justify-center p-1.5 text-center h-16">
+                 <i class="fa-solid fa-umbrella text-cyan-400 text-sm mb-0.5"></i>
+                 <span class="text-[11px] text-gray-400 font-bold scale-90">降雪/雨</span>
+                 <span class="text-sm font-bold text-gray-700 leading-none">{{ weatherData.rain }}<span class="text-[10px] font-normal">mm</span></span>
+             </div>
+             <div class="bg-gray-50/80 rounded-xl flex flex-col items-center justify-center p-1.5 text-center h-16">
+                 <i class="fa-solid fa-wind text-indigo-400 text-sm mb-0.5"></i>
+                 <span class="text-[11px] text-gray-400 font-bold scale-90">風速</span>
+                 <span class="text-sm font-bold text-gray-700 leading-none">{{ weatherData.windSpeed }}<span class="text-[10px] font-normal">m/s</span></span>
+             </div>
+          </div>
+
+          <div class="relative h-9 bg-gradient-to-r from-orange-50 to-indigo-50 rounded-full flex items-center justify-between px-4 border border-gray-100">
+             <div class="flex items-center gap-1.5">
+                 <i class="fa-solid fa-sun text-orange-400 text-sm"></i>
+                 <span class="text-xs font-bold text-gray-600">{{ weatherData.sunrise }}</span>
+             </div>
+             <div class="flex items-center gap-1.5">
+                 <span class="text-xs font-bold text-gray-600">{{ weatherData.sunset }}</span>
+                 <i class="fa-solid fa-moon text-indigo-400 text-sm"></i>
+             </div>
+          </div>
+
+          <div v-if="weatherData.forecast && weatherData.forecast.length > 0">
+            <h5 class="text-xs font-bold text-gray-400 mb-2 pl-1 flex items-center"><i class="fa-regular fa-calendar-days mr-1"></i>未來預報</h5>
+            <div class="space-y-1.5">
+              <div v-for="day in weatherData.forecast" :key="day.dayName" class="flex items-center justify-between px-3 py-2 bg-white rounded-xl border border-gray-50 shadow-sm">
+                <span class="text-sm font-bold text-gray-600 w-10">{{ day.dayName }}</span>
+                <div class="flex items-center gap-2 flex-1 justify-center">
+                    <i :class="day.icon" class="text-base" :style="{color: day.color}"></i>
+                    <span v-if="day.pop > 0" class="text-[11px] bg-blue-50 text-blue-500 px-1.5 py-0.5 rounded-full font-bold flex items-center">{{ day.pop }}%</span>
+                </div>
+                <div class="flex items-center gap-2 w-18 justify-end">
+                    <span class="text-sm font-bold text-gray-800">{{ day.max }}°</span>
+                    <span class="text-xs font-bold text-gray-400">{{ day.min }}°</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button @click="toggleWeather" class="w-full mt-1 py-2.5 bg-white border border-gray-100 text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-xs font-bold rounded-xl flex items-center justify-center transition-colors shadow-sm">
+             <i class="fa-solid fa-chevron-up mr-1.5"></i>收合天氣
+          </button>
+        </div>
+      </div>
+
+      <!-- Marquee Notice -->
+      <div class="bg-blue-50 border border-blue-200/60 text-blue-800 px-3 py-2 rounded-xl mb-4 overflow-hidden relative shadow-sm mx-1">
+        <div class="whitespace-nowrap animate-marquee text-sm font-bold flex items-center">
+           <i class="fa-solid fa-snowflake mr-2 text-blue-500"></i>冬季日落較早（約16:30），建議將戶外及拍照行程安排在白天！
+        </div>
+        <div class="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-blue-50 to-transparent z-10"></div>
+        <div class="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-blue-50 to-transparent z-10"></div>
+      </div>
+
+      <!-- Itinerary List -->
+      <div class="space-y-4">
+        <div v-for="(item, index) in filteredItinerary" :key="item.id" class="relative pl-4 border-l-2 border-winter-light">
+          <div class="bg-white rounded-2xl p-4 shadow-card relative group"
+               :class="{'border-l-4 border-winter': item.category !== 'flight', 'bg-blue-50 border-l-4 border-blue-400': item.category === 'flight'}">
+            
+            <div v-if="item.category === 'flight'">
+              <div class="flex justify-between items-start mb-2">
+                <span class="bg-blue-100 text-blue-600 text-sm px-2 py-1 rounded-full font-bold"><i class="fa-solid fa-plane-departure mr-1"></i>航班</span>
+                <span class="text-sm text-gray-500 font-bold">{{ item.time }}</span>
+              </div>
+              <h3 class="font-bold text-gray-800 text-lg mb-1">{{ item.name }}</h3>
+              <div class="text-base text-gray-600 space-y-1"><p>{{ item.note }}</p></div>
+              <div v-if="item.description" class="text-sm text-gray-400 mt-1">{{ item.description }}</div>
+            </div>
+
+            <div v-else>
+              <div class="flex justify-between items-start mb-1">
+                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                  <span :class="['text-sm px-2 py-1 rounded-full font-medium inline-block', getCategoryColor(item.category)]">{{ getCategoryLabel(item.category) }}</span>
+                  <span v-if="item.travelTime > 0" class="text-xs text-gray-400 flex items-center bg-gray-50 px-2 py-1 rounded-full border border-gray-100">
+                    <i :class="getTransportIcon(item.transportType)" class="mr-1 text-winter-dark"></i>約 {{ item.travelTime }} 分
+                  </span>
+                </div>
+                <span class="text-base font-bold text-winter-text bg-winter-light px-2 py-1 rounded-lg whitespace-nowrap ml-2">{{ item.time }}</span>
+              </div>
+              
+              <h3 class="font-bold text-gray-800 text-lg mb-2 flex items-center gap-2 select-none">
+                {{ item.name }} 
+                <button @click.stop="openMap(item.name)" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-winter-light/50 active:bg-winter-light transition-colors -my-1">
+                    <i class="fa-solid fa-location-arrow text-xs text-winter cursor-pointer"></i>
+                </button>
+              </h3>
+
+              <div class="space-y-2 text-base text-gray-600">
+                <div class="flex flex-wrap gap-3 text-sm">
+                  <p v-if="item.category !== 'other' && item.category !== 'accommodation' && item.openHours" class="flex items-center"><i class="fa-regular fa-clock w-4 text-center text-gray-400 mr-1"></i> {{ item.openHours }}</p>
+                  <p v-if="item.category === 'attraction' && item.ticket" class="flex items-center"><i class="fa-solid fa-ticket w-4 text-center text-yellow-500 mr-1"></i> {{ item.ticket }}</p>
+                </div>
+                <div v-if="item.description" class="text-sm bg-gray-50 p-3 rounded-lg border border-gray-100 leading-relaxed text-gray-500">
+                  <p style="white-space: pre-line;">{{ item.description }}</p>
+                </div>
+                <p v-if="item.note" class="text-sm text-winter-dark mt-1 flex items-start font-medium"><i class="fa-solid fa-circle-exclamation w-4 mt-0.5 mr-1"></i> {{ item.note }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="filteredItinerary.length === 0" class="text-center py-10 text-gray-400">
+          <p v-if="migrationStatus" class="animate-pulse">正在載入行程資料...</p>
+          <div v-else>
+             <i class="fa-solid fa-mug-hot text-4xl mb-3 opacity-50"></i>
+             <p>本日尚無行程</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Update Actions -->
+      <div class="text-center pb-20 pt-8 space-y-3">
+        <button @click="updateItineraryContentOnly" class="text-sm text-gray-400 underline hover:text-winter-dark transition-colors font-bold flex items-center justify-center mx-auto">
+            <i class="fa-solid fa-arrows-rotate mr-1"></i>重置為範本資料
+        </button>
+        <div class="text-xs text-gray-300 pt-2">資料庫版本: {{ TRIP_ID }}</div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Info -->
+    <div v-if="currentTab === 'info'" class="space-y-6 pb-20">
+      <!-- Exchange Rate -->
+      <div class="bg-white rounded-2xl p-5 shadow-card">
+        <h3 class="font-bold text-winter-text mb-4 border-b pb-2 flex justify-between items-center">
+          <span><i class="fa-solid fa-coins mr-2 text-yellow-500"></i>即時匯率參考</span>
+          <div class="text-right">
+            <span class="text-xs text-gray-400 block font-mono">1 JPY ≈ {{ currentRate.toFixed(4) }} TWD</span>
+            <span v-if="rateUpdateDate" class="text-[11px] text-gray-300 block">更新: {{ rateUpdateDate }}</span>
+          </div>
+        </h3>
+        <div class="flex items-center gap-4 mb-3">
+          <div class="flex-1"><label class="text-sm text-gray-500 mb-1 block font-medium">日幣 (JPY)</label><input type="number" v-model="exchange.jpy" @input="calcTwd" class="w-full bg-gray-50 rounded-xl p-3 outline-none focus:ring-2 focus:ring-winter" placeholder="¥"></div>
+          <i class="fa-solid fa-arrow-right-arrow-left text-gray-300"></i>
+          <div class="flex-1"><label class="text-sm text-gray-500 mb-1 block font-medium">台幣 (TWD)</label><input type="number" v-model="exchange.twd" @input="calcJpy" class="w-full bg-winter-light rounded-xl p-3 font-bold text-winter-text outline-none focus:ring-2 focus:ring-winter" placeholder="NT$"></div>
+        </div>
+      </div>
+
+      <!-- Announcement -->
+      <div class="bg-white rounded-2xl p-4 shadow-card border-l-4 border-winter-dark relative overflow-hidden">
+        <div class="flex items-start gap-3">
+            <div class="bg-winter-light text-winter-dark w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-bullhorn text-lg"></i>
+            </div>
+            <div class="w-full">
+                <h4 class="font-bold text-gray-800 text-base mb-2">重要公告與說明</h4>
+                <ul class="text-sm text-gray-600 space-y-1.5 list-disc pl-4 font-medium">
+                    <li>日本冬季室內（電車、商店）暖氣較強，務必採用**洋蔥式穿搭**。</li>
+                    <li>前往富士山河口湖一帶，氣溫可能降至零下，請備妥防風外套與手套。</li>
+                    <li>若遇下雪天，請穿著防滑防水的鞋子以策安全。</li>
+                </ul>
+                <p class="text-sm font-bold text-blue-500 mt-3 text-right border-t border-blue-100 pt-2">
+                    <i class="fa-regular fa-face-smile-wink mr-1"></i>祝大家旅途愉快~
+                </p>
+            </div>
+        </div>
+      </div>
+
+      <!-- Flight Info -->
+      <div class="bg-white rounded-2xl p-5 shadow-card">
+        <h3 class="font-bold text-winter-text mb-4 border-b pb-2"><i class="fa-solid fa-plane mr-2 text-blue-400"></i>航班資訊</h3>
+        <!-- Outbound -->
+        <div class="mb-4 bg-blue-50 rounded-xl p-4 border border-blue-100 relative overflow-hidden">
+          <div class="absolute top-0 right-0 bg-blue-500 text-white text-sm px-3 py-1 rounded-bl-xl font-bold tracking-wider">去程</div>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="font-bold text-xl text-gray-800 tracking-wide">IT-280</span>
+            <span class="text-xs text-blue-600 bg-white px-2 py-0.5 rounded-full border border-blue-100 font-bold">台灣虎航</span>
+          </div>
+          <div class="flex justify-between items-center text-center mb-4 relative z-10">
+            <div class="text-left"><div class="text-3xl font-bold text-gray-800 leading-none">06:55</div><div class="text-base font-bold text-gray-600 mt-1">KHH 高雄</div></div>
+            <div class="flex flex-col items-center w-1/3 px-2"><span class="text-xs text-gray-400 mb-2 font-bold">3h 15m</span><div class="w-full h-0.5 bg-gray-300 relative flex items-center justify-center"><i class="fa-solid fa-plane-departure text-blue-400 text-sm absolute bg-blue-50 px-1"></i></div><span class="text-xs text-blue-400 mt-1">直飛</span></div>
+            <div class="text-right"><div class="text-3xl font-bold text-gray-800 leading-none">11:10</div><div class="text-base font-bold text-gray-600 mt-1">NRT 成田</div></div>
+          </div>
+          <div class="text-center mb-3">
+            <span class="text-sm font-bold text-blue-600 bg-white border border-blue-200 px-3 py-1 rounded-full shadow-sm"><i class="fa-solid fa-user-clock mr-1"></i>建議報到：04:30</span>
+          </div>
+          <div class="flex justify-between items-center text-[11px] text-gray-500 border-t border-blue-200/50 pt-3 mt-2">
+            <span class="flex items-center"><i class="fa-regular fa-calendar-check mr-1.5 text-blue-400"></i>2026/12/05 (週六)</span>
+            <span class="flex items-center"><i class="fa-solid fa-suitcase-rolling mr-1 text-blue-400"></i>20kg<span class="mx-1 text-blue-200">|</span><i class="fa-solid fa-briefcase mr-1 text-blue-400"></i>10kg<span class="mx-1 text-blue-200">|</span><i class="fa-solid fa-utensils mr-1 text-blue-400"></i>餐點</span>
+          </div>
+        </div>
+        <!-- Inbound -->
+        <div class="bg-winter-light/40 rounded-xl p-4 border border-winter-light relative overflow-hidden mb-4">
+          <div class="absolute top-0 right-0 bg-winter text-white text-sm px-3 py-1 rounded-bl-xl font-bold tracking-wider">回程</div>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="font-bold text-xl text-gray-800 tracking-wide">IT-281</span>
+            <span class="text-xs text-winter-dark bg-white px-2 py-0.5 rounded-full border border-winter-light font-bold">台灣虎航</span>
+          </div>
+          <div class="flex justify-between items-center text-center mb-4 relative z-10">
+            <div class="text-left"><div class="text-3xl font-bold text-gray-800">13:00</div><div class="text-base font-bold text-gray-600 mt-1">NRT 成田</div></div>
+            <div class="flex flex-col items-center w-1/3 px-2"><span class="text-xs text-gray-400 mb-2 font-bold">4h 40m</span><div class="w-full h-0.5 bg-gray-300 relative flex items-center justify-center"><i class="fa-solid fa-plane-departure text-winter text-sm absolute bg-winter-light/40 px-1"></i></div><span class="text-xs text-winter mt-1">直飛</span></div>
+            <div class="text-right"><div class="text-3xl font-bold text-gray-800 leading-none">16:40</div><div class="text-base font-bold text-gray-600 mt-1">KHH 高雄</div></div>
+          </div>
+          <div class="text-center mb-3">
+            <span class="text-sm font-bold text-winter-text bg-white border border-winter-light px-3 py-1 rounded-full shadow-sm"><i class="fa-solid fa-user-clock mr-1 text-winter"></i>建議報到：10:30</span>
+          </div>
+          <div class="flex justify-between items-center text-[11px] text-gray-500 border-t border-winter-light pt-3 mt-2">
+            <span class="flex items-center"><i class="fa-regular fa-calendar-check mr-1.5 text-winter"></i>2026/12/13 (週日)</span>
+            <span class="flex items-center"><i class="fa-solid fa-suitcase-rolling mr-1 text-winter"></i>25kg<span class="mx-1 text-winter-light">|</span><i class="fa-solid fa-briefcase mr-1 text-winter"></i>10kg<span class="mx-1 text-winter-light">|</span><i class="fa-solid fa-utensils mr-1 text-winter"></i>餐點</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hotel Info -->
+      <div class="bg-white rounded-2xl p-5 shadow-card">
+        <h3 class="font-bold text-winter-text mb-4 border-b pb-2"><i class="fa-solid fa-hotel mr-2 text-purple-400"></i>住宿資訊</h3>
+        <div class="flex gap-4 mb-4">
+           <div class="w-20 h-20 bg-purple-50 rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300">
+                <i class="fa-solid fa-bed text-3xl"></i>
+           </div>
+           <div class="flex-1 min-w-0 py-0.5">
+             <h4 class="font-bold text-gray-800 text-lg truncate">範例飯店名稱</h4>
+             <p class="text-sm text-gray-400 mb-2 truncate">Example Hotel Name</p>
+             <div class="flex gap-1 flex-wrap">
+               <span class="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded border border-purple-100">附近地鐵站標籤</span>
+               <span class="text-xs bg-sky-50 text-sky-600 px-2 py-0.5 rounded border border-sky-100">周邊超商標籤</span>
+             </div>
+           </div>
+        </div>
+        
+        <div class="space-y-2">
+            <div class="flex items-start gap-3 text-sm text-gray-600 bg-gray-50 p-2.5 rounded-xl border border-gray-100">
+                <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1"></i>
+                <div class="flex-1">
+                    <p class="font-bold text-gray-700">範例飯店詳細地址</p>
+                    <p class="text-xs text-gray-400 mt-0.5">交通與地理位置補充說明</p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button @click="openMap('飯店地址')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-sm font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                    <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
+                </button>
+                 <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-sm font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
+                    <i class="fa-solid fa-phone mr-1"></i>撥打電話
+                </a>
+            </div>
+        </div>
+      </div>
+
+      <!-- Packing List -->
+      <div class="bg-white rounded-2xl p-5 shadow-card">
+        <h3 class="font-bold text-winter-text mb-3 border-b pb-2 flex justify-between items-center">
+          <span><i class="fa-solid fa-suitcase-rolling mr-2 text-winter"></i>行李檢查清單</span>
+        </h3>
+
+        <div class="grid grid-cols-3 gap-2 mb-3">
+          <button v-for="person in packingPeople" :key="person" @click="currentPackingFilter = person"
+            :class="['w-full py-1.5 rounded-full text-sm font-bold transition-colors border', (currentPackingFilter === person) ? 'bg-winter text-white border-winter shadow-md' : 'bg-white text-gray-500 border-gray-200']">
+            {{ person }}
+          </button>
+        </div>
+
+        <div class="space-y-0.5 mb-4">
+          <div v-if="filteredPackingList.length === 0" class="text-center text-gray-400 py-4 text-sm">
+            <i class="fa-solid fa-clipboard-check mb-1"></i><br>目前沒有項目
+          </div>
+          <div v-for="(item, index) in filteredPackingList" :key="item.id" class="flex items-center gap-3 py-0.5 px-2 rounded-lg transition-colors hover:bg-gray-50 group border border-transparent hover:border-gray-100">
+            <label class="flex items-center gap-3 flex-1 cursor-pointer">
+              <div class="relative flex items-center justify-center">
+                <input type="checkbox" :checked="item.checked" @change="togglePackingCheck(item)" class="peer appearance-none w-5 h-5 border-2 border-gray-300 rounded-md checked:bg-winter checked:border-winter transition-colors">
+                <i class="fa-solid fa-check text-white text-xs absolute opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity"></i>
+              </div>
+              <span :class="{'line-through text-gray-400': item.checked, 'text-gray-600': !item.checked}" class="text-[13px] font-medium transition-colors select-none">
+                {{ item.text }}
+              </span>
+            </label>
+            <button @click="deletePackingItem(item.id)" class="text-gray-300 hover:text-red-400 p-1 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mb-2">
+          <input type="text" v-model="newPackingItem" placeholder="新增檢查項目..." class="flex-1 min-w-0 bg-gray-50 rounded-lg px-3 py-2 text-sm outline-none border focus:border-winter" @keyup.enter="addPackingItem">
+          <button @click="addPackingItem" class="bg-winter text-white w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold shadow-sm active:scale-95 transition-transform shrink-0"><i class="fa-solid fa-plus"></i></button>
+        </div>
+        
+        <button v-if="filteredPackingList.length === 0 && currentPackingFilter" @click="checkAndMigrateData(true, currentPackingFilter)" class="w-full py-2 bg-gray-100 text-gray-500 rounded-lg text-sm font-bold hover:bg-gray-200 transition-colors dashed border border-gray-300">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 幫 {{ currentPackingFilter }} 補齊冬季預設項目
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 4: Shopping -->
+    <div v-if="currentTab === 'shopping'">
+      <div class="bg-cyan-50 text-cyan-700 text-[13px] px-4 py-2 rounded-xl mb-4 flex items-center border border-cyan-100 mx-2 shadow-sm animate-pulse mt-2">
+        <i class="fa-solid fa-wallet mr-2 text-cyan-500"></i>
+        溫馨提醒：日本免稅不是免費~ 開心購物，量力而為😆
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 pb-24 animate-slide-up">
+        <div v-for="(item, index) in filteredShoppingList" :key="item.id" @click="openModal('shoppingDetail', item)" class="bg-white rounded-2xl overflow-hidden shadow-card relative group cursor-pointer transition-transform hover:-translate-y-1">
+          <div class="h-32 bg-gray-100 relative overflow-hidden">
+            <img v-if="item.image" :src="item.image" class="w-full h-full object-cover">
+            <div v-else class="w-full h-full flex items-center justify-center text-gray-300"><i class="fa-solid fa-image text-3xl"></i></div>
+          </div>
+          <div class="p-3">
+            <h4 class="font-bold text-gray-700 text-base truncate">{{ item.name }}</h4>
+            <p v-if="item.note" class="text-xs text-gray-400 mt-1 truncate">{{ item.note }}</p>
+            <div class="flex items-center gap-1 mt-2 justify-between">
+                <label class="flex items-center gap-1 cursor-pointer" @click.stop>
+                    <input type="checkbox" :checked="item.bought" @change="toggleShoppingCheck(item)" class="accent-winter w-4 h-4 rounded-full">
+                    <span class="text-sm text-gray-500" :class="{'line-through': item.bought}">已購買</span>
+                </label>
+                <button @click.stop="deleteShoppingItem(item.id)" class="text-gray-300 hover:text-red-400 text-sm p-1 transition-colors"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+          </div>
+        </div>
+        <div v-if="filteredShoppingList.length === 0" class="col-span-2 text-center py-10 text-gray-400">
+            <i class="fa-regular fa-folder-open text-2xl mb-2"></i>
+            <p class="text-sm">尚無購物項目</p>
+        </div>
+      </div>
+      
+      <button @click="openModal('shopping')" class="fixed bottom-24 right-6 w-14 h-14 bg-winter text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-winter-dark transition-colors z-20"><i class="fa-solid fa-plus"></i></button>
+    </div>
+
+    <!-- TAB 5: Expense -->
+    <div v-if="currentTab === 'expense'">
+      <div class="animate-slide-up mt-2">
+          <div class="bg-gradient-to-r from-winter to-winter-dark rounded-2xl p-6 text-white shadow-soft mb-6 text-center transition-all duration-300">
+            <p class="text-base opacity-90 mb-1 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-wallet text-sm"></i>
+                總花費 (JPY)
+            </p>
+            <h2 class="text-4xl font-bold font-mono">¥ {{ filteredTotalExpense.toLocaleString() }}</h2>
+          </div>
+
+          <div class="bg-white rounded-t-2xl shadow-card min-h-[300px] pb-24">
+            <div v-for="(item, index) in filteredExpenses" :key="item.id" class="p-4 border-b border-gray-50 flex justify-between items-center" @click="openModal('expense', item)">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-lg shadow-sm">
+                  <i :class="getExpenseIcon(item.category)" class="text-winter-dark"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-gray-800">{{ item.name }}</h4>
+                  <p class="text-sm text-gray-400">{{ item.date }}</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-gray-800 font-mono">¥{{ Number(item.amount).toLocaleString() }}</p>
+              </div>
+            </div>
+            <div v-if="filteredExpenses.length === 0" class="text-center py-8 text-gray-400 text-base">此分類下無紀錄</div>
+          </div>
+      </div>
+      
+      <button @click="openModal('expense')" class="fixed bottom-24 right-6 w-14 h-14 bg-winter text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-winter-dark transition-colors z-20"><i class="fa-solid fa-plus"></i></button>
+    </div>
+
+    <!-- TAB 6: Notebook -->
+    <div v-if="currentTab === 'notebook'">
+      <div class="grid gap-3 pb-24 animate-slide-up mt-2">
+        <div v-if="filteredNotebookList.length === 0" class="text-center py-10 text-gray-400">
+          <i class="fa-solid fa-book-open text-4xl mb-3 opacity-50"></i><p>這裡空空的，記點什麼吧！</p>
+        </div>
+        <div v-for="note in filteredNotebookList" :key="note.id" class="bg-white p-4 rounded-2xl shadow-card relative group border-l-4 border-winter-light">
+          <h4 class="font-bold text-gray-800 mb-1">{{ note.title }}</h4>
+          <p class="text-base text-gray-600 whitespace-pre-line leading-relaxed">{{ note.content }}</p>
+          <div class="mt-3 flex justify-end items-end border-t border-gray-50 pt-2">
+            <div class="flex gap-3">
+                <button @click="openModal('notebook', note)" class="text-sm text-gray-400 hover:text-winter-dark font-bold"><i class="fa-solid fa-pen mr-1"></i>編輯</button>
+                <button @click="deleteNote(note.id)" class="text-sm text-red-300 hover:text-red-500 font-bold"><i class="fa-solid fa-trash-can mr-1"></i>刪除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <button @click="openModal('notebook')" class="fixed bottom-24 right-6 w-14 h-14 bg-winter text-white rounded-full shadow-lg flex items-center justify-center text-2xl hover:bg-winter-dark transition-colors z-20"><i class="fa-solid fa-plus"></i></button>
+    </div>
+
+  </main>
+
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex justify-around items-center h-20 px-2 pb-2 rounded-t-[20px] shadow-[0_-5px_20px_rgba(0,0,0,0.03)] z-40 max-w-[480px] mx-auto">
+    <button v-for="tab in tabs" :key="tab.id" @click="currentTab = tab.id" class="flex-1 flex flex-col items-center justify-center h-16 transition-all group">
+      <div class="w-12 h-12 flex items-center justify-center rounded-full transition-all" :class="currentTab === tab.id ? 'bg-winter-light text-winter-dark scale-110 shadow-sm' : 'text-gray-400 group-hover:bg-gray-50'">
+        <i :class="tab.icon" class="text-xl"></i>
+      </div>
+    </button>
+  </nav>
+
+  <!-- Input Modal -->
+  <div v-if="modal.show" class="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center animate-fade-in">
+    <div class="bg-white w-full max-w-[480px] rounded-t-[20px] sm:rounded-2xl p-6 shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto relative">
+      
+      <div v-if="modal.type !== 'shoppingDetail'" class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold text-winter-text">{{ modal.title }}</h3>
+        <button @click="closeModal" class="text-gray-400 hover:text-gray-600"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+
+      <div class="space-y-4">
+        <template v-if="modal.type === 'itinerary'">
+             <div class="text-gray-500 text-center py-10">此行程為唯讀模式</div>
+        </template>
+
+        <template v-if="modal.type === 'shopping'">
+            <div><label class="block text-sm font-medium text-gray-500 mb-1">商品名稱</label><input type="text" v-model="formData.name" class="w-full bg-gray-50 rounded-xl p-3 border focus:border-winter outline-none"></div>
+            <div>
+                 <label class="block text-sm font-medium text-gray-500 mb-1">圖片</label>
+                 <div class="relative w-full h-32 bg-gray-100 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300 overflow-hidden">
+                    <input type="file" @change="handleImageUpload" class="absolute inset-0 opacity-0 cursor-pointer">
+                    <img v-if="formData.image" :src="formData.image" class="w-full h-full object-cover">
+                    <div v-else class="text-center text-gray-400"><i class="fa-solid fa-camera mb-1"></i><p class="text-sm">點擊上傳圖片</p></div>
+                 </div>
+            </div>
+            <div>
+                 <label class="block text-sm font-medium text-gray-500 mb-1">備註</label>
+                 <textarea v-model="formData.note" class="w-full bg-gray-50 rounded-xl p-3 h-20 border focus:border-winter outline-none" placeholder="輸入備註資訊..."></textarea>
+            </div>
+        </template>
+
+        <template v-if="modal.type === 'shoppingDetail'">
+            <div class="-mt-6 -mx-6 mb-5 relative bg-gray-100 sm:rounded-t-2xl rounded-t-[20px] overflow-hidden flex items-center justify-center" :class="formData.image ? 'h-64' : 'h-32'">
+                <img v-if="formData.image" :src="formData.image" class="w-full h-full object-contain bg-black/5">
+                <i v-else class="fa-solid fa-image text-5xl text-gray-300"></i>
+                <button @click="closeModal" class="absolute top-4 right-4 w-8 h-8 bg-black/40 text-white rounded-full flex items-center justify-center backdrop-blur-md hover:bg-black/60 transition-colors z-10">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="px-2 pb-2">
+                <div class="flex justify-between items-start mb-2">
+                    <div class="flex-1 pr-4">
+                        <h3 class="text-2xl font-bold text-gray-800 leading-tight">{{ formData.name }}</h3>
+                    </div>
+                    <label class="flex flex-col items-center gap-1 cursor-pointer bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100 shrink-0">
+                        <input type="checkbox" :checked="formData.bought" @change="toggleShoppingCheck(formData); formData.bought = !formData.bought" class="accent-winter w-5 h-5 rounded-full">
+                        <span class="text-[10px] font-bold text-gray-500">{{ formData.bought ? '已購買' : '未購買' }}</span>
+                    </label>
+                </div>
+                
+                <div class="mt-4">
+                    <h4 class="text-sm font-bold text-gray-400 mb-1.5 flex items-center"><i class="fa-solid fa-file-lines mr-1.5"></i>備註</h4>
+                    <div class="bg-gray-50 p-4 rounded-xl text-sm text-gray-600 leading-relaxed whitespace-pre-line border border-gray-100 min-h-[80px]">
+                        {{ formData.note || '沒有填寫備註' }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex gap-3 px-2">
+                <button @click="openModal('shopping', formData)" class="flex-1 bg-winter text-white font-bold py-3.5 rounded-xl shadow-soft hover:bg-winter-dark transition-colors flex items-center justify-center">
+                    <i class="fa-solid fa-pen mr-2"></i>編輯內容
+                </button>
+            </div>
+        </template>
+        
+        <template v-if="modal.type === 'expense'">
+            <div><label class="block text-sm font-medium text-gray-500 mb-1">日期</label><select v-model="formData.date" class="w-full bg-gray-50 rounded-xl p-3"><option v-for="d in days" :value="d.dateStr">{{d.displayDate}}</option></select></div>
+            <div><label class="block text-sm font-medium text-gray-500 mb-1">類別</label>
+                <select v-model="formData.category" class="w-full bg-gray-50 rounded-xl p-3">
+                    <option value="food">飲食</option><option value="transport">交通</option><option value="shopping">購物</option><option value="ticket">門票</option><option value="accommodation">住宿</option><option value="investment">投資</option><option value="other">其他</option>
+                </select>
+            </div>
+            <div><label class="block text-sm font-medium text-gray-500 mb-1">項目</label><input type="text" v-model="formData.name" class="w-full bg-gray-50 rounded-xl p-3 border focus:border-winter outline-none"></div>
+            <div><label class="block text-sm font-medium text-gray-500 mb-1">金額 (JPY)</label><input type="number" v-model="formData.amount" class="w-full bg-gray-50 rounded-xl p-3 text-xl font-mono border focus:border-winter outline-none"></div>
+        </template>
+
+        <template v-if="modal.type === 'notebook'">
+            <div><label class="block text-sm font-medium text-gray-500 mb-1">標題</label><input type="text" v-model="formData.title" class="w-full bg-gray-50 rounded-xl p-3 border focus:border-winter outline-none"></div>
+            <div>
+                <label class="block text-sm font-medium text-gray-500 mb-1">內容</label>
+                <textarea v-model="formData.content" placeholder="請輸入備忘錄內容..." class="w-full bg-gray-50 rounded-xl p-3 h-32 border focus:border-winter outline-none"></textarea>
+            </div>
+        </template>
+      </div>
+
+      <div class="mt-6 flex gap-3" v-if="modal.type !== 'itinerary' && modal.type !== 'shoppingDetail'">
+        <button v-if="modal.isEdit" @click="deleteCurrentItem" class="flex-1 bg-red-50 text-red-500 font-bold py-3 rounded-xl hover:bg-red-100 transition-colors">刪除</button>
+        <button @click="submitForm" class="flex-[2] bg-winter text-white font-bold py-3 rounded-xl shadow-soft hover:bg-winter-dark transition-colors flex items-center justify-center">
+            <i v-if="isSaving" class="fa-solid fa-spinner fa-spin mr-2"></i>
+            {{ isSaving ? '儲存中...' : (modal.isEdit ? '儲存變更' : '新增') }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crop Modal -->
+  <div v-if="cropState.show" class="fixed inset-0 bg-black z-[70] flex flex-col animate-fade-in">
+    <div class="flex justify-between items-center p-4 bg-black text-white">
+        <h3 class="font-bold text-lg">裁切圖片</h3>
+        <button @click="closeCropModal"><i class="fa-solid fa-xmark text-2xl"></i></button>
+    </div>
+    <div class="flex-1 w-full relative overflow-hidden bg-black flex items-center justify-center">
+        <img id="crop-image" :src="cropState.src" style="display: block; max-width: 100%; max-height: 100%;">
+    </div>
+    <div class="p-6 bg-black pb-12 flex gap-4">
+        <button @click="closeCropModal" class="flex-1 bg-gray-800 text-white font-bold py-3 rounded-xl border border-gray-700">取消</button>
+        <button @click="confirmCrop" class="flex-[2] bg-winter text-white font-bold py-3 rounded-xl">確認裁切</button>
+    </div>
+  </div>
+  
+  <!-- Confirm Modal -->
+  <div v-if="confirmState.show" class="fixed inset-0 z-[60] flex items-center justify-center px-4 bg-black/20 backdrop-blur-sm animate-fade-in">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl transform transition-all scale-100 glass-modal border border-white/50">
+      <div class="text-center">
+        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-winter-light mb-4">
+          <i class="fa-solid fa-question text-winter text-xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">請確認</h3>
+        <p class="text-base text-gray-500 mb-6 whitespace-pre-line">{{ confirmState.message }}</p>
+      </div>
+      <div class="flex gap-3">
+        <button type="button" class="flex-1 rounded-xl border border-gray-300 bg-white px-4 py-2 text-base font-bold text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none" @click="handleConfirm(false)">
+          取消
+        </button>
+        <button type="button" class="flex-1 rounded-xl bg-winter px-4 py-2 text-base font-bold text-white shadow-sm hover:bg-winter-dark focus:outline-none" @click="handleConfirm(true)">
+          確定
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div v-if="toastState.show" class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[70] animate-fade-in">
+    <div class="bg-gray-800/90 text-white px-6 py-3 rounded-full shadow-xl backdrop-blur-md flex items-center gap-3 border border-white/10">
+      <i class="fa-solid fa-circle-info text-winter"></i>
+      <span class="text-base font-bold">{{ toastState.message }}</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- DATA SEEDING (冬季範例資料) -->
+<script>
+  window.__FULL_ITINERARY_DATA__ = [
+    { id: 1, date: '2026-12-05', category: 'flight', name: '航班 IT-280 KHH->NRT', time: '06:55', travelTime: 0, transportType: 'flight', note: '起飛 06:55 / 抵達 11:10', description: '準備飛往東京成田機場，感受日本冬日風情！' },
+    { id: 2, date: '2026-12-05', category: 'transport', name: '成田機場前往市區', time: '13:00', travelTime: 60, transportType: 'transit', note: '搭乘 Skyliner', description: '轉乘至飯店放行李。' },
+    { id: 3, date: '2026-12-06', category: 'attraction', name: '六本木 聖誕點燈', time: '18:00', travelTime: 0, transportType: 'walk', note: '東京必看浪漫夜景', description: '整條街掛滿閃耀的藍白燈飾，搭配遠處的東京鐵塔，是冬季限定的絕美景色。記得穿戴保暖毛帽喔！' },
+    { id: 10, date: '2026-12-07', category: 'attraction', name: '淺草雷門 & 晴空塔', time: '10:00', travelTime: 0, transportType: 'walk', note: '經典東京行程', description: '早晨在淺草寺參拜，下午前往晴空塔俯瞰東京市景。' },
+    { id: 4, date: '2026-12-08', category: 'attraction', name: '橫濱 紅磚倉庫聖誕市集', time: '15:30', travelTime: 0, transportType: 'walk', note: '喝杯熱紅酒', description: '濃濃異國風情的聖誕市集！可以在這裡品嚐德國香腸、熱紅酒，感受橫濱港灣的冷空氣與溫暖燈光。' },
+    { id: 5, date: '2026-12-09', category: 'attraction', name: '鎌倉 鶴岡八幡宮 & 大佛', time: '10:00', travelTime: 0, transportType: 'walk', note: '古都漫遊', description: '搭乘江之電漫遊湘南海岸，冬天的海風非常強烈，請務必戴上圍巾與手套。' },
+    { id: 6, date: '2026-12-10', category: 'attraction', name: '富士山 河口湖', time: '09:00', travelTime: 0, transportType: 'walk', note: '冬季富士山能見度最高', description: '12月是看到富士山全貌機率最高的月份！山頂的白雪搭配清澈的藍天，絕對是此行亮點。(請注意當地可能氣溫為零下)' },
+    { id: 7, date: '2026-12-11', category: 'attraction', name: '忍野八海 & 富士急樂園', time: '10:00', travelTime: 0, transportType: 'walk', note: '富士山周邊', description: '欣賞清澈的湧泉與壯麗的富士山景。' },
+    { id: 8, date: '2026-12-12', category: 'shopping', name: '新宿 / 澀谷 採買', time: '11:00', travelTime: 0, transportType: 'walk', note: '最後衝刺', description: '把握最後一天在東京市區大採購！' },
+    { id: 9, date: '2026-12-13', category: 'flight', name: '航班 IT-281 NRT->KHH', time: '13:00', travelTime: 0, transportType: 'flight', note: '起飛 13:00 / 抵達 16:40', description: '帶著滿滿的雪國回憶準備回家囉！' }
+  ];
+</script>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+  import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
+  
+  const { createApp, ref, computed, reactive, onMounted, watch } = Vue;
+
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDc1X5CFJc7ThluEmPN--uVKxSfrlZavek",
+    authDomain: "osa0402test.firebaseapp.com",
+    projectId: "osa0402test",
+    storageBucket: "osa0402test.firebasestorage.app",
+    messagingSenderId: "49893570598",
+    appId: "1:49893570598:web:c334c87afbd84ee329cee7",
+    measurementId: "G-HTNRTFVN0S"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  
+  // 更新 TRIP_ID 為冬季新模板，避免混淆原資料
+  const TRIP_ID = "kanto_winter_2026_template";
+
+  createApp({
+    setup() {
+      const showSplash = ref(true);
+      const currentTab = ref('itinerary');
+      const tabs = [
+        { id: 'itinerary', name: '行程表', icon: 'fa-solid fa-map-location-dot' },
+        { id: 'info', name: '資訊', icon: 'fa-solid fa-circle-info' },
+        { id: 'shopping', name: '購物', icon: 'fa-solid fa-basket-shopping' },
+        { id: 'expense', name: '花費', icon: 'fa-solid fa-yen-sign' },
+        { id: 'notebook', name: '筆記', icon: 'fa-solid fa-book' }
+      ];
+      
+      // 換回上一張漂亮的冬季富士山美景
+      const bannerImage = ref('https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=1200&q=80');
+      const handleImageError = () => { bannerImage.value = 'https://placehold.co/800x400/e8f0fe/2b65c3?text=Winter+Fuji'; };
+      
+      const tripStartDate = new Date('2026-12-05T00:00:00'); 
+      
+      const daysUntilTrip = computed(() => {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const start = new Date(tripStartDate.getFullYear(), tripStartDate.getMonth(), tripStartDate.getDate());
+        const diffTime = start - today;
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      });
+      
+      const planningDate = new Date('2026-01-01T00:00:00'); 
+      const tripProgress = computed(() => {
+          const total = tripStartDate - planningDate;
+          const elapsed = new Date() - planningDate;
+          let p = Math.floor((elapsed / total) * 100);
+          if(p < 0) p = 0;
+          if(p > 100) p = 100;
+          return p;
+      });
+      
+      const travelers = ref(['翔', '君']);
+      const packingPeople = ref(['翔', '君']);
+
+      // 設定 12月份的東京、橫濱、鎌倉、富士山 (共 9 天)
+      const days = [
+        { dateStr: '2026-12-05', displayDate: '12/05', dayOfWeek: '週六', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-06', displayDate: '12/06', dayOfWeek: '週日', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-07', displayDate: '12/07', dayOfWeek: '週一', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-08', displayDate: '12/08', dayOfWeek: '週二', mainCity: '橫濱', locations: [{name:'橫濱', lat:35.4437, lng:139.6380}, {name:'東京', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-09', displayDate: '12/09', dayOfWeek: '週三', mainCity: '鎌倉', locations: [{name:'鎌倉', lat:35.3192, lng:139.5467}] },
+        { dateStr: '2026-12-10', displayDate: '12/10', dayOfWeek: '週四', mainCity: '富士山', locations: [{name:'富士山', lat:35.3606, lng:138.7274}] },
+        { dateStr: '2026-12-11', displayDate: '12/11', dayOfWeek: '週五', mainCity: '富士山', locations: [{name:'富士山', lat:35.3606, lng:138.7274}] },
+        { dateStr: '2026-12-12', displayDate: '12/12', dayOfWeek: '週六', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-13', displayDate: '12/13', dayOfWeek: '週日', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] }
+      ];
+
+      const selectedDate = ref(days[0].dateStr);
+
+      const isTigerairInfoExpanded = ref(false);
+      const isExchangeWarningExpanded = ref(false); 
+
+      // Firebase states
+      const itineraryList = ref([]);
+      const shoppingList = ref([]);
+      const expenses = ref([]);
+      const notebookList = ref([]);
+      const packingList = ref([]);
+      const firebaseStatus = ref('connecting'); 
+      const isSaving = ref(false);
+      const migrationStatus = ref('');
+      
+      const currentPackingFilter = ref('翔');
+      const newPackingItem = ref('');
+
+      // === 修復並加入安全檢查：滑鼠拖曳支援 ===
+      const dateContainer = ref(null);
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+      let isDragging = false;
+
+      const startDrag = (e) => {
+        if (!dateContainer.value) return; // 安全檢查，避免因 v-if 切換導致的報錯
+        isDown = true;
+        isDragging = false;
+        startX = e.pageX - dateContainer.value.offsetLeft;
+        scrollLeft = dateContainer.value.scrollLeft;
+      };
+      const stopDrag = () => {
+        isDown = false;
+      };
+      const doDrag = (e) => {
+        if (!isDown || !dateContainer.value) return; // 安全檢查
+        const x = e.pageX - dateContainer.value.offsetLeft;
+        if (Math.abs(x - startX) > 5) { // 滑動超過 5px 才判定為拖曳
+            isDragging = true;
+        }
+        if (isDragging) {
+            e.preventDefault();
+            const walk = (x - startX) * 2; // 調整滑動速度
+            dateContainer.value.scrollLeft = scrollLeft - walk;
+        }
+      };
+
+      const selectDate = (dateStr) => {
+          if (!isDragging) {
+              selectedDate.value = dateStr;
+          }
+      };
+      // ==========================================
+
+      const confirmState = reactive({ show: false, message: '', resolve: null });
+      const toastState = reactive({ show: false, message: '' });
+
+      const showToast = (msg) => {
+        toastState.message = msg;
+        toastState.show = true;
+        setTimeout(() => toastState.show = false, 3000);
+      };
+
+      const askConfirm = (msg) => {
+        confirmState.message = msg;
+        confirmState.show = true;
+        return new Promise((resolve) => {
+            confirmState.resolve = resolve;
+        });
+      };
+
+      const handleConfirm = (result) => {
+        confirmState.show = false;
+        if(confirmState.resolve) {
+            confirmState.resolve(result);
+            confirmState.resolve = null;
+        }
+      };
+
+      const subscribeCollection = (colName, targetRef, orderByField = null) => {
+        let q = collection(db, 'trips', TRIP_ID, colName);
+        if (orderByField) q = query(q, orderBy(orderByField));
+        
+        onSnapshot(q, (snapshot) => {
+            const data = [];
+            snapshot.forEach(doc => {
+                data.push({ id: doc.id, ...doc.data() });
+            });
+            targetRef.value = data;
+            firebaseStatus.value = 'connected';
+        }, (err) => {
+            console.error("Sync error:", err);
+            firebaseStatus.value = 'error';
+        });
+      };
+
+      const updateItineraryContentOnly = async () => {
+          if(!(await askConfirm('即將重置範本資料至清單中。確定執行？'))) return;
+          
+          migrationStatus.value = "正在更新資料...";
+          const itinToUpload = window.__FULL_ITINERARY_DATA__ || [];
+          
+          try {
+             const q = collection(db, 'trips', TRIP_ID, 'itinerary');
+             const snapshot = await getDocs(q);
+             const existingItems = [];
+             snapshot.forEach(doc => existingItems.push({ _docId: doc.id, ...doc.data() }));
+
+             if (Array.isArray(itinToUpload)) {
+                 for (const item of itinToUpload) {
+                      const match = existingItems.find(ex => ex.name === item.name && ex.date === item.date);
+                      if (match) {
+                          await setDoc(doc(db, 'trips', TRIP_ID, 'itinerary', match._docId), item, { merge: true });
+                      } else {
+                          const id = item.id ? String(item.id) : Date.now().toString();
+                          await setDoc(doc(db, 'trips', TRIP_ID, 'itinerary', id), item);
+                      }
+                 }
+             }
+             showToast("資料已更新完畢！");
+          } catch(e) {
+             showToast("更新失敗：" + e.message);
+          } finally {
+             migrationStatus.value = "";
+          }
+      };
+
+      // 補齊冬季打包清單
+      const checkAndMigrateData = async (force = false, specificPerson = null) => {
+          migrationStatus.value = "檢查行李清單...";
+          const defaultItems = [
+               '護照 (有效期6個月以上)', 'Visit Japan Web QRcode', '網卡 / eSIM', '日幣現金 / 信用卡',
+               '行動電源 (需隨身攜帶)', '發熱衣 / 保暖內衣', '防風大衣 / 羽絨外套', '毛帽 / 手套 / 圍巾', '暖暖包', '護唇膏 / 保濕乳液'
+          ];
+          
+          let updateCount = 0;
+          const targets = specificPerson ? [specificPerson] : packingPeople.value;
+          
+          for (const p of targets) {
+               for (const txt of defaultItems) {
+                   const safeId = (p + '_' + txt).replace(/[\/\s]/g, '');
+                   await setDoc(doc(db, 'trips', TRIP_ID, 'packing', safeId), { 
+                       text: txt, 
+                       owner: p, 
+                       checked: false,
+                       createdAt: serverTimestamp() 
+                   }, { merge: true });
+               }
+               updateCount++;
+          }
+          migrationStatus.value = "";
+          if (updateCount > 0) showToast('已成功補齊冬季預設項目！');
+      };
+      
+      const reconnectFirebase = () => window.location.reload();
+
+      const filteredItinerary = computed(() => 
+        itineraryList.value
+            .filter(i => i.date === selectedDate.value)
+            .sort((a,b) => (a.time || '').localeCompare(b.time || ''))
+      );
+
+      const filteredShoppingList = computed(() => {
+        return shoppingList.value;
+      });
+
+      const filteredExpenses = computed(() => {
+        return expenses.value;
+      });
+
+      const filteredTotalExpense = computed(() => filteredExpenses.value.reduce((sum, item) => sum + Number(item.amount||0), 0));
+      const totalExpense = computed(() => expenses.value.reduce((sum, item) => sum + Number(item.amount||0), 0)); 
+      
+      const filteredPackingList = computed(() => {
+        return packingList.value
+          .filter(p => p.owner === currentPackingFilter.value)
+          .sort((a, b) => {
+             const getScore = (item) => {
+                 if (item.createdAt === undefined) return 0;
+                 if (item.createdAt === null) return 99999999999;
+                 return item.createdAt.seconds || 0;
+             };
+             return getScore(a) - getScore(b);
+          });
+      });
+
+      const filteredNotebookList = computed(() => {
+          return notebookList.value;
+      });
+
+      const modal = reactive({ show: false, type: '', title: '', isEdit: false });
+      const formData = reactive({});
+      const cropState = reactive({ show: false, src: '', cropper: null });
+
+      const openModal = (type, item = null) => {
+        if (type === 'itinerary' && item) return; 
+        if (type === 'itinerary' && !item) return;
+
+        const clonedItem = item ? JSON.parse(JSON.stringify(item)) : null;
+
+        modal.type = type;
+        modal.show = true;
+        modal.isEdit = !!item;
+        
+        Object.keys(formData).forEach(k => delete formData[k]);
+        
+        if (clonedItem) {
+            modal.title = type === 'shoppingDetail' ? '商品詳情' : '編輯';
+            Object.assign(formData, clonedItem); 
+        } else {
+            modal.title = '新增';
+            if (type === 'shopping') {
+                Object.assign(formData, { bought: false });
+            }
+            if (type === 'expense') {
+                Object.assign(formData, { date: selectedDate.value, category: 'food' });
+            }
+        }
+      };
+      
+      const closeModal = () => modal.show = false;
+
+      const submitForm = async () => {
+        isSaving.value = true;
+        try {
+            const colName = modal.type === 'shopping' ? 'shopping' : 
+                          modal.type === 'expense' ? 'expenses' : 'notebook';
+            
+            const docId = formData.id ? String(formData.id) : (Date.now().toString() + Math.random().toString().slice(2,6));
+            const docRef = doc(db, 'trips', TRIP_ID, colName, docId);
+            
+            const payload = { ...formData };
+            if(payload.id) payload.id = String(payload.id);
+
+            await setDoc(docRef, payload, { merge: true });
+            closeModal();
+            firebaseStatus.value = 'connected';
+        } catch(e) {
+            console.error(e);
+            firebaseStatus.value = 'error'; 
+            showToast("儲存失敗: " + e.message);
+        } finally {
+            isSaving.value = false;
+        }
+      };
+
+      const deleteCurrentItem = async () => {
+         if(!(await askConfirm('確定刪除？'))) return;
+         const colName = modal.type === 'shopping' ? 'shopping' : 
+                          modal.type === 'expense' ? 'expenses' : 'notebook';
+         await deleteDoc(doc(db, 'trips', TRIP_ID, colName, String(formData.id)));
+         closeModal();
+      };
+      
+      const deleteNote = async(id) => {
+         if(!(await askConfirm('刪除筆記？'))) return;
+         await deleteDoc(doc(db, 'trips', TRIP_ID, 'notebook', String(id)));
+      };
+
+      const deleteShoppingItem = async (id) => {
+        if(await askConfirm('刪除此商品？')) await deleteDoc(doc(db, 'trips', TRIP_ID, 'shopping', String(id)));
+      };
+      const toggleShoppingCheck = async (item) => {
+        await updateDoc(doc(db, 'trips', TRIP_ID, 'shopping', String(item.id)), { bought: !item.bought });
+      };
+
+      const addPackingItem = async () => {
+        if (!newPackingItem.value.trim()) return;
+        const docId = Date.now().toString();
+        await setDoc(doc(db, 'trips', TRIP_ID, 'packing', docId), {
+            text: newPackingItem.value,
+            owner: currentPackingFilter.value,
+            checked: false,
+            createdAt: serverTimestamp()
+        });
+        newPackingItem.value = '';
+      };
+      const togglePackingCheck = async (item) => {
+        await updateDoc(doc(db, 'trips', TRIP_ID, 'packing', String(item.id)), { checked: !item.checked });
+      };
+      const deletePackingItem = async (id) => {
+        if(await askConfirm('移除？')) await deleteDoc(doc(db, 'trips', TRIP_ID, 'packing', String(id)));
+      };
+
+      const weatherData = reactive({ 
+          city: '載入中', temp: '--', maxTemp: '--', minTemp: '--', 
+          humidity: '--', windSpeed: '--', rain: '--', pressure: '--', visibility: '--', uvIndex: '--', 
+          sunrise: '--', sunset: '--', 
+          icon: 'fa-solid fa-spinner', description: '載入中...', clothing: '...', iconColor: '#ccc', 
+          apparentTemp: '--', forecast: [], hourly: [] 
+      });
+      const weatherLoading = ref(false);
+      const isWeatherExpanded = ref(false);
+      const toggleWeather = () => isWeatherExpanded.value = !isWeatherExpanded.value;
+      const currentDayCities = computed(() => {
+          const d = days.find(x => x.dateStr === selectedDate.value);
+          return d ? d.locations : [];
+      });
+
+      const getClothingAdvice = (avg, max, min) => {
+        if (max < 5) return "極度寒冷，可能有雪！請穿著防風防水大衣、發熱衣、毛帽、手套及防滑鞋。";
+        if (max < 12) return "天氣寒冷，請穿著保暖大衣、圍巾、手套，建議採用洋蔥式穿法應對室內暖氣。";
+        if (max < 18) return "稍有寒意，建議穿著厚毛衣、防風外套或輕羽絨，早晚溫差大。";
+        return "氣溫舒適，可穿輕便長袖搭配外套。";
+      };
+
+      const getWeatherInfo = (code, isDay) => {
+        if (code === 0) return { desc: '晴朗', icon: isDay ? 'fa-solid fa-sun' : 'fa-solid fa-moon', color: '#fbbf24' };
+        if (code <= 3) return { desc: '多雲', icon: isDay ? 'fa-solid fa-cloud-sun' : 'fa-solid fa-cloud-moon', color: '#fbbf24' };
+        if (code <= 67) return { desc: '下雨', icon: 'fa-solid fa-umbrella', color: '#3b82f6' };
+        if (code <= 79) return { desc: '下雪', icon: 'fa-solid fa-snowflake', color: '#93c5fd' };
+        return { desc: '陣雨/雪', icon: 'fa-solid fa-cloud-showers-heavy', color: '#2563eb' };
+      };
+
+      const changeWeatherCity = async (city) => {
+          weatherLoading.value = true;
+          weatherData.city = city.name;
+          try {
+              const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m,surface_pressure,visibility,cloud_cover&hourly=temperature_2m,weather_code,precipitation_probability,is_day&daily=weather_code,sunrise,sunset,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto`);
+              const data = await res.json();
+              
+              const current = data.current;
+              const daily = data.daily;
+              const hourly = data.hourly;
+
+              weatherData.temp = Math.round(current.temperature_2m);
+              weatherData.apparentTemp = Math.round(current.apparent_temperature);
+              weatherData.humidity = current.relative_humidity_2m;
+              weatherData.windSpeed = current.wind_speed_10m;
+              weatherData.rain = current.precipitation;
+              weatherData.pressure = Math.round(current.surface_pressure);
+              weatherData.visibility = (current.visibility / 1000).toFixed(1); 
+              
+              if(daily.sunrise.length > 0) {
+                  weatherData.sunrise = daily.sunrise[0].split('T')[1];
+                  weatherData.sunset = daily.sunset[0].split('T')[1];
+              }
+
+              weatherData.maxTemp = Math.round(daily.temperature_2m_max[0]);
+              weatherData.minTemp = Math.round(daily.temperature_2m_min[0]);
+              
+              const info = getWeatherInfo(current.weather_code, current.is_day === 1);
+              weatherData.description = info.desc;
+              weatherData.icon = info.icon;
+              weatherData.iconColor = info.color;
+              weatherData.clothing = getClothingAdvice(weatherData.temp, weatherData.maxTemp, weatherData.minTemp);
+
+              const forecastList = [];
+              const weekDays = ['週日', '週一', '週二', '週三', '週四', '週五', '週六'];
+              for (let i = 1; i <= 3; i++) {
+                 if (daily.time[i]) {
+                     const d = new Date(daily.time[i]);
+                     const code = daily.weather_code[i];
+                     const fInfo = getWeatherInfo(code, true);
+                     forecastList.push({
+                         dayName: weekDays[d.getDay()],
+                         max: Math.round(daily.temperature_2m_max[i]),
+                         min: Math.round(daily.temperature_2m_min[i]),
+                         pop: daily.precipitation_probability_max ? daily.precipitation_probability_max[i] : 0,
+                         icon: fInfo.icon,
+                         color: fInfo.color
+                     });
+                 }
+              }
+              weatherData.forecast = forecastList;
+
+              const hourlyList = [];
+              const now = new Date();
+              const currentHourIndex = hourly.time.findIndex(t => new Date(t) > now); 
+              
+              if (currentHourIndex !== -1) {
+                  for (let i = currentHourIndex; i < currentHourIndex + 24; i++) {
+                      if (!hourly.time[i]) break;
+                      const t = new Date(hourly.time[i]);
+                      const code = hourly.weather_code[i];
+                      const isDay = hourly.is_day[i] === 1;
+                      const hInfo = getWeatherInfo(code, isDay);
+                      
+                      hourlyList.push({
+                          time: t.getHours().toString().padStart(2, '0') + ':00',
+                          temp: Math.round(hourly.temperature_2m[i]),
+                          icon: hInfo.icon,
+                          color: hInfo.color,
+                          pop: hourly.precipitation_probability[i]
+                      });
+                  }
+              }
+              weatherData.hourly = hourlyList;
+
+          } catch(e) { console.error(e); }
+          finally { setTimeout(() => weatherLoading.value=false, 500); }
+      };
+
+      const exchange = reactive({ jpy: '', twd: '' });
+      const currentRate = ref(0.218); // Default fallback
+      const rateUpdateDate = ref('');
+      
+      const fetchExchangeRate = async () => {
+         try {
+            const res = await fetch('https://api.exchangerate-api.com/v4/latest/JPY');
+            const data = await res.json();
+            const marketRate = data.rates.TWD; 
+            currentRate.value = marketRate + 0.002; // Simulate bank spread
+            rateUpdateDate.value = data.date;
+         } catch(e) {
+            console.error("Exchange rate fetch failed", e);
+         }
+      };
+      
+      const calcTwd = () => {
+        if(!exchange.jpy) { exchange.twd = ''; return; }
+        exchange.twd = parseFloat((exchange.jpy * currentRate.value).toFixed(2));
+      };
+      const calcJpy = () => {
+        if(!exchange.twd) { exchange.jpy = ''; return; }
+        exchange.jpy = parseFloat((exchange.twd / currentRate.value).toFixed(2));
+      };
+
+      const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            cropState.src = evt.target.result;
+            cropState.show = true;
+            
+            setTimeout(() => {
+                const image = document.getElementById('crop-image');
+                if (cropState.cropper) {
+                    cropState.cropper.destroy();
+                }
+                cropState.cropper = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    dragMode: 'move',
+                    background: false,
+                    autoCropArea: 0.9,
+                });
+            }, 100);
+        };
+        reader.readAsDataURL(file);
+        e.target.value = ''; 
+      };
+
+      const confirmCrop = () => {
+        if (!cropState.cropper) return;
+        const canvas = cropState.cropper.getCroppedCanvas({
+            width: 800,
+            height: 800,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high',
+        });
+        formData.image = canvas.toDataURL('image/jpeg', 0.6); 
+        closeCropModal();
+      };
+
+      const closeCropModal = () => {
+        if (cropState.cropper) {
+            cropState.cropper.destroy();
+            cropState.cropper = null;
+        }
+        cropState.show = false;
+        cropState.src = '';
+      };
+      
+      const handleBannerUpload = (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            bannerImage.value = evt.target.result;
+            // 更新暫存 Key 為 v7
+            localStorage.setItem('trip_banner_image_winter_v7', evt.target.result);
+        };
+        reader.readAsDataURL(file);
+      };
+
+      const openMap = (name) => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`);
+
+      const getCategoryLabel = (c) => ({attraction:'景點',food:'美食',shopping:'購物',transport:'交通',flight:'航班',accommodation:'住宿',other:'其他'}[c]||c);
+      const getCategoryColor = (c) => ({attraction:'bg-red-100 text-red-500',food:'bg-orange-100 text-orange-500',shopping:'bg-pink-100 text-pink-500',flight:'bg-blue-100 text-blue-500', transport:'bg-green-100 text-green-600', accommodation:'bg-purple-100 text-purple-500'}[c]||'bg-gray-100 text-gray-500');
+      const getExpenseIcon = (c) => ({food:'fa-solid fa-utensils',transport:'fa-solid fa-train',shopping:'fa-solid fa-bag-shopping',accommodation:'fa-solid fa-bed',ticket:'fa-solid fa-ticket', investment:'fa-solid fa-chart-line'}[c]||'fa-solid fa-yen-sign');
+      const getTransportIcon = (t) => t==='walk'?'fa-solid fa-person-walking':(t==='flight'?'fa-solid fa-plane':'fa-solid fa-train-subway');
+
+      onMounted(() => {
+        setTimeout(() => showSplash.value = false, 3000);
+        
+        // 讀取最新的 v7 暫存，避免吃到舊圖片
+        const savedBanner = localStorage.getItem('trip_banner_image_winter_v7');
+        if(savedBanner) bannerImage.value = savedBanner;
+        
+        try {
+            signInAnonymously(auth).then(async () => {
+                subscribeCollection('itinerary', itineraryList);
+                subscribeCollection('shopping', shoppingList);
+                subscribeCollection('expenses', expenses);
+                subscribeCollection('notebook', notebookList);
+                subscribeCollection('packing', packingList);
+                
+                const d = days.find(x => x.dateStr === selectedDate.value);
+                if(d && d.locations) changeWeatherCity(d.locations[0]);
+                fetchExchangeRate();
+
+            }).catch(err => {
+                console.error("Auth failed", err);
+                firebaseStatus.value = 'error';
+                showSplash.value = false;
+            });
+        } catch(e) {
+            console.error("Init failed", e);
+            showSplash.value = false;
+        }
+      });
+
+      return {
+        showSplash, currentTab, tabs, bannerImage, handleImageError, daysUntilTrip,
+        days, selectedDate, travelers, packingPeople,
+        tripProgress, 
+        
+        // 導出滑鼠拖曳方法
+        dateContainer, startDrag, stopDrag, doDrag, selectDate,
+
+        filteredItinerary, filteredShoppingList, expenses, totalExpense, filteredTotalExpense, notebookList, filteredPackingList, filteredExpenses, filteredNotebookList,
+        currentPackingFilter, newPackingItem,
+        
+        openModal, closeModal, modal, formData, submitForm, deleteCurrentItem, isSaving,
+        deleteShoppingItem, toggleShoppingCheck,
+        addPackingItem, togglePackingCheck, deletePackingItem, deleteNote,
+        updateItineraryContentOnly, 
+        checkAndMigrateData, 
+        TRIP_ID, 
+
+        weatherData, isWeatherExpanded, toggleWeather, weatherLoading, currentDayCities, changeWeatherCity,
+        exchange, currentRate, calcTwd, calcJpy, rateUpdateDate,
+        getCategoryLabel, getCategoryColor, getExpenseIcon, getTransportIcon, handleImageUpload, openMap,
+        firebaseStatus, reconnectFirebase, migrationStatus,
+        isTigerairInfoExpanded, isExchangeWarningExpanded, 
+        handleBannerUpload,
+        
+        cropState, confirmCrop, closeCropModal,
+        confirmState, toastState, handleConfirm
+      };
+    }
+  }).mount('#app');
+</script>
+</body>
+</html>
