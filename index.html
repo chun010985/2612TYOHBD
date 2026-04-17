@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -121,7 +122,7 @@
     </div>
   </div>
 
-  <!-- 全域飄雪效果 (純 CSS，連續不斷版，零流量消耗) -->
+  <!-- 全域飄雪效果 -->
   <div class="fixed inset-0 pointer-events-none z-[45] overflow-hidden opacity-70 mix-blend-screen" aria-hidden="true">
     <span class="snowflake w-1.5 h-1.5 animate-fall-1" style="--start-left: 5%; animation-duration: 10s; animation-delay: -2s;"></span>
     <span class="snowflake w-2.5 h-2.5 animate-fall-1" style="--start-left: 15%; animation-duration: 14s; animation-delay: -6s;"></span>
@@ -204,7 +205,7 @@
           class="flex-shrink-0 flex flex-col items-center justify-center w-[72px] h-[88px] transition-all duration-300 relative focus:outline-none rounded-[22px] border group snap-start"
           :class="selectedDate === day.dateStr ? 'bg-gradient-to-b from-winter to-winter-dark border-transparent shadow-[0_8px_20px_-4px_rgba(43,101,195,0.5)] transform -translate-y-2 scale-105' : 'bg-white border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:-translate-y-1 hover:border-winter-light'">
           
-          <!-- 雪花標記 (選中時顯示，已放大) -->
+          <!-- 雪花標記 -->
           <div class="absolute -top-4 transition-opacity duration-300" :class="selectedDate === day.dateStr ? 'opacity-100' : 'opacity-0'">
               <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md animate-bounce" style="animation-duration: 2s;">
                   <i class="fa-solid fa-snowflake text-winter text-[14px] animate-pulse"></i>
@@ -221,7 +222,7 @@
         </button>
       </div>
 
-      <!-- Birthday Surprise Banner (時間鎖定：2026-12-10 00:00 後才解鎖顯示) -->
+      <!-- Birthday Surprise Banner -->
       <div v-if="selectedDate === '2026-12-10' && isBirthdayUnlocked" @click="triggerConfetti" class="relative bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 rounded-3xl p-5 shadow-[0_10px_30px_-10px_rgba(236,72,153,0.5)] mb-4 text-white text-center overflow-hidden cursor-pointer transform transition-transform active:scale-95 animate-slide-up">
         <div class="absolute inset-0 bg-white/20 animate-pulse" style="animation-duration: 2s;"></div>
         <div class="absolute -right-6 -top-6 text-white/10 text-7xl transform rotate-12"><i class="fa-solid fa-cake-candles"></i></div>
@@ -376,7 +377,7 @@
         <div class="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-blue-50 to-transparent z-10"></div>
       </div>
 
-      <!-- Itinerary List (新風格：雪地浮雕卡片風 - 精緻緊湊版) -->
+      <!-- Itinerary List -->
       <div class="relative space-y-3 pb-4 mt-2 px-1">
         
         <div v-for="(item, index) in filteredItinerary" :key="item.id" class="relative group">
@@ -385,12 +386,10 @@
           <div class="w-full bg-white/90 backdrop-blur-md rounded-[20px] shadow-[0_4px_16px_rgba(109,163,235,0.08)] border border-white/80 transition-all duration-300 hover:shadow-[0_8px_24px_rgba(109,163,235,0.15)] hover:border-winter-light/50 hover:-translate-y-0.5 relative overflow-hidden"
                :class="{'bg-gradient-to-br from-blue-50/80 to-white/90': item.category === 'flight'}">
             
-            <!-- 裝飾用內陰影效果 (雪地浮雕感) -->
             <div class="absolute inset-0 rounded-[20px] shadow-[inset_0_2px_4px_rgba(255,255,255,1)] pointer-events-none"></div>
 
             <div class="p-3 sm:p-4">
               
-              <!-- 上方標籤區 (Time & Category) -->
               <div class="flex justify-between items-center mb-2">
                  <div class="flex items-center gap-2">
                     <div class="bg-winter-dark/5 text-winter-dark text-lg font-black px-2.5 py-0.5 rounded-lg tracking-tight flex items-center justify-center shadow-[inset_0_1px_2px_rgba(0,0,0,0.05)] border border-winter-light/30">
@@ -439,7 +438,6 @@
             </div>
           </div>
           
-          <!-- 連接用的雪球 (卡片之間的點綴) -->
           <div v-if="index !== filteredItinerary.length - 1" class="w-full flex justify-center py-1 opacity-40">
              <div class="w-1.5 h-1.5 rounded-full bg-winter-light shadow-[0_0_4px_rgba(109,163,235,0.5)]"></div>
              <div class="w-1.5 h-1.5 rounded-full bg-winter-light shadow-[0_0_4px_rgba(109,163,235,0.5)] ml-1.5"></div>
@@ -593,7 +591,6 @@
           </div>
         </div>
         
-        <!-- 如果還有其他天的住宿，可以繼續加在這裡 -->
         <div class="text-center">
              <button class="text-[11px] text-gray-400 hover:text-purple-500 font-bold transition-colors underline decoration-dotted underline-offset-2">
                  + 新增其他住宿資訊
@@ -936,6 +933,8 @@
     { id: 24, date: '2026-12-10', category: 'transport', name: '大船站 ➔ 櫻木町站(橫濱)', time: '15:50', travelTime: 30, transportType: 'transit', note: '搭乘 JR根岸線', description: '抵達大船站後，直接轉乘 JR 前往橫濱的櫻木町站。' },
     { id: 241, date: '2026-12-10', category: 'attraction', name: '橫濱空中纜車 YOKOHAMA AIR CABIN', time: '16:30', travelTime: 5, transportType: 'walk', note: '港灣空中漫步', description: '出櫻木町站後，直接搭乘市區景觀纜車前往運河公園！從高空俯瞰橫濱港灣與摩天輪的絕美日落與夜景。' },
     { id: 25, date: '2026-12-10', category: 'attraction', name: '橫濱 (紅磚倉庫 & 聖誕市集)', time: '17:00', travelTime: 0, transportType: 'walk', note: '浪漫港灣夜景', description: '纜車下車後步行即可抵達紅磚倉庫。這裡有冬季限定的超大聖誕市集，推薦在這裡吃晚餐、喝熱紅酒！' },
+    { id: 251, date: '2026-12-10', category: 'transport', name: '櫻木町/橫濱 ➔ 上野站', time: '20:00', travelTime: 45, transportType: 'transit', note: '搭乘 JR京濱東北線 或 上野東京線', description: '結束橫濱浪漫之夜，搭乘直達車返回東京上野一帶。' },
+    { id: 252, date: '2026-12-10', category: 'accommodation', name: '入住 東京市區飯店', time: '21:00', travelTime: 0, transportType: 'transit', note: '上野周邊 (待確認)', description: '抵達東京後辦理入住。目前飯店還在挑選中，確認後可再來補上詳細資訊！' },
 
     // Day 7 (小網神社 & OSEBA 按鈕工廠 & 東京鐵塔)
     { id: 26, date: '2026-12-11', category: 'transport', name: '市區 ➔ 人形町站', time: '09:00', travelTime: 20, transportType: 'transit', note: '前往小網神社', description: '搭乘地鐵至【人形町站】或【水天宮前站】，步行約 5 分鐘即可抵達小網神社。' },
@@ -985,8 +984,8 @@
   const db = getFirestore(app);
   const auth = getAuth(app);
   
-  // ⚡【核心解法】全新專案 ID：確保這是一個完全乾淨的雲端資料庫
-  const TRIP_ID = "kanto_winter_fuji_2days_v5";
+  // ⚡ 更新了資料庫版本號以載入新行程
+  const TRIP_ID = "kanto_winter_fuji_2days_v6";
 
   createApp({
     setup() {
@@ -1101,14 +1100,12 @@
 
       // --- 生日彩帶驚喜特效 ---
       const triggerConfetti = () => {
-          // 確保套件函數已載入
           if (typeof confetti === 'function') {
               const duration = 3 * 1000;
               const animationEnd = Date.now() + duration;
               const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
               const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
-              // 確保一開始就先噴一發大型彩帶！
               confetti({
                   particleCount: 150,
                   spread: 100,
@@ -1116,7 +1113,6 @@
                   zIndex: 9999
               });
 
-              // 接著是持續 3 秒的兩側煙火效果
               const interval = setInterval(function() {
                   const timeLeft = animationEnd - Date.now();
                   if (timeLeft <= 0) {
@@ -1131,13 +1127,11 @@
           }
       };
 
-      // 監聽日期切換，只要切到 12/10 且時間已解鎖，就自動噴發彩帶！
       watch(selectedDate, (newDate) => {
           if (newDate === '2026-12-10' && isBirthdayUnlocked.value) {
               setTimeout(triggerConfetti, 300);
           }
       });
-      // -------------------------
 
       const confirmState = reactive({ show: false, message: '', resolve: null });
       const toastState = reactive({ show: false, message: '' });
@@ -1204,7 +1198,6 @@
           }
       };
 
-      // ⚡ 自動載入機制：如果偵測到雲端是空的，自動幫你載入行程！
       const checkAndAutoSeed = async () => {
           try {
               const q = collection(db, 'trips', TRIP_ID, 'itinerary');
@@ -1591,14 +1584,12 @@
 
       const openMap = (name) => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`);
 
-      // === 全新設計的標籤、顏色與圖示系統 ===
       const getCategoryLabel = (c) => ({attraction:'景點',food:'美食',shopping:'購物',transport:'交通',flight:'航班',accommodation:'住宿',other:'其他'}[c]||c);
       const getCategoryBgColor = (c) => ({attraction:'bg-red-400',food:'bg-orange-400',shopping:'bg-pink-400',flight:'bg-blue-500', transport:'bg-emerald-400', accommodation:'bg-purple-400'}[c]||'bg-gray-400');
       const getCategoryColor = (c) => ({attraction:'bg-red-50 text-red-500 border-red-100',food:'bg-orange-50 text-orange-500 border-orange-100',shopping:'bg-pink-50 text-pink-500 border-pink-100',flight:'bg-blue-50 text-blue-500 border-blue-100', transport:'bg-emerald-50 text-emerald-600 border-emerald-200', accommodation:'bg-purple-50 text-purple-500 border-purple-100'}[c]||'bg-gray-50 text-gray-500 border-gray-200');
       const getCategoryIconClass = (c) => ({attraction:'fa-solid fa-camera',food:'fa-solid fa-utensils',shopping:'fa-solid fa-bag-shopping',transport:'fa-solid fa-train-subway',flight:'fa-solid fa-plane',accommodation:'fa-solid fa-bed',other:'fa-solid fa-star'}[c]||'fa-solid fa-location-dot');
       const getExpenseIcon = (c) => ({food:'fa-solid fa-utensils',transport:'fa-solid fa-train',shopping:'fa-solid fa-bag-shopping',accommodation:'fa-solid fa-bed',ticket:'fa-solid fa-ticket', investment:'fa-solid fa-chart-line'}[c]||'fa-solid fa-yen-sign');
       const getTransportIcon = (t) => t==='walk'?'fa-solid fa-person-walking':(t==='flight'?'fa-solid fa-plane':'fa-solid fa-train-subway');
-      // ======================================
 
       onMounted(() => {
         setTimeout(() => showSplash.value = false, 3000);
@@ -1618,7 +1609,6 @@
                 if(d && d.locations) changeWeatherCity(d.locations[0]);
                 fetchExchangeRate();
                 
-                // 執行自動載入檢查
                 checkAndAutoSeed();
 
             }).catch(err => {
@@ -1666,3 +1656,5 @@
 </script>
 </body>
 </html>
+
+```
