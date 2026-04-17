@@ -527,36 +527,50 @@
       <!-- Hotel Info -->
       <div class="bg-white rounded-2xl p-5 shadow-card">
         <h3 class="font-bold text-winter-text mb-4 border-b pb-2"><i class="fa-solid fa-hotel mr-2 text-purple-400"></i>住宿資訊</h3>
-        <div class="flex gap-4 mb-4">
-           <div class="w-20 h-20 bg-purple-50 rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300">
-                <i class="fa-solid fa-bed text-3xl"></i>
-           </div>
-           <div class="flex-1 min-w-0 py-0.5">
-             <h4 class="font-bold text-gray-800 text-lg truncate">範例飯店名稱</h4>
-             <p class="text-sm text-gray-400 mb-2 truncate">Example Hotel Name</p>
-             <div class="flex gap-1 flex-wrap">
-               <span class="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded border border-purple-100">附近地鐵站標籤</span>
-               <span class="text-xs bg-sky-50 text-sky-600 px-2 py-0.5 rounded border border-sky-100">周邊超商標籤</span>
+        
+        <!-- Hotel 1 (河口湖) -->
+        <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
+          <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
+            第 4 晚 (12/08 入住)
+          </div>
+          <div class="flex gap-3 mb-3 mt-1">
+             <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
+                  <i class="fa-solid fa-bed text-2xl"></i>
              </div>
-           </div>
+             <div class="flex-1 min-w-0 py-0.5 relative z-10">
+               <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Fujikawaguchiko Resort Hotel</h4>
+               <p class="text-xs text-gray-500 mb-1.5 mt-0.5">富士河口湖度假飯店</p>
+               <div class="flex gap-1 flex-wrap">
+                 <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">河口湖周邊</span>
+                 <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">溫泉飯店</span>
+               </div>
+             </div>
+          </div>
+          
+          <div class="space-y-2 relative z-10">
+              <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                  <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
+                  <div class="flex-1">
+                      <p class="font-bold text-gray-700 text-[13px] leading-snug">4902-2 Funatsu, Fujikawaguchiko</p>
+                      <p class="text-[10px] text-gray-400 mt-0.5">Minamitsuru District, Yamanashi 401-0301 日本</p>
+                  </div>
+              </div>
+              <div class="flex gap-2">
+                  <button @click="openMap('Fujikawaguchiko Resort Hotel, 4902-2 Funatsu')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                      <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
+                  </button>
+                   <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
+                      <i class="fa-solid fa-phone mr-1"></i>撥打電話
+                  </a>
+              </div>
+          </div>
         </div>
         
-        <div class="space-y-2">
-            <div class="flex items-start gap-3 text-sm text-gray-600 bg-gray-50 p-2.5 rounded-xl border border-gray-100">
-                <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1"></i>
-                <div class="flex-1">
-                    <p class="font-bold text-gray-700">範例飯店詳細地址</p>
-                    <p class="text-xs text-gray-400 mt-0.5">交通與地理位置補充說明</p>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <button @click="openMap('飯店地址')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-sm font-bold shadow-sm hover:bg-purple-500 transition-colors">
-                    <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
-                </button>
-                 <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-sm font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
-                    <i class="fa-solid fa-phone mr-1"></i>撥打電話
-                </a>
-            </div>
+        <!-- 如果還有其他天的住宿，可以繼續加在這裡 -->
+        <div class="text-center">
+             <button class="text-[11px] text-gray-400 hover:text-purple-500 font-bold transition-colors underline decoration-dotted underline-offset-2">
+                 + 新增其他住宿資訊
+             </button>
         </div>
       </div>
 
@@ -874,7 +888,7 @@
     { id: 15, date: '2026-12-08', category: 'transport', name: '新宿站 ➔ 河口湖站', time: '08:30', travelTime: 115, transportType: 'transit', note: '搭乘 JR特急 富士回遊', description: '帶著一晚的輕便行李！從新宿站搭乘「富士回遊(Fuji Excursion)」，直達【河口湖站】免換車。' },
     { id: 16, date: '2026-12-08', category: 'attraction', name: '富士山 河口湖大石公園', time: '11:00', travelTime: 25, transportType: 'transit', note: '搭乘 河口湖紅線巴士', description: '河口湖站搭乘「紅線周遊巴士」至終點【大石公園】。欣賞毫無遮蔽的富士山與湖面倒影。' },
     { id: 165, date: '2026-12-08', category: 'attraction', name: '天上山公園纜車 / 遊覽船', time: '14:00', travelTime: 0, transportType: 'walk', note: '從高處俯瞰河口湖', description: '搭紅線巴士回到遊覽船/纜車站，搭乘狸貓兔子纜車上山，飽覽無死角的富士山全景！' },
-    { id: 166, date: '2026-12-08', category: 'accommodation', name: '入住 河口湖溫泉飯店', time: '16:30', travelTime: 0, transportType: 'transit', note: '泡湯賞逆富士', description: '提早到飯店 Check-in！換上浴衣享用飯店晚餐，晚上泡著溫泉享受靜謐的雪國度假氣氛。' },
+    { id: 166, date: '2026-12-08', category: 'accommodation', name: '入住 Fujikawaguchiko Resort Hotel', time: '16:30', travelTime: 0, transportType: 'transit', note: '溫泉度假飯店', description: '提早到飯店 Check-in！換上浴衣享用飯店晚餐，晚上泡著溫泉享受靜謐的雪國度假氣氛。' },
 
     // Day 5 (富士山 兩天一夜 Day 2 & 新宿歌舞伎町)
     { id: 167, date: '2026-12-09', category: 'transport', name: '河口湖 ➔ 忍野八海', time: '09:30', travelTime: 30, transportType: 'transit', note: '退房後搭乘 富士急行巴士', description: '早上看完逆富士後退房，在河口湖站搭乘巴士前往【忍野八海】。' },
@@ -944,7 +958,7 @@
   const auth = getAuth(app);
   
   // ⚡【核心解法】全新專案 ID：確保這是一個完全乾淨的雲端資料庫
-  const TRIP_ID = "kanto_winter_fuji_2days_v4";
+  const TRIP_ID = "kanto_winter_fuji_2days_v5";
 
   createApp({
     setup() {
