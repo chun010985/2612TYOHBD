@@ -15,7 +15,6 @@
       }, 1000);
     });
 
-    // Force enter after 4 seconds to prevent splash screen stuck
     setTimeout(() => {
       const splash = document.getElementById('splash-screen');
       if (splash && splash.style.display !== 'none') {
@@ -90,17 +89,7 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .app-container { max-width: 480px; margin: 0 auto; background-color: #fafafa; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); padding-bottom: 80px; }
-    
-    /* 雪花樣式 */
-    .snowflake { 
-      position: absolute; 
-      background-color: #ffffff; 
-      border-radius: 50%; 
-      opacity: 0; 
-      top: -20px; 
-      box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8);
-    }
-    
+    .snowflake { position: absolute; background-color: #ffffff; border-radius: 50%; opacity: 0; top: -20px; box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8); }
     .blur-sm { filter: blur(1px); }
     .glass-modal { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
   </style>
@@ -112,7 +101,6 @@
   <!-- Splash Screen -->
   <div id="splash-screen" v-if="showSplash" class="fixed inset-0 z-[100] bg-gradient-to-b from-[#e8f0fe] to-white flex flex-col items-center justify-center overflow-hidden transition-opacity duration-700">
     <div class="absolute inset-0 pointer-events-none z-10 w-full h-full overflow-hidden">
-      <!-- 裝飾雪花飄落 -->
       <span class="snowflake w-2 h-2 animate-fall-1" style="--start-left: 15%; animation-duration: 5s;"></span>
       <span class="snowflake w-3 h-3 animate-fall-1" style="--start-left: 35%; animation-duration: 7s; animation-delay: 1s;"></span>
       <span class="snowflake w-2.5 h-2.5 animate-fall-1" style="--start-left: 65%; animation-duration: 6s; animation-delay: 2s;"></span>
@@ -141,12 +129,9 @@
           <span class="text-lg text-blue-200">❄️</span>
       </h1>
       <div class="flex items-center gap-2 text-[10px] font-bold tracking-widest text-gray-500 uppercase">
-          <span>Tokyo</span>
-          <span class="text-winter">•</span>
-          <span>Yokohama</span>
-          <span class="text-winter">•</span>
-          <span>Kamakura</span>
-          <span class="text-winter">•</span>
+          <span>Tokyo</span><span class="text-winter">•</span>
+          <span>Kawagoe</span><span class="text-winter">•</span>
+          <span>Kamakura</span><span class="text-winter">•</span>
           <span>Fuji</span>
       </div>
       <div class="text-xs font-medium text-gray-400 tracking-widest mt-0.5">
@@ -209,7 +194,6 @@
               </div>
           </div>
           
-          <!-- 城市小標籤 (選中時顯示) -->
           <span v-if="selectedDate === day.dateStr" class="absolute -bottom-2 bg-white text-winter-dark text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm border border-winter-light whitespace-nowrap z-10">
               {{ day.mainCity }}
           </span>
@@ -217,7 +201,6 @@
           <span class="text-[10px] font-bold tracking-widest uppercase mb-1" :class="selectedDate === day.dateStr ? 'text-blue-100 mt-1' : 'text-gray-400'">Day {{ index + 1 }}</span>
           <span class="text-[20px] font-bold leading-none tracking-tight mb-1" :class="selectedDate === day.dateStr ? 'text-white drop-shadow-sm' : 'text-gray-800'">{{ day.displayDate }}</span>
           <span class="text-[10px] font-bold" :class="selectedDate === day.dateStr ? 'text-white' : 'text-winter'">{{ day.dayOfWeek }}</span>
-          
         </button>
       </div>
 
@@ -358,67 +341,101 @@
         <div class="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-blue-50 to-transparent z-10"></div>
       </div>
 
-      <!-- Itinerary List -->
-      <div class="space-y-4">
-        <div v-for="(item, index) in filteredItinerary" :key="item.id" class="relative pl-4 border-l-2 border-winter-light">
-          <div class="bg-white rounded-2xl p-4 shadow-card relative group"
-               :class="{'border-l-4 border-winter': item.category !== 'flight', 'bg-blue-50 border-l-4 border-blue-400': item.category === 'flight'}">
+      <!-- Itinerary List (全新時間軸卡片設計) -->
+      <div class="relative space-y-6 before:absolute before:inset-0 before:ml-[1.125rem] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-[2px] before:bg-gradient-to-b before:from-winter-light before:via-winter-light/80 before:to-transparent pb-4 mt-2">
+        
+        <div v-for="(item, index) in filteredItinerary" :key="item.id" class="relative flex items-start group">
+          
+          <!-- Timeline Icon Node -->
+          <div class="absolute left-0 flex items-center justify-center w-9 h-9 rounded-full border-[3px] border-white shadow-sm z-10 transition-transform duration-300 group-hover:scale-110" :class="getCategoryBgColor(item.category)">
+            <i :class="getCategoryIconClass(item.category)" class="text-white text-[13px]"></i>
+          </div>
+
+          <!-- Card Container -->
+          <div class="ml-14 w-full bg-white rounded-2xl shadow-[0_2px_12px_-4px_rgba(0,0,0,0.06)] border border-gray-100/50 transition-all duration-300 hover:shadow-[0_8px_20px_-6px_rgba(109,163,235,0.2)] hover:border-winter-light relative overflow-hidden group-hover:-translate-y-0.5"
+               :class="{'bg-gradient-to-br from-blue-50/40 to-white': item.category === 'flight'}">
             
-            <div v-if="item.category === 'flight'">
-              <div class="flex justify-between items-start mb-2">
-                <span class="bg-blue-100 text-blue-600 text-sm px-2 py-1 rounded-full font-bold"><i class="fa-solid fa-plane-departure mr-1"></i>航班</span>
-                <span class="text-sm text-gray-500 font-bold">{{ item.time }}</span>
-              </div>
-              <h3 class="font-bold text-gray-800 text-lg mb-1">{{ item.name }}</h3>
-              <div class="text-base text-gray-600 space-y-1"><p>{{ item.note }}</p></div>
-              <div v-if="item.description" class="text-sm text-gray-400 mt-1">{{ item.description }}</div>
-            </div>
+            <!-- Category Accent Line on the left edge of the card -->
+            <div class="absolute top-0 left-0 w-[5px] h-full opacity-80" :class="getCategoryBgColor(item.category)"></div>
 
-            <div v-else>
-              <div class="flex justify-between items-start mb-1">
-                <div class="flex items-center gap-2 mb-2 flex-wrap">
-                  <span :class="['text-sm px-2 py-1 rounded-full font-medium inline-block', getCategoryColor(item.category)]">{{ getCategoryLabel(item.category) }}</span>
-                  <span v-if="item.travelTime > 0" class="text-xs text-gray-400 flex items-center bg-gray-50 px-2 py-1 rounded-full border border-gray-100">
-                    <i :class="getTransportIcon(item.transportType)" class="mr-1 text-winter-dark"></i>約 {{ item.travelTime }} 分
-                  </span>
-                </div>
-                <span class="text-base font-bold text-winter-text bg-winter-light px-2 py-1 rounded-lg whitespace-nowrap ml-2">{{ item.time }}</span>
-              </div>
+            <div class="p-4 pl-5">
               
-              <h3 class="font-bold text-gray-800 text-lg mb-2 flex items-center gap-2 select-none">
-                {{ item.name }} 
-                <button @click.stop="openMap(item.name)" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-winter-light/50 active:bg-winter-light transition-colors -my-1">
-                    <i class="fa-solid fa-location-arrow text-xs text-winter cursor-pointer"></i>
-                </button>
-              </h3>
+              <!-- Flight Layout -->
+              <div v-if="item.category === 'flight'">
+                <div class="flex justify-between items-start mb-2">
+                  <span class="bg-blue-100 text-blue-600 text-[11px] px-2 py-0.5 rounded-md font-bold tracking-widest border border-blue-200">
+                    <i class="fa-solid fa-plane-departure mr-1"></i>航班
+                  </span>
+                  <span class="text-lg font-black text-gray-800 tracking-tight">{{ item.time }}</span>
+                </div>
+                <h3 class="font-bold text-gray-800 text-lg mb-1.5 leading-snug">{{ item.name }}</h3>
+                <div v-if="item.note" class="inline-flex items-center bg-blue-50/80 px-2 py-1 rounded-md border border-blue-100 mb-2">
+                    <i class="fa-solid fa-circle-info text-blue-400 text-xs mr-1.5"></i>
+                    <span class="text-[13px] font-bold text-blue-700 leading-tight">{{ item.note }}</span>
+                </div>
+                <div v-if="item.description" class="text-[13px] text-gray-500 leading-relaxed pt-1">
+                  {{ item.description }}
+                </div>
+              </div>
 
-              <div class="space-y-2 text-base text-gray-600">
-                <div class="flex flex-wrap gap-3 text-sm">
-                  <p v-if="item.category !== 'other' && item.category !== 'accommodation' && item.openHours" class="flex items-center"><i class="fa-regular fa-clock w-4 text-center text-gray-400 mr-1"></i> {{ item.openHours }}</p>
-                  <p v-if="item.category === 'attraction' && item.ticket" class="flex items-center"><i class="fa-solid fa-ticket w-4 text-center text-yellow-500 mr-1"></i> {{ item.ticket }}</p>
-                </div>
-                <div v-if="item.description" class="text-sm bg-gray-50 p-3 rounded-lg border border-gray-100 leading-relaxed text-gray-500">
-                  <p style="white-space: pre-line;">{{ item.description }}</p>
-                </div>
-                <p v-if="item.note" class="text-sm text-winter-dark mt-1 flex items-start font-medium"><i class="fa-solid fa-circle-exclamation w-4 mt-0.5 mr-1"></i> {{ item.note }}</p>
+              <!-- Normal Layout -->
+              <div v-else>
+                 <!-- Time and Category Tag -->
+                 <div class="flex justify-between items-start mb-1.5">
+                   <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-xl font-black text-gray-800 tracking-tight">{{ item.time }}</span>
+                      <span v-if="item.travelTime > 0" class="text-[11px] text-gray-500 font-medium bg-gray-50 px-2 py-0.5 rounded-full border border-gray-200 flex items-center shadow-sm">
+                        <i :class="getTransportIcon(item.transportType)" class="mr-1.5 text-winter-dark"></i>約 {{ item.travelTime }} 分
+                      </span>
+                   </div>
+                   <span :class="['text-[10px] px-2 py-0.5 rounded-md font-bold tracking-widest border shrink-0', getCategoryColor(item.category)]">{{ getCategoryLabel(item.category) }}</span>
+                 </div>
+                 
+                 <!-- Title & Map Button -->
+                 <h3 class="font-bold text-gray-800 text-[17px] mb-2.5 flex items-center gap-2 leading-snug select-none">
+                   {{ item.name }} 
+                   <button @click.stop="openMap(item.name)" class="w-7 h-7 shrink-0 flex items-center justify-center rounded-full bg-gray-50 border border-gray-200 hover:bg-winter hover:border-winter active:scale-95 transition-all group/btn -ml-0.5">
+                       <i class="fa-solid fa-location-arrow text-[10px] text-gray-400 group-hover/btn:text-white transition-colors"></i>
+                   </button>
+                 </h3>
+
+                 <!-- Details & Notes -->
+                 <div class="space-y-2.5">
+                   <div v-if="item.note" class="inline-flex items-start bg-winter-light/40 px-2.5 py-1.5 rounded-lg border border-winter-light/60">
+                      <i class="fa-solid fa-thumbtack text-winter text-xs mt-0.5 mr-1.5 shrink-0 rotate-45"></i>
+                      <span class="text-[13px] font-bold text-winter-dark leading-tight">{{ item.note }}</span>
+                   </div>
+                   
+                   <div class="flex gap-2 text-xs text-gray-400 font-medium">
+                      <p v-if="item.category !== 'other' && item.category !== 'accommodation' && item.openHours" class="flex items-center bg-gray-50 px-2 py-1 rounded-md border border-gray-100"><i class="fa-regular fa-clock text-gray-400 mr-1.5"></i> {{ item.openHours }}</p>
+                      <p v-if="item.category === 'attraction' && item.ticket" class="flex items-center bg-gray-50 px-2 py-1 rounded-md border border-gray-100"><i class="fa-solid fa-ticket text-yellow-500 mr-1.5"></i> {{ item.ticket }}</p>
+                   </div>
+
+                   <div v-if="item.description" class="text-[13px] text-gray-500 leading-relaxed bg-gray-50/60 p-2.5 rounded-xl">
+                     <p style="white-space: pre-line;">{{ item.description }}</p>
+                   </div>
+                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div v-if="filteredItinerary.length === 0" class="text-center py-10 text-gray-400">
-          <p v-if="migrationStatus" class="animate-pulse">正在載入行程資料...</p>
-          <div v-else>
-             <i class="fa-solid fa-mug-hot text-4xl mb-3 opacity-50"></i>
-             <p>本日尚無行程</p>
-          </div>
+        <!-- Empty State -->
+        <div v-if="filteredItinerary.length === 0" class="text-center py-12 text-gray-400 relative z-10">
+            <p v-if="migrationStatus" class="animate-pulse font-bold text-winter">正在同步您的雪國行程...</p>
+            <div v-else class="bg-white/80 backdrop-blur-sm rounded-3xl py-8 px-4 shadow-sm border border-gray-50 ml-12">
+               <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+                   <i class="fa-solid fa-mug-hot text-2xl text-gray-300"></i>
+               </div>
+               <p class="font-bold text-gray-500">本日尚無行程</p>
+            </div>
         </div>
       </div>
       
       <!-- Update Actions -->
-      <div class="text-center pb-20 pt-8 space-y-3">
-        <button @click="updateItineraryContentOnly" class="text-sm text-gray-400 underline hover:text-winter-dark transition-colors font-bold flex items-center justify-center mx-auto">
-            <i class="fa-solid fa-arrows-rotate mr-1"></i>重置為範本資料
+      <div class="text-center pb-20 pt-8 space-y-3 relative z-10">
+        <button @click="updateItineraryContentOnly" class="text-sm text-gray-400 underline hover:text-winter-dark transition-colors font-bold flex items-center justify-center mx-auto bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100">
+            <i class="fa-solid fa-arrows-rotate mr-1.5"></i>重置為範本資料
         </button>
         <div class="text-xs text-gray-300 pt-2">資料庫版本: {{ TRIP_ID }}</div>
       </div>
@@ -831,61 +848,71 @@
     // Day 1
     { id: 1, date: '2026-12-05', category: 'flight', name: '航班 IT-280 KHH ➔ NRT', time: '06:55', travelTime: 195, transportType: 'flight', note: '起飛 06:55 / 抵達 11:10', description: '準備飛往東京成田機場，感受日本冬日風情！' },
     { id: 2, date: '2026-12-05', category: 'transport', name: '成田機場(T2) ➔ 淺草站', time: '12:30', travelTime: 55, transportType: 'transit', note: '搭乘 京成Access特急', description: '從成田機場第2候機樓搭乘「京成成田Sky Access特急」(往羽田機場/西馬込方向)，免換車直達【淺草站】。' },
-    { id: 3, date: '2026-12-05', category: 'attraction', name: '淺草 (雷門/仲見世通)', time: '14:30', travelTime: 0, transportType: 'walk', note: '經典東京起點', description: '品嚐淺草小吃，感受傳統氛圍。' },
-    { id: 4, date: '2026-12-05', category: 'transport', name: '淺草站 ➔ 押上站(晴空塔)', time: '18:00', travelTime: 3, transportType: 'transit', note: '搭乘 都營淺草線 (僅1站)', description: '淺草站搭乘「都營淺草線」(往青砥/印旛日本醫大方向)，於【押上站】下車即達。' },
-    { id: 5, date: '2026-12-05', category: 'attraction', name: '晴空塔 Skytree', time: '18:30', travelTime: 0, transportType: 'walk', note: '看東京夜景', description: '俯瞰百萬夜景與聖誕點燈。' },
+    { id: 3, date: '2026-12-05', category: 'attraction', name: '淺草 雷門 & 仲見世通', time: '14:00', travelTime: 0, transportType: 'walk', note: '經典東京起點', description: '穿過巨大的紅燈籠，沿著仲見世通品嚐人形燒、炸肉餅等道地小吃。' },
+    { id: 31, date: '2026-12-05', category: 'attraction', name: '淺草觀音寺 及 周邊', time: '15:00', travelTime: 0, transportType: 'walk', note: '抽籤與參拜', description: '到本堂參拜祈福，並在周邊（如傳法院通、花月堂、西參道）悠閒逛逛，感受下町風情。' },
+    { id: 4, date: '2026-12-05', category: 'transport', name: '淺草站 ➔ 押上站(晴空塔)', time: '17:30', travelTime: 3, transportType: 'transit', note: '搭乘 都營淺草線 (僅1站)', description: '淺草站搭乘「都營淺草線」(往青砥/印旛日本醫大方向)，於【押上站】下車即達。' },
+    { id: 5, date: '2026-12-05', category: 'attraction', name: '晴空塔 Skytree', time: '18:00', travelTime: 0, transportType: 'walk', note: '看東京夜景', description: '俯瞰百萬夜景與聖誕點燈，底下還有商場可以逛街吃晚餐。' },
 
     // Day 2 (龜有 & 秋葉原)
     { id: 6, date: '2026-12-06', category: 'transport', name: '淺草/上野 ➔ 龜有站', time: '09:30', travelTime: 30, transportType: 'transit', note: '常磐線 (需於北千住轉車)', description: '上野站搭乘「JR常磐線(快速)」至【北千住站】，同站轉乘「JR常磐線(各站停車)」至【龜有站】。' },
     { id: 7, date: '2026-12-06', category: 'attraction', name: '龜有車站南北口 (銅像巡禮)', time: '10:00', travelTime: 0, transportType: 'walk', note: '收集阿兩、中川、麗子', description: '一出車站就有金色的兩津勘吉像迎賓！南口還有真實的龜有派出所原型可以拍照合影。' },
     { id: 71, date: '2026-12-06', category: 'attraction', name: '龜有銀座商店街 (Youroad)', time: '11:00', travelTime: 0, transportType: 'walk', note: '下町風情', description: '漫步在充滿昭和氣息的商店街，沿途尋找少年阿兩與本田的銅像，還能買些當地小吃當點心。' },
     { id: 72, date: '2026-12-06', category: 'attraction', name: 'Ario 龜有 (烏龍派出所遊樂場)', time: '12:00', travelTime: 0, transportType: 'walk', note: 'こち亀遊戲公園', description: '在 Ario 購物中心吃午餐後，直奔 3 樓的烏龍派出所主題遊樂場！裡面有實體大小的派出所場景、阿兩的辦公桌，絕對是粉絲必朝聖之地。' },
-    { id: 8, date: '2026-12-06', category: 'transport', name: '龜有站 ➔ 秋葉原站', time: '14:30', travelTime: 35, transportType: 'transit', note: '常磐線 轉 山手線', description: '龜有站搭乘「JR常磐線(各站停車)」至【西日暮里站】，站內轉乘「JR山手線」(往上野/東京方向) 至【秋葉原站】。' },
+    { id: 8, date: '2026-12-06', category: 'transport', name: '龜有站 ➔ 秋葉原站', time: '14:30', travelTime: 35, transportType: 'transit', note: '常磐線 轉 山手線', description: '龜有站搭乘「JR常磐線(各站停車)」至【西日暮里站】，站內轉乘「JR山手線」(往上野/東京方向)至【秋葉原站】。' },
     { id: 9, date: '2026-12-06', category: 'attraction', name: '秋葉原 (動漫與電器街)', time: '15:15', travelTime: 0, transportType: 'walk', note: '御宅族聖地', description: '感受日本獨特的動漫文化、扭蛋機與女僕咖啡廳。' },
     { id: 10, date: '2026-12-06', category: 'food', name: '秋葉原車站 喝牛奶', time: '18:00', travelTime: 0, transportType: 'walk', note: '總武線第5月台', description: '尋找「酪 農協同直營 牛奶攤」，體驗日本上班族站著喝瓶裝牛奶的道地文化！' },
 
-    // Day 3
-    { id: 11, date: '2026-12-07', category: 'transport', name: '上野站/東京站 ➔ 長野站', time: '08:00', travelTime: 90, transportType: 'transit', note: '搭乘 北陸新幹線', description: '搭乘北陸新幹線 (光輝號 Kagayaki 或 白鷹號 Hakutaka) 直達【長野站】。建議買個鐵路便當在車上享用。' },
-    { id: 12, date: '2026-12-07', category: 'transport', name: '長野站(東口) ➔ 志賀高原', time: '10:00', travelTime: 45, transportType: 'transit', note: '搭乘 志賀高原急行巴士', description: '從長野站東口巴士站，搭乘急行巴士至【雪猴公苑 (Snow Monkey Park)】站下車。' },
-    { id: 13, date: '2026-12-07', category: 'attraction', name: '地獄谷野猿公苑', time: '11:30', travelTime: 30, transportType: 'walk', note: '看猴子泡溫泉', description: '巴士下車後需步行約30分鐘雪地山路才抵達入口，務必穿防滑雪靴！' },
-    { id: 14, date: '2026-12-07', category: 'transport', name: '志賀高原 ➔ 上野/東京', time: '16:00', travelTime: 140, transportType: 'transit', note: '急行巴士 轉 北陸新幹線', description: '搭巴士回到【長野站】，轉乘北陸新幹線回到溫暖的東京市區。' },
+    // Day 3 (川越小江戶 & 池袋商圈)
+    { id: 11, date: '2026-12-07', category: 'transport', name: '池袋站 ➔ 川越站', time: '09:00', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線 (急行)', description: '從池袋搭乘東武東上線，大約半小時、單程車資不到500日圓就能抵達川越，交通費超級省！' },
+    { id: 12, date: '2026-12-07', category: 'attraction', name: '川越 冰川神社', time: '10:00', travelTime: 0, transportType: 'walk', note: '求良緣、釣鯛魚籤', description: '超人氣的打卡神社！可以用釣竿釣可愛的「一年安鯛」和平安籤，祈求好運。' },
+    { id: 13, date: '2026-12-07', category: 'attraction', name: '小江戶 藏造老街 & 時之鐘', time: '11:30', travelTime: 0, transportType: 'walk', note: '江戶風情', description: '漫步在傳統黑磚藏造老街，聽百年鐘塔的鐘聲，推薦品嚐著名的「川越地瓜」特色小吃或炭烤鰻魚飯。' },
+    { id: 14, date: '2026-12-07', category: 'transport', name: '川越站 ➔ 池袋站', time: '15:00', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線', description: '下午搭車回到熱鬧的池袋商圈。' },
+    { id: 141, date: '2026-12-07', category: 'shopping', name: '池袋 Sunshine City (太陽城)', time: '15:45', travelTime: 0, transportType: 'walk', note: '超大型複合商場', description: '裡面有寶可夢中心 (Pokémon Center Mega Tokyo)、扭蛋百貨，以及好逛的服飾與動漫周邊！' },
+    { id: 142, date: '2026-12-07', category: 'food', name: '池袋 晚餐', time: '18:30', travelTime: 0, transportType: 'walk', note: '拉麵與美食激戰區', description: '池袋是著名的美食激戰區，推薦無敵家拉麵、敘敘苑燒肉或各式居酒屋。' },
 
-    // Day 4 (富士山)
-    { id: 15, date: '2026-12-08', category: 'transport', name: '新宿站 ➔ 河口湖站', time: '08:30', travelTime: 115, transportType: 'transit', note: '搭乘 JR特急 富士回遊', description: '強烈建議提前線上劃位！從新宿站搭乘「富士回遊(Fuji Excursion)」，直達【河口湖站】免換車。' },
-    { id: 16, date: '2026-12-08', category: 'attraction', name: '富士山 河口湖大石公園', time: '10:30', travelTime: 25, transportType: 'transit', note: '搭乘 河口湖紅線巴士', description: '河口湖站搭乘「紅線周遊巴士」至終點【大石公園】。欣賞毫無遮蔽的富士山與湖面倒影。' },
-    { id: 161, date: '2026-12-08', category: 'transport', name: '河口湖站 ➔ 忍野八海', time: '12:00', travelTime: 25, transportType: 'transit', note: '搭乘 富士急行巴士', description: '回到河口湖站，在 6 號站牌搭乘「富士急行巴士」(往御殿場/山中湖方向)，於【忍野八海】站下車。' },
-    { id: 162, date: '2026-12-08', category: 'attraction', name: '忍野八海', time: '12:30', travelTime: 0, transportType: 'walk', note: '富士山雪水湧泉', description: '欣賞八個清澈見底的池子，品嚐烤草餅、名水豆腐等當地小吃當午餐！' },
-    { id: 17, date: '2026-12-08', category: 'transport', name: '忍野八海 ➔ 下吉田站', time: '14:30', travelTime: 30, transportType: 'transit', note: '路線巴士 轉 富士急行線', description: '忍野八海搭巴士至【富士山站】(約20分)，同站轉乘「富士急行線」電車至【下吉田站】(約5分)。' },
-    { id: 18, date: '2026-12-08', category: 'attraction', name: '新倉山淺間神社', time: '15:00', travelTime: 15, transportType: 'walk', note: '出站步行+爬398階', description: '下吉田站出站跟著指標走。明信片上最經典的五重塔與富士山同框畫面！(剛好可欣賞傍晚的夕陽富士山)' },
-    { id: 19, date: '2026-12-08', category: 'transport', name: '下吉田站 ➔ 新宿站', time: '17:30', travelTime: 115, transportType: 'transit', note: '搭乘 JR特急 富士回遊', description: '下吉田站直接搭乘「富士回遊」直達新宿。回到東京市區吃晚餐。' },
+    // Day 4 (富士山 兩天一夜 Day 1)
+    { id: 15, date: '2026-12-08', category: 'transport', name: '新宿站 ➔ 河口湖站', time: '08:30', travelTime: 115, transportType: 'transit', note: '搭乘 JR特急 富士回遊', description: '帶著一晚的輕便行李！從新宿站搭乘「富士回遊(Fuji Excursion)」，直達【河口湖站】免換車。' },
+    { id: 16, date: '2026-12-08', category: 'attraction', name: '富士山 河口湖大石公園', time: '11:00', travelTime: 25, transportType: 'transit', note: '搭乘 河口湖紅線巴士', description: '河口湖站搭乘「紅線周遊巴士」至終點【大石公園】。欣賞毫無遮蔽的富士山與湖面倒影。' },
+    { id: 165, date: '2026-12-08', category: 'attraction', name: '天上山公園纜車 / 遊覽船', time: '14:00', travelTime: 0, transportType: 'walk', note: '從高處俯瞰河口湖', description: '搭紅線巴士回到遊覽船/纜車站，搭乘狸貓兔子纜車上山，飽覽無死角的富士山全景！' },
+    { id: 166, date: '2026-12-08', category: 'accommodation', name: '入住 河口湖溫泉飯店', time: '16:30', travelTime: 0, transportType: 'transit', note: '泡湯賞逆富士', description: '提早到飯店 Check-in！換上浴衣享用飯店晚餐，晚上泡著溫泉享受靜謐的雪國度假氣氛。' },
 
-    // Day 5 (鎌倉/橫濱)
-    { id: 20, date: '2026-12-09', category: 'transport', name: '新宿/東京站 ➔ 鎌倉站', time: '09:00', travelTime: 60, transportType: 'transit', note: '搭乘 JR湘南新宿線/橫須賀線', description: '搭乘直達車前往充滿歷史氣息的古都【鎌倉站】。' },
-    { id: 21, date: '2026-12-09', category: 'attraction', name: '鎌倉 (鶴岡八幡宮/小町通)', time: '10:30', travelTime: 0, transportType: 'walk', note: '古都漫遊', description: '逛小町通吃美食，參拜鶴岡八幡宮。' },
-    { id: 22, date: '2026-12-09', category: 'transport', name: '鎌倉站 ➔ 鎌倉高校前站', time: '13:30', travelTime: 18, transportType: 'transit', note: '搭乘 江之島電鐵 (江之電)', description: '鎌倉站轉乘沿著湘南海岸行駛的復古路面電車。' },
-    { id: 23, date: '2026-12-09', category: 'attraction', name: '鎌倉櫻木花道平交道', time: '14:00', travelTime: 0, transportType: 'walk', note: '灌籃高手聖地', description: '出站旁邊就是櫻木花道經典平交道場景！(冬季海風極大請注意保暖)' },
-    { id: 24, date: '2026-12-09', category: 'transport', name: '鎌倉高校前站 ➔ 櫻木町站(橫濱)', time: '15:30', travelTime: 50, transportType: 'transit', note: '江之電 轉 JR', description: '江之電搭到【藤澤站】，轉乘「JR東海道本線」至【橫濱站】，再轉「JR根岸線」至【櫻木町站】。' },
-    { id: 241, date: '2026-12-09', category: 'attraction', name: '橫濱空中纜車 YOKOHAMA AIR CABIN', time: '16:30', travelTime: 5, transportType: 'walk', note: '港灣空中漫步', description: '出櫻木町站後，直接搭乘市區景觀纜車前往運河公園！從高空俯瞰橫濱港灣與摩天輪的絕美日落與夜景。' },
-    { id: 25, date: '2026-12-09', category: 'attraction', name: '橫濱 (紅磚倉庫 & 聖誕市集)', time: '17:00', travelTime: 0, transportType: 'walk', note: '浪漫港灣夜景', description: '纜車下車後步行即可抵達紅磚倉庫。這裡有冬季限定的超大聖誕市集，推薦在這裡吃晚餐、喝熱紅酒！' },
+    // Day 5 (富士山 兩天一夜 Day 2 & 新宿歌舞伎町)
+    { id: 167, date: '2026-12-09', category: 'transport', name: '河口湖 ➔ 忍野八海', time: '09:30', travelTime: 30, transportType: 'transit', note: '退房後搭乘 富士急行巴士', description: '早上看完逆富士後退房，在河口湖站搭乘巴士前往【忍野八海】。' },
+    { id: 168, date: '2026-12-09', category: 'attraction', name: '忍野八海', time: '10:30', travelTime: 0, transportType: 'walk', note: '富士山雪水湧泉', description: '漫步欣賞八個清澈見底的池子，中午在這裡品嚐烤草餅、蕎麥麵或名水豆腐等當地小吃！' },
+    { id: 17, date: '2026-12-09', category: 'transport', name: '忍野八海 ➔ 下吉田站', time: '13:30', travelTime: 30, transportType: 'transit', note: '路線巴士 轉 富士急行線', description: '搭巴士至【富士山站】，同站轉乘「富士急行線」電車至【下吉田站】。' },
+    { id: 18, date: '2026-12-09', category: 'attraction', name: '新倉山淺間神社', time: '14:30', travelTime: 15, transportType: 'walk', note: '出站步行+爬398階', description: '明信片上最經典的五重塔與富士山同框畫面！這時間剛好可以拍到下午絕佳的光線。' },
+    { id: 19, date: '2026-12-09', category: 'transport', name: '下吉田站 ➔ 新宿站', time: '17:00', travelTime: 115, transportType: 'transit', note: '搭乘 JR特急 富士回遊', description: '搭乘「富士回遊」直達新宿。' },
+    { id: 191, date: '2026-12-09', category: 'attraction', name: '新宿 歌舞伎町', time: '19:00', travelTime: 10, transportType: 'walk', note: '東京不夜城', description: '抵達新宿後，直接步行前往歌舞伎町，跟著名的「哥吉拉頭」地標拍照，感受繁華的夜生活！' },
+    { id: 192, date: '2026-12-09', category: 'food', name: '新宿周邊 晚餐', time: '19:30', travelTime: 0, transportType: 'walk', note: '美食選擇超多', description: '在新宿或歌舞伎町周邊吃晚餐，不管是敘敘苑燒肉、阿夫利拉麵還是各種居酒屋任君挑選。' },
 
-    // Day 6
-    { id: 26, date: '2026-12-10', category: 'transport', name: '市區 ➔ 濱町站', time: '09:30', travelTime: 20, transportType: 'transit', note: '搭乘 都營新宿線', description: '搭乘都營地鐵新宿線至【濱町站】(Hamacho)，A2出口步行 3 分鐘。' },
-    { id: 27, date: '2026-12-10', category: 'attraction', name: '東京按鈕博物館', time: '10:00', travelTime: 0, transportType: 'walk', note: '特色博物館 (僅平日開放)', description: 'Iris Button Museum，收藏來自世界各地的珍貴精緻按鈕。' },
-    { id: 28, date: '2026-12-10', category: 'transport', name: '濱町站 ➔ 赤羽橋站', time: '14:00', travelTime: 20, transportType: 'transit', note: '都營新宿線 轉 大江戶線', description: '濱町站搭「都營新宿線」至【森下站】，轉乘「都營大江戶線」至【赤羽橋站】。' },
-    { id: 29, date: '2026-12-10', category: 'attraction', name: '東京鐵塔', time: '14:30', travelTime: 5, transportType: 'walk', note: '經典地標', description: '赤羽橋站出站就能看到壯觀的紅色鐵塔，可步行至芝公園附近拍美照。' },
-    { id: 30, date: '2026-12-10', category: 'transport', name: '赤羽橋站 ➔ 六本木站', time: '17:00', travelTime: 5, transportType: 'transit', note: '搭乘 都營大江戶線 (2站)', description: '直接搭乘大江戶線，兩站就抵達六本木商圈。' },
-    { id: 31, date: '2026-12-10', category: 'attraction', name: '六本木聖誕點燈', time: '17:30', travelTime: 0, transportType: 'walk', note: '浪漫燈海', description: '櫸坂通 (Keyakizaka) 的藍白聖誕點燈，搭配遠方的東京鐵塔，是冬季必看！' },
+    // Day 6 (鎌倉/橫濱)
+    { id: 20, date: '2026-12-10', category: 'transport', name: '新宿/東京站 ➔ 鎌倉站', time: '09:00', travelTime: 60, transportType: 'transit', note: '搭乘 JR湘南新宿線/橫須賀線', description: '搭乘直達車前往充滿歷史氣息的古都【鎌倉站】。' },
+    { id: 21, date: '2026-12-10', category: 'attraction', name: '鎌倉 (鶴岡八幡宮/小町通)', time: '10:30', travelTime: 0, transportType: 'walk', note: '古都漫遊', description: '逛小町通吃美食，參拜鶴岡八幡宮。' },
+    { id: 22, date: '2026-12-10', category: 'transport', name: '鎌倉站 ➔ 鎌倉高校前站', time: '13:30', travelTime: 18, transportType: 'transit', note: '搭乘 江之島電鐵 (江之電)', description: '鎌倉站轉乘沿著湘南海岸行駛的復古路面電車。' },
+    { id: 23, date: '2026-12-10', category: 'attraction', name: '鎌倉櫻木花道平交道', time: '14:00', travelTime: 0, transportType: 'walk', note: '灌籃高手聖地', description: '出站旁邊就是櫻木花道經典平交道場景！(冬季海風極大請注意保暖)' },
+    { id: 24, date: '2026-12-10', category: 'transport', name: '鎌倉高校前站 ➔ 櫻木町站(橫濱)', time: '15:30', travelTime: 50, transportType: 'transit', note: '江之電 轉 JR', description: '江之電搭到【藤澤站】，轉乘「JR東海道本線」至【橫濱站】，再轉「JR根岸線」至【櫻木町站】。' },
+    { id: 241, date: '2026-12-10', category: 'attraction', name: '橫濱空中纜車 YOKOHAMA AIR CABIN', time: '16:30', travelTime: 5, transportType: 'walk', note: '港灣空中漫步', description: '出櫻木町站後，直接搭乘市區景觀纜車前往運河公園！從高空俯瞰橫濱港灣與摩天輪的絕美日落與夜景。' },
+    { id: 25, date: '2026-12-10', category: 'attraction', name: '橫濱 (紅磚倉庫 & 聖誕市集)', time: '17:00', travelTime: 0, transportType: 'walk', note: '浪漫港灣夜景', description: '纜車下車後步行即可抵達紅磚倉庫。這裡有冬季限定的超大聖誕市集，推薦在這裡吃晚餐、喝熱紅酒！' },
 
-    // Day 7
-    { id: 32, date: '2026-12-11', category: 'transport', name: '新橋站/汐留站 ➔ 台場站', time: '10:30', travelTime: 15, transportType: 'transit', note: '搭乘 百合鷗號 (Yurikamome)', description: '搭乘無人駕駛的百合鷗號，沿途欣賞跨越東京灣與彩虹大橋的景色。' },
-    { id: 33, date: '2026-12-11', category: 'attraction', name: '台場', time: '11:00', travelTime: 0, transportType: 'walk', note: '海濱與鋼彈', description: '逛 DiverCity 看巨大獨角獸鋼彈，傍晚欣賞彩虹大橋與自由女神像。' },
+    // Day 7 (小網神社洗錢 & 特色博物館 & 東京鐵塔)
+    { id: 26, date: '2026-12-11', category: 'transport', name: '市區 ➔ 人形町站', time: '09:30', travelTime: 20, transportType: 'transit', note: '前往小網神社', description: '搭乘地鐵至【人形町站】或【水天宮前站】，步行約 5 分鐘即可抵達小網神社。' },
+    { id: 27, date: '2026-12-11', category: 'attraction', name: '小網神社 (洗錢 / 強運厄除)', time: '10:00', travelTime: 0, transportType: 'walk', note: '東京最強財神廟', description: '趁早抵達避開最恐怖的排隊人潮！在境內的「洗錢井」把硬幣或鈔票洗淨放進錢包當錢母，據說能帶來滿滿財運。' },
+    { id: 271, date: '2026-12-11', category: 'transport', name: '小網神社 ➔ 濱町', time: '11:15', travelTime: 12, transportType: 'walk', note: '市區漫步', description: '洗完錢後，沿著街道散步約 10~15 分鐘前往濱町。' },
+    { id: 272, date: '2026-12-11', category: 'attraction', name: '東京按鈕博物館', time: '11:30', travelTime: 0, transportType: 'walk', note: '特色博物館 (僅平日開放)', description: 'Iris Button Museum，收藏來自世界各地的珍貴精緻按鈕。' },
+    { id: 273, date: '2026-12-11', category: 'food', name: '濱町/人形町周邊 午餐', time: '12:45', travelTime: 0, transportType: 'walk', note: '在地美食', description: '參觀完博物館後，在附近享用午餐，這裡有很多老字號美食或特色咖啡廳。' },
+    { id: 28, date: '2026-12-11', category: 'transport', name: '人形町/濱町 ➔ 赤羽橋站', time: '14:00', travelTime: 20, transportType: 'transit', note: '搭乘地鐵前往東京鐵塔', description: '搭乘地鐵轉乘「都營大江戶線」至【赤羽橋站】。' },
+    { id: 29, date: '2026-12-11', category: 'attraction', name: '東京鐵塔', time: '14:30', travelTime: 5, transportType: 'walk', note: '經典地標', description: '赤羽橋站出站就能看到壯觀的紅色鐵塔，可步行至芝公園附近拍美照。' },
+    { id: 30, date: '2026-12-11', category: 'transport', name: '赤羽橋站 ➔ 六本木站', time: '17:00', travelTime: 5, transportType: 'transit', note: '搭乘 都營大江戶線 (2站)', description: '直接搭乘大江戶線，兩站就抵達六本木商圈。' },
+    { id: 31, date: '2026-12-11', category: 'attraction', name: '六本木聖誕點燈', time: '17:30', travelTime: 0, transportType: 'walk', note: '浪漫燈海', description: '櫸坂通 (Keyakizaka) 的藍白聖誕點燈，搭配遠方的東京鐵塔，是冬季必看！' },
 
-    // Day 8
-    { id: 34, date: '2026-12-12', category: 'transport', name: '市區 ➔ 澀谷站', time: '10:30', travelTime: 25, transportType: 'transit', note: '搭乘 JR山手線 / 銀座線', description: '前往東京潮流中心【澀谷站】。' },
-    { id: 35, date: '2026-12-12', category: 'attraction', name: '澀谷', time: '11:00', travelTime: 0, transportType: 'walk', note: '潮流文化', description: '朝聖澀谷十字路口、忠犬八公，也可預約 Shibuya Sky 觀景台。' },
-    { id: 36, date: '2026-12-12', category: 'shopping', name: '最後採買', time: '15:00', travelTime: 0, transportType: 'walk', note: '藥妝與伴手禮', description: '把握最後一天在市區把清單上的東西買齊！' },
+    // Day 8 (台場 & 澀谷合併)
+    { id: 32, date: '2026-12-12', category: 'transport', name: '新橋站/汐留站 ➔ 台場站', time: '09:30', travelTime: 15, transportType: 'transit', note: '搭乘 百合鷗號 (Yurikamome)', description: '搭乘無人駕駛的百合鷗號，沿途欣賞跨越東京灣與彩虹大橋的景色。' },
+    { id: 33, date: '2026-12-12', category: 'attraction', name: '台場', time: '10:00', travelTime: 0, transportType: 'walk', note: '海濱與鋼彈', description: '逛 DiverCity 看巨大獨角獸鋼彈，欣賞彩虹大橋與自由女神像。' },
+    { id: 34, date: '2026-12-12', category: 'transport', name: '台場 ➔ 澀谷站', time: '13:30', travelTime: 35, transportType: 'transit', note: '搭乘 臨海線 轉 埼京線', description: '從台場【東京電訊站】搭乘臨海線(可直通運轉JR埼京線)，免換車直達【澀谷站】。' },
+    { id: 35, date: '2026-12-12', category: 'attraction', name: '澀谷', time: '14:30', travelTime: 0, transportType: 'walk', note: '潮流文化', description: '朝聖澀谷十字路口、忠犬八公，也可預約 Shibuya Sky 觀景台。' },
+    { id: 36, date: '2026-12-12', category: 'shopping', name: '最後採買', time: '16:30', travelTime: 0, transportType: 'walk', note: '藥妝與伴手禮', description: '把握最後一天在市區把清單上的東西買齊！' },
 
-    // Day 9
+    // Day 9 (回程)
     { id: 37, date: '2026-12-13', category: 'transport', name: '日暮里/上野站 ➔ 成田機場(T2)', time: '09:00', travelTime: 45, transportType: 'transit', note: '搭乘 Keisei Skyliner', description: '搭乘京成電鐵 Skyliner 快速抵達機場。(全車對號座，建議提前購票)' },
     { id: 38, date: '2026-12-13', category: 'flight', name: '航班 IT-281 NRT ➔ KHH', time: '13:00', travelTime: 280, transportType: 'flight', note: '起飛 13:00 / 抵達 16:40', description: '帶著滿滿的雪國與關東回憶準備回家囉！' }
   ];
@@ -914,8 +941,8 @@
   const db = getFirestore(app);
   const auth = getAuth(app);
   
-  // 更新 TRIP_ID 為冬季新模板，避免混淆原資料
-  const TRIP_ID = "kanto_winter_2026_template";
+  // ⚡【核心解法】全新專案 ID：確保這是一個完全乾淨的雲端資料庫
+  const TRIP_ID = "kanto_winter_fuji_2days_v2";
 
   createApp({
     setup() {
@@ -955,14 +982,14 @@
       const travelers = ref(['翔', '君']);
       const packingPeople = ref(['翔', '君']);
 
-      // 設定 12月份的東京、橫濱、鎌倉、富士山、長野 (共 9 天)
+      // 設定 12月份的精準天氣追蹤 (共 9 天)
       const days = [
         { dateStr: '2026-12-05', displayDate: '12/05', dayOfWeek: '週六', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
         { dateStr: '2026-12-06', displayDate: '12/06', dayOfWeek: '週日', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-07', displayDate: '12/07', dayOfWeek: '週一', mainCity: '長野', locations: [{name:'長野', lat:36.6485, lng:138.1942}] },
+        { dateStr: '2026-12-07', displayDate: '12/07', dayOfWeek: '週一', mainCity: '川越', locations: [{name:'川越', lat:35.9251, lng:139.4858}, {name:'東京', lat:35.6895, lng:139.6917}] },
         { dateStr: '2026-12-08', displayDate: '12/08', dayOfWeek: '週二', mainCity: '富士山', locations: [{name:'富士山', lat:35.3606, lng:138.7274}] },
-        { dateStr: '2026-12-09', displayDate: '12/09', dayOfWeek: '週三', mainCity: '鎌倉', locations: [{name:'鎌倉', lat:35.3192, lng:139.5467}, {name:'橫濱', lat:35.4437, lng:139.6380}] },
-        { dateStr: '2026-12-10', displayDate: '12/10', dayOfWeek: '週四', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-09', displayDate: '12/09', dayOfWeek: '週三', mainCity: '富士山', locations: [{name:'富士山', lat:35.3606, lng:138.7274}, {name:'東京', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-10', displayDate: '12/10', dayOfWeek: '週四', mainCity: '鎌倉', locations: [{name:'鎌倉', lat:35.3192, lng:139.5467}, {name:'橫濱', lat:35.4437, lng:139.6380}] },
         { dateStr: '2026-12-11', displayDate: '12/11', dayOfWeek: '週五', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
         { dateStr: '2026-12-12', displayDate: '12/12', dayOfWeek: '週六', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
         { dateStr: '2026-12-13', displayDate: '12/13', dayOfWeek: '週日', mainCity: '東京', locations: [{name:'東京', lat:35.6895, lng:139.6917}] }
@@ -1064,33 +1091,39 @@
       };
 
       const updateItineraryContentOnly = async () => {
-          if(!(await askConfirm('即將重置範本資料至清單中。確定執行？'))) return;
-          
-          migrationStatus.value = "正在更新資料...";
+          migrationStatus.value = "正在為您準備雪國行程...";
           const itinToUpload = window.__FULL_ITINERARY_DATA__ || [];
           
           try {
              const q = collection(db, 'trips', TRIP_ID, 'itinerary');
              const snapshot = await getDocs(q);
-             const existingItems = [];
-             snapshot.forEach(doc => existingItems.push({ _docId: doc.id, ...doc.data() }));
+             const deletePromises = snapshot.docs.map(docSnap => deleteDoc(doc(db, 'trips', TRIP_ID, 'itinerary', docSnap.id)));
+             await Promise.all(deletePromises);
 
-             if (Array.isArray(itinToUpload)) {
-                 for (const item of itinToUpload) {
-                      const match = existingItems.find(ex => ex.name === item.name && ex.date === item.date);
-                      if (match) {
-                          await setDoc(doc(db, 'trips', TRIP_ID, 'itinerary', match._docId), item, { merge: true });
-                      } else {
-                          const id = item.id ? String(item.id) : Date.now().toString();
-                          await setDoc(doc(db, 'trips', TRIP_ID, 'itinerary', id), item);
-                      }
-                 }
-             }
-             showToast("資料已更新完畢！");
+             const addPromises = itinToUpload.map(item => {
+                  const id = item.id ? String(item.id) : Date.now().toString();
+                  return setDoc(doc(db, 'trips', TRIP_ID, 'itinerary', id), item);
+             });
+             await Promise.all(addPromises);
+             showToast("資料已完美更新！");
           } catch(e) {
              showToast("更新失敗：" + e.message);
           } finally {
              migrationStatus.value = "";
+          }
+      };
+
+      // ⚡ 自動載入機制：如果偵測到雲端是空的，自動幫你載入行程！
+      const checkAndAutoSeed = async () => {
+          try {
+              const q = collection(db, 'trips', TRIP_ID, 'itinerary');
+              const snap = await getDocs(q);
+              if (snap.empty) {
+                  console.log("偵測到全新專案，正在自動寫入行程資料...");
+                  await updateItineraryContentOnly();
+              }
+          } catch(e) {
+              console.error("Auto seed failed:", e);
           }
       };
 
@@ -1280,12 +1313,26 @@
         return { desc: '陣雨/雪', icon: 'fa-solid fa-cloud-showers-heavy', color: '#2563eb' };
       };
 
+      const fetchWithRetry = async (url, retries = 5, delay = 1000) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            if (retries > 0) {
+                await new Promise(res => setTimeout(res, delay));
+                return fetchWithRetry(url, retries - 1, delay * 2);
+            }
+            throw error;
+        }
+      };
+
       const changeWeatherCity = async (city) => {
           weatherLoading.value = true;
           weatherData.city = city.name;
           try {
-              const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m,surface_pressure,visibility,cloud_cover&hourly=temperature_2m,weather_code,precipitation_probability,is_day&daily=weather_code,sunrise,sunset,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto`);
-              const data = await res.json();
+              const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m,surface_pressure,visibility,cloud_cover&hourly=temperature_2m,weather_code,precipitation_probability,is_day&daily=weather_code,sunrise,sunset,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=auto`;
+              const data = await fetchWithRetry(url);
               
               const current = data.current;
               const daily = data.daily;
@@ -1355,20 +1402,28 @@
               }
               weatherData.hourly = hourlyList;
 
-          } catch(e) { console.error(e); }
+          } catch(e) { 
+              console.error("天氣獲取失敗:", e);
+              weatherData.description = "暫無資料";
+              weatherData.icon = "fa-solid fa-circle-exclamation";
+              weatherData.iconColor = "#9ca3af";
+              weatherData.clothing = "連線失敗，請檢查網路狀態或稍後重試。";
+              weatherData.temp = "--";
+              weatherData.forecast = [];
+              weatherData.hourly = [];
+          }
           finally { setTimeout(() => weatherLoading.value=false, 500); }
       };
 
       const exchange = reactive({ jpy: '', twd: '' });
-      const currentRate = ref(0.218); // Default fallback
+      const currentRate = ref(0.218); 
       const rateUpdateDate = ref('');
       
       const fetchExchangeRate = async () => {
          try {
-            const res = await fetch('https://api.exchangerate-api.com/v4/latest/JPY');
-            const data = await res.json();
+            const data = await fetchWithRetry('https://api.exchangerate-api.com/v4/latest/JPY');
             const marketRate = data.rates.TWD; 
-            currentRate.value = marketRate + 0.002; // Simulate bank spread
+            currentRate.value = marketRate + 0.002; 
             rateUpdateDate.value = data.date;
          } catch(e) {
             console.error("Exchange rate fetch failed", e);
@@ -1447,16 +1502,9 @@
 
       // === 全新設計的標籤、顏色與圖示系統 ===
       const getCategoryLabel = (c) => ({attraction:'景點',food:'美食',shopping:'購物',transport:'交通',flight:'航班',accommodation:'住宿',other:'其他'}[c]||c);
-      
-      // 專門給 Timeline 圓形圖示背景 與 卡片左側色條 使用
       const getCategoryBgColor = (c) => ({attraction:'bg-red-400',food:'bg-orange-400',shopping:'bg-pink-400',flight:'bg-blue-500', transport:'bg-emerald-400', accommodation:'bg-purple-400'}[c]||'bg-gray-400');
-      
-      // 專門給時間旁邊的小分類標籤框框使用
       const getCategoryColor = (c) => ({attraction:'bg-red-50 text-red-500 border-red-100',food:'bg-orange-50 text-orange-500 border-orange-100',shopping:'bg-pink-50 text-pink-500 border-pink-100',flight:'bg-blue-50 text-blue-500 border-blue-100', transport:'bg-emerald-50 text-emerald-600 border-emerald-200', accommodation:'bg-purple-50 text-purple-500 border-purple-100'}[c]||'bg-gray-50 text-gray-500 border-gray-200');
-      
-      // 專門給 Timeline 圓形圖示內的 Icon 使用
       const getCategoryIconClass = (c) => ({attraction:'fa-solid fa-camera',food:'fa-solid fa-utensils',shopping:'fa-solid fa-bag-shopping',transport:'fa-solid fa-train-subway',flight:'fa-solid fa-plane',accommodation:'fa-solid fa-bed',other:'fa-solid fa-star'}[c]||'fa-solid fa-location-dot');
-
       const getExpenseIcon = (c) => ({food:'fa-solid fa-utensils',transport:'fa-solid fa-train',shopping:'fa-solid fa-bag-shopping',accommodation:'fa-solid fa-bed',ticket:'fa-solid fa-ticket', investment:'fa-solid fa-chart-line'}[c]||'fa-solid fa-yen-sign');
       const getTransportIcon = (t) => t==='walk'?'fa-solid fa-person-walking':(t==='flight'?'fa-solid fa-plane':'fa-solid fa-train-subway');
       // ======================================
@@ -1478,6 +1526,9 @@
                 const d = days.find(x => x.dateStr === selectedDate.value);
                 if(d && d.locations) changeWeatherCity(d.locations[0]);
                 fetchExchangeRate();
+                
+                // 執行自動載入檢查
+                checkAndAutoSeed();
 
             }).catch(err => {
                 console.error("Auth failed", err);
@@ -1509,7 +1560,7 @@
 
         weatherData, isWeatherExpanded, toggleWeather, weatherLoading, currentDayCities, changeWeatherCity,
         exchange, currentRate, calcTwd, calcJpy, rateUpdateDate,
-        getCategoryLabel, getCategoryColor, getExpenseIcon, getTransportIcon, handleImageUpload, openMap,
+        getCategoryLabel, getCategoryColor, getCategoryBgColor, getCategoryIconClass, getExpenseIcon, getTransportIcon, handleImageUpload, openMap,
         firebaseStatus, reconnectFirebase, migrationStatus,
         isTigerairInfoExpanded, isExchangeWarningExpanded, 
         handleBannerUpload,
