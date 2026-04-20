@@ -419,9 +419,6 @@
                            class="shrink-0 w-11 h-11 rounded-full border border-gray-200 shadow-sm bg-gray-50 flex items-center justify-center cursor-pointer group relative overflow-hidden transition-transform hover:scale-105">
                           <img v-if="item.image" :src="item.image" class="w-full h-full object-cover">
                           <i v-else class="fa-solid fa-camera text-gray-300 text-[14px] group-hover:text-winter transition-colors"></i>
-                          <div v-if="item.image" class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                              <i class="fa-solid fa-pen text-white text-[10px]"></i>
-                          </div>
                       </div>
 
                       <h3 class="font-bold text-gray-800 text-[18px] leading-snug tracking-wide pt-0.5" :class="{'mt-1.5': item.category === 'attraction' || item.category === 'food'}">
