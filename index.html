@@ -412,18 +412,18 @@
 
               <!-- Title & Map Button -->
               <div class="flex justify-between items-start mb-2 gap-2">
-                  <div class="flex items-start gap-2.5 flex-1">
-                      <!-- 圓形相片上傳區塊 (僅限景點、美食) -->
-                      <div v-if="item.category === 'attraction' || item.category === 'food'"
-                           @click.stop="triggerItineraryUpload(item.id)"
-                           class="shrink-0 w-11 h-11 rounded-full border border-gray-200 shadow-sm bg-gray-50 flex items-center justify-center cursor-pointer group relative overflow-hidden transition-transform hover:scale-105">
-                          <img v-if="item.image" :src="item.image" class="w-full h-full object-cover">
-                          <i v-else class="fa-solid fa-camera text-gray-300 text-[14px] group-hover:text-winter transition-colors"></i>
-                      </div>
-
-                      <h3 class="font-bold text-gray-800 text-[18px] leading-snug tracking-wide pt-0.5" :class="{'mt-1.5': item.category === 'attraction' || item.category === 'food'}">
+                  <div class="flex items-center flex-wrap gap-2 flex-1">
+                      <h3 class="font-bold text-gray-800 text-[18px] leading-snug tracking-wide">
                         {{ item.name }} 
                       </h3>
+                      
+                      <!-- 圓形相片上傳區塊 (景點、美食) -->
+                      <div v-if="item.category === 'attraction' || item.category === 'food'"
+                           @click.stop="triggerItineraryUpload(item.id)"
+                           class="shrink-0 w-8 h-8 rounded-full border border-gray-200 shadow-sm bg-gray-50 flex items-center justify-center cursor-pointer group relative overflow-hidden transition-transform hover:scale-105">
+                          <img v-if="item.image" :src="item.image" class="w-full h-full object-cover">
+                          <i v-else class="fa-solid fa-camera text-gray-300 text-[11px] group-hover:text-winter transition-colors"></i>
+                      </div>
                   </div>
                   <button v-if="item.category !== 'flight'" @click.stop="openMap(item.name)" class="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-gray-50 border border-gray-200 hover:bg-winter hover:border-winter hover:text-white text-gray-400 active:scale-95 transition-all shadow-sm">
                       <i class="fa-solid fa-location-arrow text-[13px]"></i>
@@ -516,155 +516,183 @@
         </div>
       </div>
 
-      <!-- Flight Info -->
-      <div class="bg-white rounded-2xl p-5 shadow-card">
-        <h3 class="font-bold text-winter-text mb-4 border-b pb-2"><i class="fa-solid fa-plane mr-2 text-blue-400"></i>航班資訊</h3>
-        <!-- Outbound -->
-        <div class="mb-4 bg-blue-50 rounded-xl p-4 border border-blue-100 relative overflow-hidden">
-          <div class="absolute top-0 right-0 bg-blue-500 text-white text-sm px-3 py-1 rounded-bl-xl font-bold tracking-wider">去程</div>
-          <div class="flex items-center gap-2 mb-4">
-            <span class="font-bold text-xl text-gray-800 tracking-wide">IT-280</span>
-            <span class="text-xs text-blue-600 bg-white px-2 py-0.5 rounded-full border border-blue-100 font-bold">台灣虎航</span>
-          </div>
-          <div class="flex justify-between items-center text-center mb-4 relative z-10">
-            <div class="text-left"><div class="text-3xl font-bold text-gray-800 leading-none">06:55</div><div class="text-base font-bold text-gray-600 mt-1">KHH 高雄</div></div>
-            <div class="flex flex-col items-center w-1/3 px-2"><span class="text-xs text-gray-400 mb-2 font-bold">3h 15m</span><div class="w-full h-0.5 bg-gray-300 relative flex items-center justify-center"><i class="fa-solid fa-plane-departure text-blue-400 text-sm absolute bg-blue-50 px-1"></i></div><span class="text-xs text-blue-400 mt-1">直飛</span></div>
-            <div class="text-right"><div class="text-3xl font-bold text-gray-800 leading-none">11:10</div><div class="text-base font-bold text-gray-600 mt-1">NRT 成田</div></div>
-          </div>
-          <div class="text-center mb-3">
-            <span class="text-sm font-bold text-blue-600 bg-white border border-blue-200 px-3 py-1 rounded-full shadow-sm"><i class="fa-solid fa-user-clock mr-1"></i>建議報到：04:30</span>
-          </div>
-          <div class="flex justify-between items-center text-[11px] text-gray-500 border-t border-blue-200/50 pt-3 mt-2">
-            <span class="flex items-center"><i class="fa-regular fa-calendar-check mr-1.5 text-blue-400"></i>2026/12/05 (週六)</span>
-            <span class="flex items-center"><i class="fa-solid fa-suitcase-rolling mr-1 text-blue-400"></i>20kg<span class="mx-1 text-blue-200">|</span><i class="fa-solid fa-briefcase mr-1 text-blue-400"></i>10kg<span class="mx-1 text-blue-200">|</span><i class="fa-solid fa-utensils mr-1 text-blue-400"></i>餐點</span>
+      <!-- Flight Info Card (Collapsible) -->
+      <div class="bg-white rounded-2xl shadow-card overflow-hidden">
+        <div @click="isFlightExpanded = !isFlightExpanded" class="p-4 sm:p-5 flex justify-between items-center cursor-pointer transition-colors hover:bg-gray-50 select-none">
+          <h3 class="font-bold text-winter-text m-0 flex items-center"><i class="fa-solid fa-plane mr-2 text-blue-400"></i>航班資訊</h3>
+          <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-400 transition-transform duration-300" :class="{'rotate-180': isFlightExpanded}">
+              <i class="fa-solid fa-chevron-down text-sm"></i>
           </div>
         </div>
-        <!-- Inbound -->
-        <div class="bg-winter-light/40 rounded-xl p-4 border border-winter-light relative overflow-hidden mb-4">
-          <div class="absolute top-0 right-0 bg-winter text-white text-sm px-3 py-1 rounded-bl-xl font-bold tracking-wider">回程</div>
-          <div class="flex items-center gap-2 mb-4">
-            <span class="font-bold text-xl text-gray-800 tracking-wide">IT-281</span>
-            <span class="text-xs text-winter-dark bg-white px-2 py-0.5 rounded-full border border-winter-light font-bold">台灣虎航</span>
+        
+        <div v-show="isFlightExpanded" class="px-4 sm:px-5 pb-5 animate-fade-in border-t border-gray-50 pt-4">
+          <!-- Outbound -->
+          <div class="mb-4 bg-blue-50 rounded-xl p-4 border border-blue-100 relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-blue-500 text-white text-sm px-3 py-1 rounded-bl-xl font-bold tracking-wider">去程</div>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="font-bold text-xl text-gray-800 tracking-wide">IT-280</span>
+              <span class="text-xs text-blue-600 bg-white px-2 py-0.5 rounded-full border border-blue-100 font-bold">台灣虎航</span>
+            </div>
+            <div class="flex justify-between items-center text-center mb-4 relative z-10">
+              <div class="text-left"><div class="text-3xl font-bold text-gray-800 leading-none">06:55</div><div class="text-base font-bold text-gray-600 mt-1">KHH 高雄</div></div>
+              <div class="flex flex-col items-center w-1/3 px-2"><span class="text-xs text-gray-400 mb-2 font-bold">3h 15m</span><div class="w-full h-0.5 bg-gray-300 relative flex items-center justify-center"><i class="fa-solid fa-plane-departure text-blue-400 text-sm absolute bg-blue-50 px-1"></i></div><span class="text-xs text-blue-400 mt-1">直飛</span></div>
+              <div class="text-right"><div class="text-3xl font-bold text-gray-800 leading-none">11:10</div><div class="text-base font-bold text-gray-600 mt-1">NRT 成田</div></div>
+            </div>
+            <div class="text-center mb-3">
+              <span class="text-sm font-bold text-blue-600 bg-white border border-blue-200 px-3 py-1 rounded-full shadow-sm"><i class="fa-solid fa-user-clock mr-1"></i>建議報到：04:30</span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] text-gray-500 border-t border-blue-200/50 pt-3 mt-2">
+              <span class="flex items-center"><i class="fa-regular fa-calendar-check mr-1.5 text-blue-400"></i>2026/12/05 (週六)</span>
+              <span class="flex items-center"><i class="fa-solid fa-suitcase-rolling mr-1 text-blue-400"></i>20kg<span class="mx-1 text-blue-200">|</span><i class="fa-solid fa-briefcase mr-1 text-blue-400"></i>10kg<span class="mx-1 text-blue-200">|</span><i class="fa-solid fa-utensils mr-1 text-blue-400"></i>餐點</span>
+            </div>
           </div>
-          <div class="flex justify-between items-center text-center mb-4 relative z-10">
-            <div class="text-left"><div class="text-3xl font-bold text-gray-800">13:00</div><div class="text-base font-bold text-gray-600 mt-1">NRT 成田</div></div>
-            <div class="flex flex-col items-center w-1/3 px-2"><span class="text-xs text-gray-400 mb-2 font-bold">4h 40m</span><div class="w-full h-0.5 bg-gray-300 relative flex items-center justify-center"><i class="fa-solid fa-plane-departure text-winter text-sm absolute bg-winter-light/40 px-1"></i></div><span class="text-xs text-winter mt-1">直飛</span></div>
-            <div class="text-right"><div class="text-3xl font-bold text-gray-800 leading-none">16:40</div><div class="text-base font-bold text-gray-600 mt-1">KHH 高雄</div></div>
-          </div>
-          <div class="text-center mb-3">
-            <span class="text-sm font-bold text-winter-text bg-white border border-winter-light px-3 py-1 rounded-full shadow-sm"><i class="fa-solid fa-user-clock mr-1 text-winter"></i>建議報到：10:30</span>
-          </div>
-          <div class="flex justify-between items-center text-[11px] text-gray-500 border-t border-winter-light pt-3 mt-2">
-            <span class="flex items-center"><i class="fa-regular fa-calendar-check mr-1.5 text-winter"></i>2026/12/13 (週日)</span>
-            <span class="flex items-center"><i class="fa-solid fa-suitcase-rolling mr-1 text-winter"></i>25kg<span class="mx-1 text-winter-light">|</span><i class="fa-solid fa-briefcase mr-1 text-winter"></i>10kg<span class="mx-1 text-winter-light">|</span><i class="fa-solid fa-utensils mr-1 text-winter"></i>餐點</span>
+          <!-- Inbound -->
+          <div class="bg-winter-light/40 rounded-xl p-4 border border-winter-light relative overflow-hidden mb-2">
+            <div class="absolute top-0 right-0 bg-winter text-white text-sm px-3 py-1 rounded-bl-xl font-bold tracking-wider">回程</div>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="font-bold text-xl text-gray-800 tracking-wide">IT-281</span>
+              <span class="text-xs text-winter-dark bg-white px-2 py-0.5 rounded-full border border-winter-light font-bold">台灣虎航</span>
+            </div>
+            <div class="flex justify-between items-center text-center mb-4 relative z-10">
+              <div class="text-left"><div class="text-3xl font-bold text-gray-800">13:00</div><div class="text-base font-bold text-gray-600 mt-1">NRT 成田</div></div>
+              <div class="flex flex-col items-center w-1/3 px-2"><span class="text-xs text-gray-400 mb-2 font-bold">4h 40m</span><div class="w-full h-0.5 bg-gray-300 relative flex items-center justify-center"><i class="fa-solid fa-plane-departure text-winter text-sm absolute bg-winter-light/40 px-1"></i></div><span class="text-xs text-winter mt-1">直飛</span></div>
+              <div class="text-right"><div class="text-3xl font-bold text-gray-800 leading-none">16:40</div><div class="text-base font-bold text-gray-600 mt-1">KHH 高雄</div></div>
+            </div>
+            <div class="text-center mb-3">
+              <span class="text-sm font-bold text-winter-text bg-white border border-winter-light px-3 py-1 rounded-full shadow-sm"><i class="fa-solid fa-user-clock mr-1 text-winter"></i>建議報到：10:30</span>
+            </div>
+            <div class="flex justify-between items-center text-[11px] text-gray-500 border-t border-winter-light pt-3 mt-2">
+              <span class="flex items-center"><i class="fa-regular fa-calendar-check mr-1.5 text-winter"></i>2026/12/13 (週日)</span>
+              <span class="flex items-center"><i class="fa-solid fa-suitcase-rolling mr-1 text-winter"></i>25kg<span class="mx-1 text-winter-light">|</span><i class="fa-solid fa-briefcase mr-1 text-winter"></i>10kg<span class="mx-1 text-winter-light">|</span><i class="fa-solid fa-utensils mr-1 text-winter"></i>餐點</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Hotel Info -->
-      <div class="bg-white rounded-2xl p-5 shadow-card">
-        <h3 class="font-bold text-winter-text mb-4 border-b pb-2"><i class="fa-solid fa-hotel mr-2 text-purple-400"></i>住宿資訊</h3>
-        
-        <!-- Hotel 1 (淺草) -->
-        <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
-          <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
-            第 1~3 晚 (12/05-12/07)
-          </div>
-          <div class="flex gap-3 mb-3 mt-1">
-             <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
-                  <i class="fa-solid fa-bed text-2xl"></i>
-             </div>
-             <div class="flex-1 min-w-0 py-0.5 relative z-10">
-               <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Richmond Hotel Asakusa</h4>
-               <p class="text-xs text-gray-500 mb-1.5 mt-0.5">里士滿淺草飯店</p>
-               <div class="flex gap-1 flex-wrap">
-                 <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">淺草商圈</span>
-                 <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">交通便利</span>
-               </div>
-             </div>
-          </div>
-          
-          <div class="space-y-2 relative z-10">
-              <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
-                  <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
-                  <div class="flex-1">
-                      <p class="font-bold text-gray-700 text-[13px] leading-snug">Asakusa 2-7-10, 台東區</p>
-                      <p class="text-[10px] text-gray-400 mt-0.5">111-0032 東京都, 日本</p>
-                  </div>
-              </div>
-              <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
-                  <i class="fa-solid fa-train-subway text-emerald-500 mt-0.5 ml-1 text-xs"></i>
-                  <div class="flex-1">
-                      <p class="font-bold text-gray-700 text-[12px] leading-snug">鄰近交通</p>
-                      <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
-                         • 筑波快線(TX) 淺草站：步行約 1 分鐘 (100m)<br>
-                         • 銀座線/都營線 淺草站：步行約 8 分鐘 (600m)
-                      </p>
-                  </div>
-              </div>
-              <div class="flex gap-2">
-                  <button @click="openMap('里士滿淺草飯店 Asakusa 2-7-10')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
-                      <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
-                  </button>
-                   <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
-                      <i class="fa-solid fa-phone mr-1"></i>撥打電話
-                  </a>
-              </div>
+      <!-- Hotel Info Card (Collapsible) -->
+      <div class="bg-white rounded-2xl shadow-card overflow-hidden">
+        <div @click="isHotelExpanded = !isHotelExpanded" class="p-4 sm:p-5 flex justify-between items-center cursor-pointer transition-colors hover:bg-gray-50 select-none">
+          <h3 class="font-bold text-winter-text m-0 flex items-center"><i class="fa-solid fa-hotel mr-2 text-purple-400"></i>住宿資訊</h3>
+          <div class="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-400 transition-transform duration-300" :class="{'rotate-180': isHotelExpanded}">
+              <i class="fa-solid fa-chevron-down text-sm"></i>
           </div>
         </div>
 
-        <!-- Hotel 2 (河口湖) -->
-        <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
-          <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
-            第 4 晚 (12/08 入住)
-          </div>
-          <div class="flex gap-3 mb-3 mt-1">
-             <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
-                  <i class="fa-solid fa-bed text-2xl"></i>
-             </div>
-             <div class="flex-1 min-w-0 py-0.5 relative z-10">
-               <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Fujikawaguchiko Resort Hotel</h4>
-               <p class="text-xs text-gray-500 mb-1.5 mt-0.5">富士河口湖度假飯店</p>
-               <div class="flex gap-1 flex-wrap">
-                 <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">河口湖周邊</span>
-                 <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">溫泉飯店</span>
+        <div v-show="isHotelExpanded" class="px-4 sm:px-5 pb-5 animate-fade-in border-t border-gray-50 pt-4">
+          <!-- Hotel 1 (淺草) -->
+          <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
+            <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
+              第 1~3 晚 (12/05-12/07)
+            </div>
+            <div class="flex gap-3 mb-3 mt-1">
+               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
+                    <i class="fa-solid fa-bed text-2xl"></i>
                </div>
-             </div>
+               <div class="flex-1 min-w-0 py-0.5 relative z-10">
+                 <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Richmond Hotel Asakusa</h4>
+                 <p class="text-xs text-gray-500 mb-1.5 mt-0.5">里士滿淺草飯店</p>
+                 <div class="flex gap-1 flex-wrap">
+                   <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">淺草商圈</span>
+                   <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">交通便利</span>
+                 </div>
+               </div>
+            </div>
+            
+            <div class="space-y-2 relative z-10">
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                    <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-700 text-[13px] leading-snug">Asakusa 2-7-10, 台東區</p>
+                        <p class="text-[10px] text-gray-400 mt-0.5">111-0032 東京都, 日本</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                    <i class="fa-solid fa-train-subway text-emerald-500 mt-0.5 ml-1 text-xs"></i>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-700 text-[12px] leading-snug">鄰近交通</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                           • 筑波快線(TX) 淺草站：步行約 1 分鐘 (100m)<br>
+                           • 銀座線 田原町站：步行約 7 分鐘 (500m)<br>
+                           • 銀座線/都營線 淺草站：步行約 8 分鐘 (600m)
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                    <i class="fa-solid fa-basket-shopping text-orange-400 mt-0.5 ml-1 text-xs"></i>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-700 text-[12px] leading-snug">周邊生活機能</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                           • 唐吉訶德(24h)：步行約 1 分鐘<br>
+                           • Hoppy Street 居酒屋街：步行約 1 分鐘<br>
+                           • 淺草 ROX 購物中心：步行約 2 分鐘<br>
+                           • LIFE 大型超市(營業至22:00)：步行約 4~5 分鐘 (約350m)
+                        </p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button @click="openMap('里士滿淺草飯店 Asakusa 2-7-10')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                        <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
+                    </button>
+                     <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
+                        <i class="fa-solid fa-phone mr-1"></i>撥打電話
+                    </a>
+                </div>
+            </div>
+          </div>
+
+          <!-- Hotel 2 (河口湖) -->
+          <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
+            <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
+              第 4 晚 (12/08 入住)
+            </div>
+            <div class="flex gap-3 mb-3 mt-1">
+               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
+                    <i class="fa-solid fa-bed text-2xl"></i>
+               </div>
+               <div class="flex-1 min-w-0 py-0.5 relative z-10">
+                 <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Fujikawaguchiko Resort Hotel</h4>
+                 <p class="text-xs text-gray-500 mb-1.5 mt-0.5">富士河口湖度假飯店</p>
+                 <div class="flex gap-1 flex-wrap">
+                   <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">河口湖周邊</span>
+                   <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">溫泉飯店</span>
+                 </div>
+               </div>
+            </div>
+            
+            <div class="space-y-2 relative z-10">
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                    <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-700 text-[13px] leading-snug">4902-2 Funatsu, Fujikawaguchiko</p>
+                        <p class="text-[10px] text-gray-400 mt-0.5">Minamitsuru District, Yamanashi 401-0301 日本</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                    <i class="fa-solid fa-train-subway text-emerald-500 mt-0.5 ml-1 text-xs"></i>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-700 text-[12px] leading-snug">鄰近交通</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                           • 富士急行線 河口湖站：步行約 11 分鐘 (850m)<br>
+                           • 亦可於車站搭乘短程計程車前往
+                        </p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button @click="openMap('Fujikawaguchiko Resort Hotel, 4902-2 Funatsu')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                        <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
+                    </button>
+                     <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
+                        <i class="fa-solid fa-phone mr-1"></i>撥打電話
+                    </a>
+                </div>
+            </div>
           </div>
           
-          <div class="space-y-2 relative z-10">
-              <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
-                  <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
-                  <div class="flex-1">
-                      <p class="font-bold text-gray-700 text-[13px] leading-snug">4902-2 Funatsu, Fujikawaguchiko</p>
-                      <p class="text-[10px] text-gray-400 mt-0.5">Minamitsuru District, Yamanashi 401-0301 日本</p>
-                  </div>
-              </div>
-              <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
-                  <i class="fa-solid fa-train-subway text-emerald-500 mt-0.5 ml-1 text-xs"></i>
-                  <div class="flex-1">
-                      <p class="font-bold text-gray-700 text-[12px] leading-snug">鄰近交通</p>
-                      <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
-                         • 富士急行線 河口湖站：步行約 11 分鐘 (850m)<br>
-                         • 亦可於車站搭乘短程計程車前往
-                      </p>
-                  </div>
-              </div>
-              <div class="flex gap-2">
-                  <button @click="openMap('Fujikawaguchiko Resort Hotel, 4902-2 Funatsu')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
-                      <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
-                  </button>
-                   <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
-                      <i class="fa-solid fa-phone mr-1"></i>撥打電話
-                  </a>
-              </div>
+          <div class="text-center mt-2">
+               <button class="text-[11px] text-gray-400 hover:text-purple-500 font-bold transition-colors underline decoration-dotted underline-offset-2">
+                   + 新增其他住宿資訊
+               </button>
           </div>
-        </div>
-        
-        <div class="text-center">
-             <button class="text-[11px] text-gray-400 hover:text-purple-500 font-bold transition-colors underline decoration-dotted underline-offset-2">
-                 + 新增其他住宿資訊
-             </button>
         </div>
       </div>
 
@@ -980,7 +1008,7 @@
     { id: 13, date: '2026-12-07', category: 'attraction', name: '小江戶 藏造老街 & 時之鐘', time: '11:30', travelTime: 0, transportType: 'walk', note: '江戶風情', description: '漫步在傳統黑磚藏造老街，聽百年鐘塔的鐘聲，推薦品嚐著名的「川越地瓜」特色小吃或炭烤鰻魚飯。' },
     { id: 14, date: '2026-12-07', category: 'transport', name: '川越站 ➔ 池袋站', time: '15:00', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線', description: '下午搭車回到熱鬧的池袋商圈。' },
     { id: 141, date: '2026-12-07', category: 'shopping', name: '池袋 Sunshine City (太陽城)', time: '15:45', travelTime: 0, transportType: 'walk', note: '超大型複合商場', description: '裡面有寶可夢中心 (Pokémon Center Mega Tokyo)、扭蛋百貨，以及好逛的服飾與動漫周邊！' },
-    { id: 142, date: '2026-12-07', category: 'food', name: '池袋 晚餐', time: '18:30', travelTime: 0, transportType: 'walk', note: '拉麵與美食激戰區', description: '池袋是著名的美食激戰區，推薦無敵家拉麵、敘敘苑燒肉或各式居酒屋。' },
+    { id: 142, date: '2026-12-07', category: 'food', name: '池袋 晚餐', time: '18:30', travelTime: 0, transportType: 'walk', note: '拉麵與美食激激區', description: '池袋是著名的美食激戰區，推薦無敵家拉麵、敘敘苑燒肉或各式居酒屋。' },
     { id: 143, date: '2026-12-07', category: 'transport', name: '池袋站 ➔ 淺草站', time: '20:00', travelTime: 30, transportType: 'transit', note: '山手線 轉 銀座線', description: '從池袋搭乘「JR山手線」至【上野站】，轉乘「東京地鐵銀座線」至【淺草站】。' },
     { id: 144, date: '2026-12-07', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '20:45', travelTime: 10, transportType: 'walk', note: '連住第 3 晚', description: '回飯店收拾打包行李，準備明早退房前往富士山！' },
 
@@ -1117,8 +1145,8 @@
 
       const selectedDate = ref(days[0].dateStr);
 
-      const isTigerairInfoExpanded = ref(false);
-      const isExchangeWarningExpanded = ref(false); 
+      const isFlightExpanded = ref(false);
+      const isHotelExpanded = ref(false); 
 
       // Firebase states
       const itineraryList = ref([]);
@@ -1740,6 +1768,8 @@
         
         dateContainer, startDrag, stopDrag, doDrag, selectDate,
 
+        isFlightExpanded, isHotelExpanded,
+
         globalImageInput, triggerItineraryUpload, handleGlobalImageUpload,
 
         filteredItinerary, filteredShoppingList, expenses, totalExpense, filteredTotalExpense, notebookList, filteredPackingList, filteredExpenses, filteredNotebookList,
@@ -1756,7 +1786,6 @@
         exchange, currentRate, calcTwd, calcJpy, rateUpdateDate,
         getCategoryLabel, getCategoryColor, getCategoryBgColor, getCategoryIconClass, getExpenseIcon, getTransportIcon, handleImageUpload, openMap,
         firebaseStatus, reconnectFirebase, migrationStatus,
-        isTigerairInfoExpanded, isExchangeWarningExpanded, 
         handleBannerUpload,
         
         cropState, confirmCrop, closeCropModal,
