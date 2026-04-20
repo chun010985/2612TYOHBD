@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -156,6 +155,9 @@
           2026.12.05 - 12.13
       </div>
   </div>
+
+  <!-- 用於行程景點上傳照片的隱藏按鈕 -->
+  <input type="file" ref="globalImageInput" class="hidden" accept="image/*" @change="handleGlobalImageUpload">
 
   <!-- Header Banner -->
   <header class="relative h-[200px] w-full overflow-hidden bg-gray-100 group">
@@ -410,9 +412,22 @@
 
               <!-- Title & Map Button -->
               <div class="flex justify-between items-start mb-2 gap-2">
-                  <h3 class="font-bold text-gray-800 text-[18px] leading-snug tracking-wide pt-0.5">
-                    {{ item.name }} 
-                  </h3>
+                  <div class="flex items-start gap-2.5 flex-1">
+                      <!-- 圓形相片上傳區塊 (僅限景點、美食) -->
+                      <div v-if="item.category === 'attraction' || item.category === 'food'"
+                           @click.stop="triggerItineraryUpload(item.id)"
+                           class="shrink-0 w-11 h-11 rounded-full border border-gray-200 shadow-sm bg-gray-50 flex items-center justify-center cursor-pointer group relative overflow-hidden transition-transform hover:scale-105">
+                          <img v-if="item.image" :src="item.image" class="w-full h-full object-cover">
+                          <i v-else class="fa-solid fa-camera text-gray-300 text-[14px] group-hover:text-winter transition-colors"></i>
+                          <div v-if="item.image" class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <i class="fa-solid fa-pen text-white text-[10px]"></i>
+                          </div>
+                      </div>
+
+                      <h3 class="font-bold text-gray-800 text-[18px] leading-snug tracking-wide pt-0.5" :class="{'mt-1.5': item.category === 'attraction' || item.category === 'food'}">
+                        {{ item.name }} 
+                      </h3>
+                  </div>
                   <button v-if="item.category !== 'flight'" @click.stop="openMap(item.name)" class="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-gray-50 border border-gray-200 hover:bg-winter hover:border-winter hover:text-white text-gray-400 active:scale-95 transition-all shadow-sm">
                       <i class="fa-solid fa-location-arrow text-[13px]"></i>
                   </button>
@@ -553,7 +568,55 @@
       <div class="bg-white rounded-2xl p-5 shadow-card">
         <h3 class="font-bold text-winter-text mb-4 border-b pb-2"><i class="fa-solid fa-hotel mr-2 text-purple-400"></i>住宿資訊</h3>
         
-        <!-- Hotel 1 (河口湖) -->
+        <!-- Hotel 1 (淺草) -->
+        <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
+          <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
+            第 1~3 晚 (12/05-12/07)
+          </div>
+          <div class="flex gap-3 mb-3 mt-1">
+             <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
+                  <i class="fa-solid fa-bed text-2xl"></i>
+             </div>
+             <div class="flex-1 min-w-0 py-0.5 relative z-10">
+               <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Richmond Hotel Asakusa</h4>
+               <p class="text-xs text-gray-500 mb-1.5 mt-0.5">里士滿淺草飯店</p>
+               <div class="flex gap-1 flex-wrap">
+                 <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">淺草商圈</span>
+                 <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">交通便利</span>
+               </div>
+             </div>
+          </div>
+          
+          <div class="space-y-2 relative z-10">
+              <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                  <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
+                  <div class="flex-1">
+                      <p class="font-bold text-gray-700 text-[13px] leading-snug">Asakusa 2-7-10, 台東區</p>
+                      <p class="text-[10px] text-gray-400 mt-0.5">111-0032 東京都, 日本</p>
+                  </div>
+              </div>
+              <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                  <i class="fa-solid fa-train-subway text-emerald-500 mt-0.5 ml-1 text-xs"></i>
+                  <div class="flex-1">
+                      <p class="font-bold text-gray-700 text-[12px] leading-snug">鄰近交通</p>
+                      <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                         • 筑波快線(TX) 淺草站：步行約 1 分鐘 (100m)<br>
+                         • 銀座線/都營線 淺草站：步行約 8 分鐘 (600m)
+                      </p>
+                  </div>
+              </div>
+              <div class="flex gap-2">
+                  <button @click="openMap('里士滿淺草飯店 Asakusa 2-7-10')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                      <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
+                  </button>
+                   <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
+                      <i class="fa-solid fa-phone mr-1"></i>撥打電話
+                  </a>
+              </div>
+          </div>
+        </div>
+
+        <!-- Hotel 2 (河口湖) -->
         <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
           <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
             第 4 晚 (12/08 入住)
@@ -578,6 +641,16 @@
                   <div class="flex-1">
                       <p class="font-bold text-gray-700 text-[13px] leading-snug">4902-2 Funatsu, Fujikawaguchiko</p>
                       <p class="text-[10px] text-gray-400 mt-0.5">Minamitsuru District, Yamanashi 401-0301 日本</p>
+                  </div>
+              </div>
+              <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                  <i class="fa-solid fa-train-subway text-emerald-500 mt-0.5 ml-1 text-xs"></i>
+                  <div class="flex-1">
+                      <p class="font-bold text-gray-700 text-[12px] leading-snug">鄰近交通</p>
+                      <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                         • 富士急行線 河口湖站：步行約 11 分鐘 (850m)<br>
+                         • 亦可於車站搭乘短程計程車前往
+                      </p>
                   </div>
               </div>
               <div class="flex gap-2">
@@ -758,7 +831,7 @@
             <div>
                  <label class="block text-sm font-medium text-gray-500 mb-1">圖片</label>
                  <div class="relative w-full h-32 bg-gray-100 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300 overflow-hidden">
-                    <input type="file" @change="handleImageUpload" class="absolute inset-0 opacity-0 cursor-pointer">
+                    <input type="file" @change="(e) => handleImageUpload(e, 'form')" class="absolute inset-0 opacity-0 cursor-pointer">
                     <img v-if="formData.image" :src="formData.image" class="w-full h-full object-cover">
                     <div v-else class="text-center text-gray-400"><i class="fa-solid fa-camera mb-1"></i><p class="text-sm">點擊上傳圖片</p></div>
                  </div>
@@ -886,10 +959,12 @@
     // Day 1
     { id: 1, date: '2026-12-05', category: 'flight', name: '航班 IT-280 KHH ➔ NRT', time: '06:55', travelTime: 195, transportType: 'flight', note: '起飛 06:55 / 抵達 11:10', description: '準備飛往東京成田機場，感受日本冬日風情！' },
     { id: 2, date: '2026-12-05', category: 'transport', name: '成田機場(T2) ➔ 淺草站', time: '12:30', travelTime: 55, transportType: 'transit', note: '搭乘 京成Access特急', description: '從成田機場第2候機樓搭乘「京成成田Sky Access特急」(往羽田機場/西馬込方向)，免換車直達【淺草站】。' },
+    { id: 201, date: '2026-12-05', category: 'accommodation', name: '里士滿淺草飯店 寄放行李', time: '13:30', travelTime: 10, transportType: 'walk', note: '淺草站步行約8分鐘', description: '抵達都營淺草線「淺草站」後，若有大行李建議從 A2-b 出口 (有電梯) 出站，步行約 8-10 分鐘抵達飯店寄放行李，減輕負擔輕鬆逛街！' },
     { id: 3, date: '2026-12-05', category: 'attraction', name: '淺草 雷門 & 仲見世通', time: '14:00', travelTime: 0, transportType: 'walk', note: '經典東京起點', description: '穿過巨大的紅燈籠，沿著仲見世通品嚐人形燒、炸肉餅等道地小吃。' },
     { id: 31, date: '2026-12-05', category: 'attraction', name: '淺草觀音寺 及 周邊', time: '15:00', travelTime: 0, transportType: 'walk', note: '抽籤與參拜', description: '到本堂參拜祈福，並在周邊（如傳法院通、花月堂、西參道）悠閒逛逛，感受下町風情。' },
     { id: 4, date: '2026-12-05', category: 'transport', name: '淺草站 ➔ 押上站(晴空塔)', time: '17:30', travelTime: 3, transportType: 'transit', note: '搭乘 都營淺草線 (僅1站)', description: '淺草站搭乘「都營淺草線」(往青砥/印旛日本醫大方向)，於【押上站】下車即達。' },
     { id: 5, date: '2026-12-05', category: 'attraction', name: '晴空塔 Skytree', time: '18:00', travelTime: 0, transportType: 'walk', note: '看東京夜景', description: '俯瞰百萬夜景與聖誕點燈，底下還有商場可以逛街吃晚餐。' },
+    { id: 51, date: '2026-12-05', category: 'accommodation', name: '入住 里士滿淺草飯店', time: '20:30', travelTime: 15, transportType: 'transit', note: '連住 3 晚', description: '從晴空塔搭車回淺草，辦理入住手續並休息。' },
 
     // Day 2 (龜有 & 秋葉原)
     { id: 6, date: '2026-12-06', category: 'transport', name: '淺草/上野 ➔ 龜有站', time: '09:30', travelTime: 30, transportType: 'transit', note: '常磐線 (需於北千住轉車)', description: '上野站搭乘「JR常磐線(快速)」至【北千住站】，同站轉乘「JR常磐線(各站停車)」至【龜有站】。' },
@@ -899,6 +974,8 @@
     { id: 8, date: '2026-12-06', category: 'transport', name: '龜有站 ➔ 秋葉原站', time: '14:30', travelTime: 35, transportType: 'transit', note: '常磐線 轉 山手線', description: '龜有站搭乘「JR常磐線(各站停車)」至【西日暮里站】，站內轉乘「JR山手線」(往上野/東京方向)至【秋葉原站】。' },
     { id: 9, date: '2026-12-06', category: 'attraction', name: '秋葉原 (動漫與電器街)', time: '15:15', travelTime: 0, transportType: 'walk', note: '御宅族聖地', description: '感受日本獨特的動漫文化、扭蛋機與女僕咖啡廳。' },
     { id: 10, date: '2026-12-06', category: 'food', name: '秋葉原車站 喝牛奶', time: '18:00', travelTime: 0, transportType: 'walk', note: '總武線第5月台', description: '尋找「酪 農協同直營 牛奶攤」，體驗日本上班族站著喝瓶裝牛奶的道地文化！' },
+    { id: 101, date: '2026-12-06', category: 'transport', name: '秋葉原站 ➔ 淺草站', time: '20:00', travelTime: 5, transportType: 'transit', note: '搭乘 筑波快線 (TX)', description: '從秋葉原搭乘「筑波快線 (Tsukuba Express)」直達淺草，出站步行約 1 分鐘就能輕鬆回到里士滿飯店！' },
+    { id: 102, date: '2026-12-06', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '20:15', travelTime: 0, transportType: 'walk', note: '連住第 2 晚', description: '帶著滿滿的戰利品回飯店休息。' },
 
     // Day 3 (川越小江戶 & 池袋商圈)
     { id: 11, date: '2026-12-07', category: 'transport', name: '池袋站 ➔ 川越站', time: '09:00', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線 (急行)', description: '從池袋搭乘東武東上線，大約半小時、單程車資不到500日圓就能抵達川越，交通費超級省！' },
@@ -907,8 +984,11 @@
     { id: 14, date: '2026-12-07', category: 'transport', name: '川越站 ➔ 池袋站', time: '15:00', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線', description: '下午搭車回到熱鬧的池袋商圈。' },
     { id: 141, date: '2026-12-07', category: 'shopping', name: '池袋 Sunshine City (太陽城)', time: '15:45', travelTime: 0, transportType: 'walk', note: '超大型複合商場', description: '裡面有寶可夢中心 (Pokémon Center Mega Tokyo)、扭蛋百貨，以及好逛的服飾與動漫周邊！' },
     { id: 142, date: '2026-12-07', category: 'food', name: '池袋 晚餐', time: '18:30', travelTime: 0, transportType: 'walk', note: '拉麵與美食激戰區', description: '池袋是著名的美食激戰區，推薦無敵家拉麵、敘敘苑燒肉或各式居酒屋。' },
+    { id: 143, date: '2026-12-07', category: 'transport', name: '池袋站 ➔ 淺草站', time: '20:00', travelTime: 30, transportType: 'transit', note: '山手線 轉 銀座線', description: '從池袋搭乘「JR山手線」至【上野站】，轉乘「東京地鐵銀座線」至【淺草站】。' },
+    { id: 144, date: '2026-12-07', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '20:45', travelTime: 10, transportType: 'walk', note: '連住第 3 晚', description: '回飯店收拾打包行李，準備明早退房前往富士山！' },
 
     // Day 4 (富士山 兩天一夜 Day 1)
+    { id: 149, date: '2026-12-08', category: 'accommodation', name: '退房 里士滿淺草飯店', time: '07:30', travelTime: 0, transportType: 'walk', note: '準備前往新宿', description: '早上辦理退房，準備搭車前往新宿轉乘特急前往富士山！' },
     { id: 15, date: '2026-12-08', category: 'transport', name: '新宿站 ➔ 河口湖站', time: '08:30', travelTime: 115, transportType: 'transit', note: '搭乘 JR特急 富士回遊', description: '帶著一晚的輕便行李！從新宿站搭乘「富士回遊(Fuji Excursion)」，直達【河口湖站】免換車。' },
     { id: 16, date: '2026-12-08', category: 'attraction', name: '富士山 河口湖大石公園', time: '11:00', travelTime: 25, transportType: 'transit', note: '搭乘 河口湖紅線巴士', description: '河口湖站搭乘「紅線周遊巴士」至終點【大石公園】。欣賞毫無遮蔽的富士山與湖面倒影。' },
     { id: 165, date: '2026-12-08', category: 'attraction', name: '天上山公園纜車 / 遊覽船', time: '14:00', travelTime: 0, transportType: 'walk', note: '從高處俯瞰河口湖', description: '搭紅線巴士回到遊覽船/纜車站，搭乘狸貓兔子纜車上山，飽覽無死角的富士山全景！' },
@@ -984,8 +1064,8 @@
   const db = getFirestore(app);
   const auth = getAuth(app);
   
-  // ⚡ 更新了資料庫版本號以載入新行程
-  const TRIP_ID = "kanto_winter_fuji_2days_v6";
+  // ⚡ 幫你把資料庫版本改回原本的 v5，這樣你之前存的購物、記帳資料就會全部回來了！
+  const TRIP_ID = "kanto_winter_fuji_2days_v5";
 
   createApp({
     setup() {
@@ -1275,7 +1355,21 @@
 
       const modal = reactive({ show: false, type: '', title: '', isEdit: false });
       const formData = reactive({});
-      const cropState = reactive({ show: false, src: '', cropper: null });
+      const cropState = reactive({ show: false, src: '', cropper: null, context: 'form', itemId: null });
+
+      const globalImageInput = ref(null);
+      const uploadTargetId = ref(null);
+
+      const triggerItineraryUpload = (id) => {
+          uploadTargetId.value = id;
+          if (globalImageInput.value) {
+              globalImageInput.value.click();
+          }
+      };
+
+      const handleGlobalImageUpload = (e) => {
+          handleImageUpload(e, 'itinerary', uploadTargetId.value);
+      };
 
       const openModal = (type, item = null) => {
         if (type === 'itinerary' && item) return; 
@@ -1523,14 +1617,17 @@
         exchange.jpy = parseFloat((exchange.twd / currentRate.value).toFixed(2));
       };
 
-      const handleImageUpload = (e) => {
+      const handleImageUpload = (e, context = 'form', itemId = null) => {
         const file = e.target.files[0];
         if(!file) return;
 
+        const targetElement = e.target;
         const reader = new FileReader();
         reader.onload = (evt) => {
             cropState.src = evt.target.result;
             cropState.show = true;
+            cropState.context = context;
+            cropState.itemId = itemId;
             
             setTimeout(() => {
                 const image = document.getElementById('crop-image');
@@ -1547,18 +1644,35 @@
             }, 100);
         };
         reader.readAsDataURL(file);
-        e.target.value = ''; 
+        targetElement.value = ''; 
       };
 
-      const confirmCrop = () => {
+      const confirmCrop = async () => {
         if (!cropState.cropper) return;
         const canvas = cropState.cropper.getCroppedCanvas({
-            width: 800,
-            height: 800,
+            width: 400,
+            height: 400,
             imageSmoothingEnabled: true,
             imageSmoothingQuality: 'high',
         });
-        formData.image = canvas.toDataURL('image/jpeg', 0.6); 
+        const base64Image = canvas.toDataURL('image/jpeg', 0.6); 
+        
+        if (cropState.context === 'itinerary') {
+            try {
+                isSaving.value = true;
+                const docRef = doc(db, 'trips', TRIP_ID, 'itinerary', String(cropState.itemId));
+                await setDoc(docRef, { image: base64Image }, { merge: true });
+                showToast('照片更新成功！');
+            } catch (err) {
+                console.error(err);
+                showToast('照片上傳失敗');
+            } finally {
+                isSaving.value = false;
+            }
+        } else {
+            formData.image = base64Image;
+        }
+        
         closeCropModal();
       };
 
@@ -1628,6 +1742,8 @@
         tripProgress, 
         
         dateContainer, startDrag, stopDrag, doDrag, selectDate,
+
+        globalImageInput, triggerItineraryUpload, handleGlobalImageUpload,
 
         filteredItinerary, filteredShoppingList, expenses, totalExpense, filteredTotalExpense, notebookList, filteredPackingList, filteredExpenses, filteredNotebookList,
         currentPackingFilter, newPackingItem,
