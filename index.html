@@ -416,14 +416,6 @@
                       <h3 class="font-bold text-gray-800 text-[18px] leading-snug tracking-wide">
                         {{ item.name }} 
                       </h3>
-                      
-                      <!-- 圓形相片上傳區塊 (景點、美食) -->
-                      <div v-if="item.category === 'attraction' || item.category === 'food'"
-                           @click.stop="triggerItineraryUpload(item.id)"
-                           class="shrink-0 w-8 h-8 rounded-full border border-gray-200 shadow-sm bg-gray-50 flex items-center justify-center cursor-pointer group relative overflow-hidden transition-transform hover:scale-105">
-                          <img v-if="item.image" :src="item.image" class="w-full h-full object-cover">
-                          <i v-else class="fa-solid fa-camera text-gray-300 text-[11px] group-hover:text-winter transition-colors"></i>
-                      </div>
                   </div>
                   <button v-if="item.category !== 'flight'" @click.stop="openMap(item.name)" class="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-gray-50 border border-gray-200 hover:bg-winter hover:border-winter hover:text-white text-gray-400 active:scale-95 transition-all shadow-sm">
                       <i class="fa-solid fa-location-arrow text-[13px]"></i>
@@ -566,6 +558,11 @@
               <span class="flex items-center"><i class="fa-solid fa-suitcase-rolling mr-1 text-winter"></i>25kg<span class="mx-1 text-winter-light">|</span><i class="fa-solid fa-briefcase mr-1 text-winter"></i>10kg<span class="mx-1 text-winter-light">|</span><i class="fa-solid fa-utensils mr-1 text-winter"></i>餐點</span>
             </div>
           </div>
+          
+          <!-- 航班收合按鈕 -->
+          <button @click="isFlightExpanded = false" class="w-full mt-2 py-2.5 bg-white border border-gray-100 text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-xs font-bold rounded-xl flex items-center justify-center transition-colors shadow-sm">
+             <i class="fa-solid fa-chevron-up mr-1.5"></i>收合航班資訊
+          </button>
         </div>
       </div>
 
@@ -688,11 +685,69 @@
             </div>
           </div>
           
-          <div class="text-center mt-2">
-               <button class="text-[11px] text-gray-400 hover:text-purple-500 font-bold transition-colors underline decoration-dotted underline-offset-2">
-                   + 新增其他住宿資訊
-               </button>
+          <!-- Hotel 3 (池袋) -->
+          <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
+            <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
+              第 5~8 晚 (12/09-12/12)
+            </div>
+            <div class="flex gap-3 mb-3 mt-1">
+               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
+                    <i class="fa-solid fa-bed text-2xl"></i>
+               </div>
+               <div class="flex-1 min-w-0 py-0.5 relative z-10">
+                 <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Tokyu Stay Ikebukuro</h4>
+                 <p class="text-xs text-gray-500 mb-1.5 mt-0.5">東急Stay池袋</p>
+                 <div class="flex gap-1 flex-wrap">
+                   <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">池袋商圈</span>
+                   <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">房內洗脫烘</span>
+                 </div>
+               </div>
+            </div>
+            
+            <div class="space-y-2 relative z-10">
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                    <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-700 text-[13px] leading-snug">Ikebukuro 2-12-2, 豐島區</p>
+                        <p class="text-[10px] text-gray-400 mt-0.5">171-0014 東京都, 日本</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                    <i class="fa-solid fa-train-subway text-emerald-500 mt-0.5 ml-1 text-xs"></i>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-700 text-[12px] leading-snug">鄰近交通</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                           • 各線 池袋站 (西口/C1出口)：步行約 1~4 分鐘<br>
+                           • 副都心線 池袋站：非常便利
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                    <i class="fa-solid fa-basket-shopping text-orange-400 mt-0.5 ml-1 text-xs"></i>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-700 text-[12px] leading-snug">周邊生活機能</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                           • 附近多家超商 (FamilyMart, 7-11)<br>
+                           • 鄰近池袋西口商圈、各式餐廳居酒屋<br>
+                           • 步行可達東武百貨、LUMINE
+                        </p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button @click="openMap('Tokyu Stay Ikebukuro')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                        <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
+                    </button>
+                     <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
+                        <i class="fa-solid fa-phone mr-1"></i>撥打電話
+                    </a>
+                </div>
+            </div>
           </div>
+
+          <!-- 住宿收合按鈕 -->
+          <button @click="isHotelExpanded = false" class="w-full mt-2 py-2.5 bg-white border border-gray-100 text-gray-400 hover:text-gray-600 hover:bg-gray-50 text-xs font-bold rounded-xl flex items-center justify-center transition-colors shadow-sm">
+             <i class="fa-solid fa-chevron-up mr-1.5"></i>收合住宿資訊
+          </button>
         </div>
       </div>
 
@@ -1027,6 +1082,7 @@
     { id: 19, date: '2026-12-09', category: 'transport', name: '下吉田站 ➔ 新宿站', time: '17:00', travelTime: 115, transportType: 'transit', note: '搭乘 JR特急 富士回遊', description: '搭乘「富士回遊」直達新宿。' },
     { id: 191, date: '2026-12-09', category: 'attraction', name: '新宿 歌舞伎町', time: '19:00', travelTime: 10, transportType: 'walk', note: '東京不夜城', description: '抵達新宿後，直接步行前往歌舞伎町，跟著名的「哥吉拉頭」地標拍照，感受繁華的夜生活！' },
     { id: 192, date: '2026-12-09', category: 'food', name: '新宿周邊 晚餐', time: '19:30', travelTime: 0, transportType: 'walk', note: '美食選擇超多', description: '在新宿或歌舞伎町周邊吃晚餐，不管是敘敘苑燒肉、阿夫利拉麵還是各種居酒屋任君挑選。' },
+    { id: 193, date: '2026-12-09', category: 'accommodation', name: '入住 東急Stay池袋', time: '21:30', travelTime: 15, transportType: 'transit', note: '連住 4 晚', description: '從新宿搭乘JR山手線或埼京線前往池袋，辦理入住手續並休息。房間內有洗脫烘衣機超級方便！' },
 
     // Day 6 (鎌倉/橫濱 + 湘南單軌電車)
     { id: 20, date: '2026-12-10', category: 'transport', name: '新宿/東京站 ➔ 鎌倉站', time: '09:00', travelTime: 60, transportType: 'transit', note: '搭乘 JR湘南新宿線/橫須賀線', description: '搭乘直達車前往充滿歷史氣息的古都【鎌倉站】。' },
@@ -1038,8 +1094,8 @@
     { id: 24, date: '2026-12-10', category: 'transport', name: '大船站 ➔ 櫻木町站(橫濱)', time: '15:50', travelTime: 30, transportType: 'transit', note: '搭乘 JR根岸線', description: '抵達大船站後，直接轉乘 JR 前往橫濱的櫻木町站。' },
     { id: 241, date: '2026-12-10', category: 'attraction', name: '橫濱空中纜車 YOKOHAMA AIR CABIN', time: '16:30', travelTime: 5, transportType: 'walk', note: '港灣空中漫步', description: '出櫻木町站後，直接搭乘市區景觀纜車前往運河公園！從高空俯瞰橫濱港灣與摩天輪的絕美日落與夜景。' },
     { id: 25, date: '2026-12-10', category: 'attraction', name: '橫濱 (紅磚倉庫 & 聖誕市集)', time: '17:00', travelTime: 0, transportType: 'walk', note: '浪漫港灣夜景', description: '纜車下車後步行即可抵達紅磚倉庫。這裡有冬季限定的超大聖誕市集，推薦在這裡吃晚餐、喝熱紅酒！' },
-    { id: 251, date: '2026-12-10', category: 'transport', name: '櫻木町/橫濱 ➔ 上野站', time: '20:00', travelTime: 45, transportType: 'transit', note: '搭乘 JR京濱東北線 或 上野東京線', description: '結束橫濱浪漫之夜，搭乘直達車返回東京上野一帶。' },
-    { id: 252, date: '2026-12-10', category: 'accommodation', name: '入住 東京市區飯店', time: '21:00', travelTime: 0, transportType: 'transit', note: '上野周邊 (待確認)', description: '抵達東京後辦理入住。目前飯店還在挑選中，確認後可再來補上詳細資訊！' },
+    { id: 251, date: '2026-12-10', category: 'transport', name: '櫻木町/橫濱 ➔ 池袋站', time: '20:00', travelTime: 45, transportType: 'transit', note: '湘南新宿線直達', description: '結束橫濱浪漫之夜，搭乘電車返回池袋。' },
+    { id: 252, date: '2026-12-10', category: 'accommodation', name: '返回 東急Stay池袋', time: '21:00', travelTime: 0, transportType: 'walk', note: '連住第 2 晚', description: '抵達池袋後回飯店休息。' },
 
     // Day 7 (小網神社 & OSEBA 按鈕工廠 & 東京鐵塔)
     { id: 26, date: '2026-12-11', category: 'transport', name: '市區 ➔ 人形町站', time: '09:00', travelTime: 20, transportType: 'transit', note: '前往小網神社', description: '搭乘地鐵至【人形町站】或【水天宮前站】，步行約 5 分鐘即可抵達小網神社。' },
@@ -1051,6 +1107,8 @@
     { id: 29, date: '2026-12-11', category: 'attraction', name: '東京鐵塔', time: '17:00', travelTime: 5, transportType: 'walk', note: '經典地標', description: '赤羽橋站出站就能看到壯觀的紅色鐵塔，可步行至芝公園附近拍美照。' },
     { id: 30, date: '2026-12-11', category: 'transport', name: '赤羽橋站 ➔ 六本木站', time: '18:30', travelTime: 5, transportType: 'transit', note: '搭乘 都營大江戶線 (2站)', description: '直接搭乘大江戶線，兩站就抵達六本木商圈。' },
     { id: 31, date: '2026-12-11', category: 'attraction', name: '六本木聖誕點燈', time: '19:00', travelTime: 0, transportType: 'walk', note: '浪漫燈海', description: '櫸坂通 (Keyakizaka) 的藍白聖誕點燈，搭配遠方的東京鐵塔，是冬季必看！' },
+    { id: 311, date: '2026-12-11', category: 'transport', name: '六本木站 ➔ 池袋站', time: '20:30', travelTime: 25, transportType: 'transit', note: '地鐵轉乘JR', description: '搭乘大江戶線轉山手線回池袋。' },
+    { id: 312, date: '2026-12-11', category: 'accommodation', name: '返回 東急Stay池袋', time: '21:00', travelTime: 0, transportType: 'walk', note: '連住第 3 晚', description: '回飯店休息。' },
 
     // Day 8 (台場 & 澀谷合併)
     { id: 32, date: '2026-12-12', category: 'transport', name: '新橋站/汐留站 ➔ 台場站', time: '09:30', travelTime: 15, transportType: 'transit', note: '搭乘 百合鷗號 (Yurikamome)', description: '搭乘無人駕駛的百合鷗號，沿途欣賞跨越東京灣與彩虹大橋的景色。' },
@@ -1058,9 +1116,11 @@
     { id: 34, date: '2026-12-12', category: 'transport', name: '台場 ➔ 澀谷站', time: '13:30', travelTime: 35, transportType: 'transit', note: '搭乘 臨海線 轉 埼京線', description: '從台場【東京電訊站】搭乘臨海線(可直通運轉JR埼京線)，免換車直達【澀谷站】。' },
     { id: 35, date: '2026-12-12', category: 'attraction', name: '澀谷', time: '14:30', travelTime: 0, transportType: 'walk', note: '潮流文化', description: '朝聖澀谷十字路口、忠犬八公，也可預約 Shibuya Sky 觀景台。' },
     { id: 36, date: '2026-12-12', category: 'shopping', name: '最後採買', time: '16:30', travelTime: 0, transportType: 'walk', note: '藥妝與伴手禮', description: '把握最後一天在市區把清單上的東西買齊！' },
+    { id: 361, date: '2026-12-12', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:00', travelTime: 0, transportType: 'walk', note: '連住第 4 晚', description: '回飯店收拾打包行李，準備明早退房！' },
 
     // Day 9 (回程)
-    { id: 37, date: '2026-12-13', category: 'transport', name: '日暮里/上野站 ➔ 成田機場(T2)', time: '09:00', travelTime: 45, transportType: 'transit', note: '搭乘 Keisei Skyliner', description: '搭乘京成電鐵 Skyliner 快速抵達機場。(全車對號座，建議提前購票)' },
+    { id: 362, date: '2026-12-13', category: 'accommodation', name: '退房 東急Stay池袋', time: '08:00', travelTime: 0, transportType: 'walk', note: '準備前往機場', description: '早上辦理退房，準備搭車前往成田機場！' },
+    { id: 37, date: '2026-12-13', category: 'transport', name: '池袋站 ➔ 成田機場(T2)', time: '09:00', travelTime: 85, transportType: 'transit', note: '搭乘 N\'EX 成田特快', description: '從池袋搭乘 N\'EX 直達機場，或至日暮里轉乘 Skyliner 快速抵達機場。' },
     { id: 38, date: '2026-12-13', category: 'flight', name: '航班 IT-281 NRT ➔ KHH', time: '13:00', travelTime: 280, transportType: 'flight', note: '起飛 13:00 / 抵達 16:40', description: '帶著滿滿的雪國與關東回憶準備回家囉！' }
   ];
 </script>
@@ -1089,7 +1149,7 @@
   const db = getFirestore(app);
   const auth = getAuth(app);
   
-  // ⚡ 幫你把資料庫版本改回原本的 v5，這樣你之前存的購物、記帳資料就會全部回來了！
+  // 維持原本的資料庫版本
   const TRIP_ID = "kanto_winter_fuji_2days_v5";
 
   createApp({
@@ -1281,21 +1341,37 @@
       };
 
       const updateItineraryContentOnly = async () => {
-          migrationStatus.value = "正在為您準備雪國行程...";
+          migrationStatus.value = "正在同步您的雪國行程...";
           const itinToUpload = window.__FULL_ITINERARY_DATA__ || [];
           
           try {
              const q = collection(db, 'trips', TRIP_ID, 'itinerary');
              const snapshot = await getDocs(q);
-             const deletePromises = snapshot.docs.map(docSnap => deleteDoc(doc(db, 'trips', TRIP_ID, 'itinerary', docSnap.id)));
+             
+             // 【核心修復】：在覆寫行程之前，先把舊資料裡所有的圖片暫存起來
+             const existingImages = {};
+             snapshot.docs.forEach(docSnap => {
+                 const data = docSnap.data();
+                 if (data.image) {
+                     existingImages[docSnap.id] = data.image;
+                 }
+             });
+
+             // 刪除舊的資料節點
+             const deletePromises = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
              await Promise.all(deletePromises);
 
+             // 寫入新資料，同時把剛剛暫存的圖片塞回去！
              const addPromises = itinToUpload.map(item => {
                   const id = item.id ? String(item.id) : Date.now().toString();
+                  // 檢查這個行程 ID 之前有沒有存過圖片，有的話就加回來
+                  if (existingImages[id]) {
+                      item.image = existingImages[id];
+                  }
                   return setDoc(doc(db, 'trips', TRIP_ID, 'itinerary', id), item);
              });
              await Promise.all(addPromises);
-             showToast("資料已完美更新！");
+             showToast("資料已更新！(您的專屬照片已全數保留)");
           } catch(e) {
              showToast("更新失敗：" + e.message);
           } finally {
