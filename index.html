@@ -30,6 +30,38 @@
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons --><!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>關東之旅</title>
+
+  <!-- Global Error Handler -->
+  <script>
+    window.addEventListener('error', function(e) {
+      console.error("Global Error:", e.error);
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        if (splash) splash.style.display = 'none';
+      }, 1000);
+    });
+
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash && splash.style.display !== 'none') {
+        splash.style.display = 'none';
+      }
+    }, 4000);
+  </script>
+
+  <!-- Preconnect -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <!-- Google Fonts -->
@@ -1029,125 +1061,125 @@
 <script>
   window.__FULL_ITINERARY_DATA__ = [
     // Day 1
-    { id: '101', date: '2026-12-05', category: 'flight', name: '航班 IT-280 KHH ➔ NRT', time: '08:15', travelTime: 195, transportType: 'flight', note: '起飛 08:15 / 抵達 12:10', description: '準備飛往東京成田機場，感受日本冬日風情！' },
-    { id: '102', date: '2026-12-05', category: 'transport', name: '成田機場 ➔ 淺草站', time: '13:30', travelTime: 60, transportType: 'transit', note: '搭乘 京成Access特急', description: '最推薦搭乘「京成成田Sky Access特急」(往羽田機場/西馬込方向)，免換車直達【淺草站】，對拿大行李最友善！' },
-    { id: '103', date: '2026-12-05', category: 'accommodation', name: '里士滿淺草飯店 寄放行李', time: '14:45', travelTime: 10, transportType: 'walk', note: '淺草站步行約8分鐘', description: '抵達都營淺草線「淺草站」後，建議從 A2-b 出口出站，步行抵達飯店寄放行李，減輕負擔輕鬆逛街！' },
-    { id: '104', date: '2026-12-05', category: 'attraction', name: '淺草 雷門 & 仲見世通', time: '15:15', travelTime: 0, transportType: 'walk', note: '經典東京起點', description: '穿過巨大的紅燈籠，沿著仲見世通品嚐人形燒、炸肉餅等道地小吃。' },
-    { id: '105', date: '2026-12-05', category: 'attraction', name: '淺草寺參拜 & 拍夕陽', time: '16:00', travelTime: 0, transportType: 'walk', note: '傍晚時分', description: '這時候可以同時拍到白天與點燈的雙重美景。' },
-    { id: '106', date: '2026-12-05', category: 'attraction', name: '隅田川漫步 (Sumida River Walk)', time: '17:00', travelTime: 20, transportType: 'walk', note: '跨河景觀步道', description: '走在隅田川專屬的跨河步道上，看著晴空塔慢慢變大，非常浪漫。' },
-    { id: '107', date: '2026-12-05', category: 'attraction', name: '晴空塔 Skytree', time: '17:45', travelTime: 0, transportType: 'walk', note: '看夜景 + 吃晚餐', description: '俯瞰夜景與聖誕點燈，晚餐可以直接在底下的 Solamachi 商場享用。' },
-    { id: '108', date: '2026-12-05', category: 'accommodation', name: '入住 里士滿淺草飯店', time: '20:30', travelTime: 15, transportType: 'transit', note: '連住 3 晚', description: '搭乘一站地鐵回到淺草，辦理入住手續並休息。' },
+    { id: '101', date: '2026-12-05', category: 'flight', name: '航班 IT-280 KHH ➔ NRT', time: '08:15', travelTime: 195, transportType: 'flight', note: '起飛 08:15 / 抵達 12:10', description: '✈️ 交通：台灣虎航直飛成田機場\n⏱️ 時間：飛行約 3 小時 55 分鐘\n📍 抵達：成田機場第二航廈' },
+    { id: '102', date: '2026-12-05', category: 'transport', name: '成田機場 ➔ 淺草', time: '13:30', travelTime: 60, transportType: 'transit', note: '京成成田Sky Access', description: '🚇 交通：於機場B1搭乘「京成成田Sky Access特急」(往羽田機場/西馬込方向)。\n⏱️ 時間：車程約 60 分鐘 (免換車直達)。\n📍 下車：【淺草站】A2-b 出口搭乘電梯出站。' },
+    { id: '103', date: '2026-12-05', category: 'accommodation', name: '里士滿淺草飯店 (寄放行李)', time: '14:45', travelTime: 8, transportType: 'walk', note: '出站步行8分', description: '🚶 步行：從淺草站 A2-b 出口出發，沿著大馬路步行約 8 分鐘。\n💡 抵達飯店後先寄放大型行李，一身輕出門逛街！' },
+    { id: '104', date: '2026-12-05', category: 'attraction', name: '淺草 雷門 & 仲見世通', time: '15:15', travelTime: 5, transportType: 'walk', note: '步行5分', description: '🚶 步行：從飯店步行 5 分鐘即可抵達雷門。\n穿過巨大的紅燈籠，沿著仲見世通品嚐人形燒、炸肉餅等道地小吃。' },
+    { id: '105', date: '2026-12-05', category: 'attraction', name: '淺草寺參拜 & 拍夕陽', time: '16:00', travelTime: 5, transportType: 'walk', note: '步行5分', description: '🚶 步行：沿著仲見世通直走到底即是淺草寺本堂。\n傍晚時分，可以同時拍到白天與準備點燈的雙重美景。' },
+    { id: '106', date: '2026-12-05', category: 'attraction', name: '隅田川漫步 (Sumida River Walk)', time: '17:00', travelTime: 10, transportType: 'walk', note: '跨河景觀步道', description: '🚶 步行：從淺草寺往隅田川方向走約 10 分鐘，上步道過橋。\n走在專屬的跨河步道上，看著晴空塔慢慢變大，非常浪漫。' },
+    { id: '107', date: '2026-12-05', category: 'attraction', name: '晴空塔 Skytree (晚餐)', time: '17:45', travelTime: 15, transportType: 'walk', note: '下橋步行即達', description: '🚶 步行：下跨河步道後，步行約 15 分鐘直達晴空塔底下的 Solamachi 商場。\n俯瞰夜景與聖誕點燈，晚餐直接在商場享用。' },
+    { id: '108', date: '2026-12-05', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '20:30', travelTime: 15, transportType: 'transit', note: '淺草線 1站', description: '🚇 交通：從【押上站】搭乘都營淺草線。\n⏱️ 時間：乘車 3 分鐘 (1站) 抵達【淺草站】。\n🚶 步行：出站步行 8 分鐘回飯店 Check-in 休息。' },
 
     // Day 2
-    { id: '201', date: '2026-12-06', category: 'transport', name: '飯店出發 ➔ 淺草站', time: '08:15', travelTime: 10, transportType: 'walk', note: '步行', description: '從飯店步行出發前往淺草站。' },
-    { id: '202', date: '2026-12-06', category: 'transport', name: '淺草 ➔ 人形町站', time: '08:30', travelTime: 10, transportType: 'transit', note: '搭乘 都營淺草線', description: '搭乘都營淺草線至【人形町站】，A5出口出站。' },
-    { id: '203', date: '2026-12-06', category: 'attraction', name: '小網神社 (洗錢 / 強運厄除)', time: '08:45', travelTime: 0, transportType: 'walk', note: '提早抵達免排隊', description: '假日人潮眾多！提早抵達排隊等 9:00 開門，洗錢當錢母祈求好運。' },
-    { id: '204', date: '2026-12-06', category: 'transport', name: '人形町 ➔ 銀座站', time: '09:45', travelTime: 10, transportType: 'transit', note: '搭乘 日比谷線', description: '在人形町站搭乘「日比谷線(往中目黑方向)」直達【銀座站】。' },
-    { id: '205', date: '2026-12-06', category: 'attraction', name: '銀座 ➔ 東京車站 (漫步逛街)', time: '10:00', travelTime: 0, transportType: 'walk', note: '步行者天國', description: '假日銀座實施封街，沿著中央通漫步到東京車站，沿路吃午餐、買伴手禮。' },
-    { id: '206', date: '2026-12-06', category: 'transport', name: '市區 ➔ 赤羽橋站', time: '15:15', travelTime: 20, transportType: 'transit', note: '轉乘 大江戶線', description: '搭車轉乘「都營大江戶線」前往赤羽橋站，準備看夕陽。' },
-    { id: '207', date: '2026-12-06', category: 'attraction', name: '東京鐵塔 (拍夕陽與點燈)', time: '16:00', travelTime: 5, transportType: 'walk', note: '經典地標', description: '東京鐵塔冬季預計於【16:30 左右點燈】，這時間抵達可以一次收集白天、夕陽與絕美夜景！' },
-    { id: '208', date: '2026-12-06', category: 'transport', name: '赤羽橋 ➔ 淺草站', time: '19:30', travelTime: 30, transportType: 'transit', note: '大江戶線 轉 淺草線', description: '搭乘大江戶線至大門站，轉乘淺草線回淺草吃晚餐。' },
-    { id: '209', date: '2026-12-06', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '21:00', travelTime: 0, transportType: 'walk', note: '連住第 2 晚', description: '回飯店休息。' },
+    { id: '201', date: '2026-12-06', category: 'transport', name: '飯店出發 ➔ 淺草站', time: '08:15', travelTime: 10, transportType: 'walk', note: '步行', description: '🚶 步行：從飯店漫步約 8~10 分鐘抵達淺草站。' },
+    { id: '202', date: '2026-12-06', category: 'transport', name: '淺草 ➔ 人形町', time: '08:30', travelTime: 12, transportType: 'transit', note: '搭乘 都營淺草線', description: '🚇 交通：於【淺草站】搭乘「都營淺草線」(往西馬込方向)。\n⏱️ 時間：車程約 7 分鐘。\n📍 下車：於【人形町站】下車，從 A5 出口出站。' },
+    { id: '203', date: '2026-12-06', category: 'attraction', name: '小網神社 (洗錢/強運厄除)', time: '08:45', travelTime: 5, transportType: 'walk', note: '步行5分', description: '🚶 步行：從人形町站 A5 出口步行約 5 分鐘抵達。\n提早抵達排隊等 9:00 開門，洗錢當錢母祈求好運。' },
+    { id: '204', date: '2026-12-06', category: 'transport', name: '人形町 ➔ 銀座', time: '09:45', travelTime: 15, transportType: 'transit', note: '搭乘 日比谷線', description: '🚇 交通：走回【人形町站】，搭乘「東京地鐵 日比谷線」(往中目黑方向)。\n⏱️ 時間：車程約 9 分鐘。\n📍 下車：直達【銀座站】。' },
+    { id: '205', date: '2026-12-06', category: 'attraction', name: '銀座 ➔ 東京車站 (漫步逛街)', time: '10:00', travelTime: 0, transportType: 'walk', note: '步行者天國', description: '🚶 步行：假日銀座實施封街，可直接走在馬路正中央。\n沿著中央通一路漫步 20~30 分鐘往東京車站方向前進，沿路吃午餐、買伴手禮。' },
+    { id: '206', date: '2026-12-06', category: 'transport', name: '東京車站周邊 ➔ 赤羽橋', time: '15:15', travelTime: 25, transportType: 'transit', note: '轉乘至 大江戶線', description: '🚇 交通：從銀座周邊走到【東銀座站】搭淺草線至【大門站】，同站轉乘「都營大江戶線」。\n⏱️ 時間：車程加轉乘約 25 分鐘。\n📍 下車：於【赤羽橋站】出站。' },
+    { id: '207', date: '2026-12-06', category: 'attraction', name: '東京鐵塔 (拍夕陽與點燈)', time: '16:00', travelTime: 5, transportType: 'walk', note: '出站步行5分', description: '🚶 步行：從赤羽橋站出站，眼前就是巨大的東京鐵塔，步行 5 分鐘抵達正下方。\n💡 冬季預計於【16:30 左右點燈】，一次收集夕陽與夜景！' },
+    { id: '208', date: '2026-12-06', category: 'transport', name: '赤羽橋 ➔ 淺草站', time: '19:30', travelTime: 30, transportType: 'transit', note: '大江戶線 轉 淺草線', description: '🚇 交通：於【赤羽橋站】搭大江戶線至【大門站】，同站轉乘「都營淺草線」。\n⏱️ 時間：車程加轉乘約 25 分鐘。\n📍 下車：直達【淺草站】。' },
+    { id: '209', date: '2026-12-06', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '20:00', travelTime: 10, transportType: 'walk', note: '出站步行8分', description: '🚶 步行：在淺草周邊吃完晚餐後，步行回飯店休息，準備明天前往台場！' },
 
     // Day 3
-    { id: '301', date: '2026-12-07', category: 'transport', name: '飯店出發 ➔ 淺草站', time: '08:45', travelTime: 10, transportType: 'walk', note: '步行', description: '從飯店步行至淺草站。' },
-    { id: '302', date: '2026-12-07', category: 'transport', name: '淺草 ➔ 東銀座站', time: '09:00', travelTime: 12, transportType: 'transit', note: '搭乘 都營淺草線', description: '搭乘都營淺草線直達【東銀座站】，步行即達築地市場。' },
-    { id: '303', date: '2026-12-07', category: 'food', name: '築地場外市場', time: '09:15', travelTime: 0, transportType: 'walk', note: '海鮮早午餐', description: '品嚐新鮮的海鮮丼、玉子燒與各式烤物！' },
-    { id: '304', date: '2026-12-07', category: 'attraction', name: '濱離宮恩賜庭園', time: '11:00', travelTime: 10, transportType: 'walk', note: '日式庭園漫步', description: '吃飽後散步到旁邊的濱離宮，欣賞傳統日式庭園。' },
-    { id: '305', date: '2026-12-07', category: 'transport', name: '市區 ➔ 大森海岸站', time: '12:30', travelTime: 30, transportType: 'transit', note: '淺草線直通京急線', description: '逛完庭園後，從新橋/大門搭乘淺草線直通運轉京急本線（請注意搭乘有停靠「大森海岸」的普通或急行列車），前往水族館。' },
-    { id: '306', date: '2026-12-07', category: 'attraction', name: '品川水族館 (しながわ水族館)', time: '13:15', travelTime: 8, transportType: 'walk', note: '大森海岸站步行8分', description: '來到位於大森海岸的經典水族館！這裡有超棒的海豚秀、海豹館，以及夢幻的海底隧道，氛圍非常悠閒舒適。' },
-    { id: '307', date: '2026-12-07', category: 'transport', name: '大森海岸 ➔ 新橋 ➔ 台場站', time: '15:30', travelTime: 45, transportType: 'transit', note: '京急本線 轉 百合鷗號', description: '搭乘京急線回到新橋站，轉乘無人駕駛的「百合鷗號」前往台場，沿途可欣賞跨海大橋美景。' },
-    { id: '308', date: '2026-12-07', category: 'attraction', name: '台場 & 彩虹大橋夜景', time: '16:15', travelTime: 0, transportType: 'walk', note: '看夕陽與百萬夜景', description: '逛 DiverCity 看鋼彈，傍晚欣賞彩虹大橋，並在商場享用晚餐。' },
-    { id: '309', date: '2026-12-07', category: 'transport', name: '台場 ➔ 淺草站', time: '19:30', travelTime: 45, transportType: 'transit', note: '百合鷗號 轉 淺草線', description: '搭乘百合鷗號回到新橋，同站轉乘都營淺草線一路睡回淺草。' },
-    { id: '310', date: '2026-12-07', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '20:30', travelTime: 10, transportType: 'walk', note: '準備明早退房', description: '回飯店收拾行李，準備明天出發去富士山！' },
+    { id: '301', date: '2026-12-07', category: 'transport', name: '飯店出發 ➔ 淺草站', time: '08:45', travelTime: 10, transportType: 'walk', note: '步行', description: '🚶 步行：從飯店漫步約 8~10 分鐘抵達淺草站。' },
+    { id: '302', date: '2026-12-07', category: 'transport', name: '淺草 ➔ 築地 (東銀座站)', time: '09:00', travelTime: 15, transportType: 'transit', note: '搭乘 都營淺草線', description: '🚇 交通：於【淺草站】搭乘「都營淺草線」。\n⏱️ 時間：車程約 12 分鐘。\n📍 下車：於【東銀座站】下車，往築地市場方向出站。' },
+    { id: '303', date: '2026-12-07', category: 'food', name: '築地場外市場', time: '09:15', travelTime: 5, transportType: 'walk', note: '出站步行5分', description: '🚶 步行：出站步行約 5 分鐘抵達築地市場外圍。\n品嚐新鮮的海鮮丼、玉子燒與各式烤物！' },
+    { id: '304', date: '2026-12-07', category: 'attraction', name: '濱離宮恩賜庭園', time: '11:00', travelTime: 10, transportType: 'walk', note: '步行10分', description: '🚶 步行：從築地市場吃飽後，沿著指標步行約 10 分鐘即可抵達濱離宮入口。\n欣賞傳統日式庭園與高樓大廈的對比美景。' },
+    { id: '305', date: '2026-12-07', category: 'transport', name: '汐留 ➔ 大森海岸', time: '12:30', travelTime: 25, transportType: 'transit', note: '淺草線直通京急線', description: '🚇 交通：走到【新橋站】或【大門站】，搭乘「淺草線直通運轉京急本線」的列車 (需確認有停靠大森海岸)。\n⏱️ 時間：車程約 20 分鐘。\n📍 下車：於【大森海岸站】下車。' },
+    { id: '306', date: '2026-12-07', category: 'attraction', name: '品川水族館 (しながわ水族館)', time: '13:00', travelTime: 8, transportType: 'walk', note: '大森海岸站步行8分', description: '🚶 步行：出站後沿著指標步行約 8 分鐘抵達公園內的水族館。\n💡 必看精彩的海豚秀、海獅秀，以及夢幻的海底隧道！' },
+    { id: '307', date: '2026-12-07', category: 'transport', name: '大森海岸 ➔ 台場', time: '15:30', travelTime: 40, transportType: 'transit', note: '京急線 轉 百合鷗號', description: '🚇 交通：從【大森海岸站】搭京急線至【新橋站】(約20分)。出站後走到地面轉乘「百合鷗號」(往豐洲方向)。\n⏱️ 時間：百合鷗號車程約 15 分鐘。\n📍 下車：於【台場站】下車。' },
+    { id: '308', date: '2026-12-07', category: 'attraction', name: '台場 & 彩虹大橋夜景', time: '16:15', travelTime: 5, transportType: 'walk', note: '出站即達', description: '🚶 步行：台場站出站即是 Aqua City 與自由女神像。\n逛 DiverCity 看 1:1 獨角獸鋼彈，傍晚欣賞彩虹大橋，並在商場享用晚餐。' },
+    { id: '309', date: '2026-12-07', category: 'transport', name: '台場 ➔ 淺草站', time: '19:30', travelTime: 45, transportType: 'transit', note: '百合鷗號 轉 淺草線', description: '🚇 交通：搭乘百合鷗號回到【新橋站】，同站走到地下轉乘「都營淺草線」。\n⏱️ 時間：車程加轉乘約 45 分鐘。\n📍 下車：直達【淺草站】。' },
+    { id: '310', date: '2026-12-07', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '20:30', travelTime: 10, transportType: 'walk', note: '整理行李', description: '🚶 步行：出站步行回飯店。\n收拾行李，將帶上富士山的兩天一夜輕便衣物另外打包！' },
 
     // Day 4
-    { id: '401', date: '2026-12-08', category: 'accommodation', name: '退房 里士滿淺草飯店', time: '07:30', travelTime: 0, transportType: 'walk', note: '告別淺草', description: '辦理退房手續。' },
-    { id: '402', date: '2026-12-08', category: 'transport', name: '淺草 ➔ 新宿站', time: '07:45', travelTime: 35, transportType: 'transit', note: '淺草線 轉 總武線', description: '帶著行李前往新宿站。' },
-    { id: '403', date: '2026-12-08', category: 'accommodation', name: '新宿車站 寄放大型行李', time: '08:30', travelTime: 0, transportType: 'walk', note: '減輕上山負擔', description: '【內行秘訣】把大行李箱鎖在新宿車站的置物櫃，只帶兩天一夜輕便行李上富士山！' },
-    { id: '404', date: '2026-12-08', category: 'transport', name: '新宿 ➔ 河口湖', time: '09:30', travelTime: 115, transportType: 'transit', note: '特急 富士回遊', description: '搭乘直達特急列車前往河口湖。' },
-    { id: '405', date: '2026-12-08', category: 'attraction', name: '河口湖 大石公園', time: '12:00', travelTime: 25, transportType: 'transit', note: '搭乘紅線巴士', description: '先搭巴士到最遠的【大石公園】，欣賞毫無遮蔽的富士山與湖面倒影。' },
-    { id: '406', date: '2026-12-08', category: 'attraction', name: '天上山纜車 & 湖畔散步', time: '14:00', travelTime: 20, transportType: 'transit', note: '由遠玩回市區', description: '搭巴士往回坐到纜車站，搭狸貓兔子纜車上山飽覽全景。' },
-    { id: '407', date: '2026-12-08', category: 'accommodation', name: '入住 Fujikawaguchiko Resort', time: '16:30', travelTime: 15, transportType: 'walk', note: '溫泉度假飯店', description: '提早到飯店 Check-in！換上浴衣享用晚餐，晚上泡溫泉。' },
+    { id: '401', date: '2026-12-08', category: 'accommodation', name: '退房 里士滿淺草飯店', time: '07:30', travelTime: 10, transportType: 'walk', note: '告別淺草', description: '🚶 步行：辦理退房手續後，帶著所有行李步行前往淺草站。' },
+    { id: '402', date: '2026-12-08', category: 'transport', name: '淺草 ➔ 新宿站', time: '07:45', travelTime: 35, transportType: 'transit', note: '淺草線 轉 新宿線', description: '🚇 交通：搭乘淺草線至【東日本橋/馬喰橫山站】，站內轉乘「都營新宿線」。\n⏱️ 時間：車程加轉乘約 35 分鐘。\n📍 下車：抵達【新宿站】。' },
+    { id: '403', date: '2026-12-08', category: 'accommodation', name: '新宿車站 寄放大型行李', time: '08:30', travelTime: 15, transportType: 'walk', note: '站內找置物櫃', description: '🚶 步行：在新宿車站內（建議靠近 JR 特急月台附近）尋找大型 Coin Locker（置物櫃）。\n💡 將大行李箱鎖入，只帶兩天一夜輕裝上富士山，減輕負擔！' },
+    { id: '404', date: '2026-12-08', category: 'transport', name: '新宿 ➔ 河口湖', time: '09:30', travelTime: 115, transportType: 'transit', note: '特急 富士回遊', description: '🚇 交通：於 JR 新宿站搭乘直達特急列車「富士回遊 (Fuji Excursion)」。\n⏱️ 時間：車程約 1 小時 55 分鐘。\n📍 下車：直達【河口湖站】。' },
+    { id: '405', date: '2026-12-08', category: 'attraction', name: '河口湖 大石公園', time: '12:00', travelTime: 30, transportType: 'transit', note: '搭乘紅線巴士', description: '🚌 交通：在河口湖站前搭乘「周遊巴士 紅線」至終點站【大石公園】(約25分)。\n欣賞毫無遮蔽的富士山與湖面倒影，並在此享用午餐。' },
+    { id: '406', date: '2026-12-08', category: 'attraction', name: '天上山纜車 & 湖畔散步', time: '14:00', travelTime: 20, transportType: 'transit', note: '搭乘紅線巴士', description: '🚌 交通：從大石公園搭乘紅線巴士往回坐，於【遊覽船・纜車入口】下車 (約15分)。\n搭乘狸貓兔子纜車上山飽覽全景，下山後在湖畔散步。' },
+    { id: '407', date: '2026-12-08', category: 'accommodation', name: '入住 Fujikawaguchiko Resort', time: '16:30', travelTime: 15, transportType: 'transit', note: '接駁車或步行', description: '🚌 交通：搭巴士回河口湖站，搭乘飯店接駁車或步行 15 分鐘前往飯店。\n提早到飯店 Check-in！換上浴衣享用晚餐，晚上泡溫泉。' },
 
     // Day 5
-    { id: '501', date: '2026-12-09', category: 'accommodation', name: '退房 富士河口湖飯店', time: '09:00', travelTime: 0, transportType: 'walk', note: '告別河口湖', description: '早上看完逆富士後退房。' },
-    { id: '502', date: '2026-12-09', category: 'transport', name: '飯店 ➔ 下吉田站', time: '09:15', travelTime: 30, transportType: 'transit', note: '接駁/步行 轉 富士急行線', description: '前往河口湖站，轉乘電車前往下吉田。' },
-    { id: '503', date: '2026-12-09', category: 'attraction', name: '新倉山淺間公園 & 神社', time: '10:00', travelTime: 15, transportType: 'walk', note: '經典五重塔', description: '出站後爬階梯，拍攝明信片上最經典的「五重塔與富士山」同框絕景！' },
-    { id: '504', date: '2026-12-09', category: 'attraction', name: '下吉田本町二丁目 散步', time: '12:00', travelTime: 15, transportType: 'walk', note: '復古富士山街景', description: '拍攝巨大的富士山矗立在街道盡頭的壯觀畫面，並在附近吃午餐。' },
-    { id: '505', date: '2026-12-09', category: 'transport', name: '下吉田 ➔ 新宿站', time: '15:00', travelTime: 110, transportType: 'transit', note: '搭乘 富士回遊', description: '搭乘特急列車返回東京市區。' },
-    { id: '506', date: '2026-12-09', category: 'accommodation', name: '新宿車站 領取行李', time: '17:00', travelTime: 0, transportType: 'walk', note: '拿回大行李箱', description: '抵達新宿後，去置物櫃領回昨天寄放的大行李。' },
-    { id: '507', date: '2026-12-09', category: 'transport', name: '新宿 ➔ 池袋站', time: '17:30', travelTime: 15, transportType: 'transit', note: 'JR 埼京線', description: '帶著行李搭車前往池袋。' },
-    { id: '508', date: '2026-12-09', category: 'accommodation', name: '入住 東急Stay池袋', time: '18:00', travelTime: 5, transportType: 'walk', note: '將在此連住 4 晚', description: '辦理入住！房間內有洗脫烘衣機可以洗衣服。' },
-    { id: '509', date: '2026-12-09', category: 'shopping', name: '池袋商圈 晚餐與逛街', time: '19:00', travelTime: 0, transportType: 'walk', note: '自由活動', description: '放下行李一身輕，在熱鬧的池袋吃晚餐（如無敵家拉麵）、逛藥妝店。' },
+    { id: '501', date: '2026-12-09', category: 'accommodation', name: '退房 富士河口湖飯店', time: '09:00', travelTime: 15, transportType: 'transit', note: '接駁車至車站', description: '🚌 交通：早上看完逆富士並享用早餐後退房，搭乘接駁車回到【河口湖站】。' },
+    { id: '502', date: '2026-12-09', category: 'transport', name: '河口湖 ➔ 下吉田', time: '09:20', travelTime: 15, transportType: 'transit', note: '搭乘 富士急行線', description: '🚇 交通：於【河口湖站】搭乘「富士急行線」普通車。\n⏱️ 時間：車程約 14 分鐘。\n📍 下車：於【下吉田站】下車。' },
+    { id: '503', date: '2026-12-09', category: 'attraction', name: '新倉山淺間公園 & 神社', time: '10:00', travelTime: 15, transportType: 'walk', note: '爬階梯398階', description: '🚶 步行：出站後跟著指標走，爬上 398 階的階梯。\n拍攝明信片上最經典的「五重塔與富士山」同框絕景！' },
+    { id: '504', date: '2026-12-09', category: 'attraction', name: '下吉田本町二丁目 散步', time: '12:00', travelTime: 15, transportType: 'walk', note: '步行15分', description: '🚶 步行：從淺間公園下山後，步行約 15 分鐘前往著名的日川時計店前。\n拍攝巨大的富士山矗立在街道盡頭的壯觀畫面，並在附近吃午餐。' },
+    { id: '505', date: '2026-12-09', category: 'transport', name: '下吉田 ➔ 新宿站', time: '15:00', travelTime: 110, transportType: 'transit', note: '搭乘 富士回遊', description: '🚇 交通：於【下吉田站】搭乘「富士回遊」特急列車直達，或搭普通車至大月站轉乘 JR 特急。\n⏱️ 時間：車程約 1 小時 50 分鐘。\n📍 下車：抵達【新宿站】。' },
+    { id: '506', date: '2026-12-09', category: 'accommodation', name: '新宿車站 領取行李', time: '17:00', travelTime: 15, transportType: 'walk', note: '找尋置物櫃', description: '🚶 步行：抵達新宿後，尋找昨天寄放行李的置物櫃，領回大行李箱。' },
+    { id: '507', date: '2026-12-09', category: 'transport', name: '新宿 ➔ 池袋站', time: '17:30', travelTime: 10, transportType: 'transit', note: 'JR 埼京/湘南線', description: '🚇 交通：帶著行李於新宿站搭乘「JR 埼京線」或「湘南新宿線」。\n⏱️ 時間：車程僅需 6 分鐘 (1站)。\n📍 下車：直達【池袋站】。' },
+    { id: '508', date: '2026-12-09', category: 'accommodation', name: '入住 東急Stay池袋', time: '18:00', travelTime: 5, transportType: 'walk', note: '出站步行5分', description: '🚶 步行：從池袋站西口出站，步行 5 分鐘抵達飯店。\n辦理入住！飯店房間內有洗脫烘衣機，可以把前幾天的衣服洗乾淨。' },
+    { id: '509', date: '2026-12-09', category: 'shopping', name: '池袋商圈 晚餐與逛街', time: '19:00', travelTime: 5, transportType: 'walk', note: '自由活動', description: '🚶 步行：放下行李一身輕，走回池袋車站周邊。\n享用晚餐（如無敵家拉麵、牛舌），並逛逛藥妝店與百貨公司。' },
 
     // Day 6
-    { id: '601', date: '2026-12-10', category: 'transport', name: '飯店出發 ➔ 池袋站', time: '09:30', travelTime: 5, transportType: 'walk', note: '步行', description: '步行前往池袋站。' },
-    { id: '602', date: '2026-12-10', category: 'transport', name: '池袋 ➔ 港未來站', time: '09:45', travelTime: 45, transportType: 'transit', note: '副都心線 直通運轉', description: '【超強搭車密技】搭乘副都心線，直通運轉東急東橫線與港未來線，免換車直達橫濱！' },
-    { id: '603', date: '2026-12-10', category: 'attraction', name: '港未來商圈漫步', time: '10:45', travelTime: 10, transportType: 'walk', note: '現代港灣風情', description: '感受橫濱充滿現代感與海港交織的獨特氛圍。' },
-    { id: '604', date: '2026-12-10', category: 'attraction', name: '橫濱紅磚倉庫', time: '12:00', travelTime: 15, transportType: 'walk', note: '聖誕市集', description: '12月的廣場有盛大的聖誕市集，可以在這裡吃午餐、喝熱紅酒！' },
-    { id: '605', date: '2026-12-10', category: 'attraction', name: '山下公園', time: '14:30', travelTime: 15, transportType: 'walk', note: '無敵海景散步', description: '沿著海岸線漫步，看著巨大的冰川丸客船與海鷗。' },
-    { id: '606', date: '2026-12-10', category: 'food', name: '橫濱中華街', time: '16:00', travelTime: 10, transportType: 'walk', note: '日本最大中華街', description: '品嚐著名的熊貓包子、生煎包。' },
-    { id: '607', date: '2026-12-10', category: 'attraction', name: '港未來夜景纜車 (YOKOHAMA AIR CABIN)', time: '17:30', travelTime: 20, transportType: 'transit', note: '浪漫高空夜景', description: '搭乘景觀纜車前往櫻木町，從高空俯瞰港灣夜景，超級浪漫！' },
-    { id: '608', date: '2026-12-10', category: 'transport', name: '櫻木町 ➔ 池袋站', time: '19:00', travelTime: 55, transportType: 'transit', note: 'JR 湘南新宿線', description: '從橫濱轉乘 JR 湘南新宿線直達池袋。' },
-    { id: '609', date: '2026-12-10', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:00', travelTime: 5, transportType: 'walk', note: '連住第 2 晚', description: '回飯店休息。' },
+    { id: '601', date: '2026-12-10', category: 'transport', name: '飯店出發 ➔ 池袋站', time: '09:30', travelTime: 5, transportType: 'walk', note: '步行', description: '🚶 步行：從飯店悠閒散步前往池袋站。' },
+    { id: '602', date: '2026-12-10', category: 'transport', name: '池袋 ➔ 港未來 (橫濱)', time: '09:45', travelTime: 45, transportType: 'transit', note: '副都心線直通', description: '🚇 交通：【超強密技】於池袋搭乘「副都心線(急行/F-Liner)」。\n💡 該線會直通運轉東急東橫線與港未來線，免換車直達橫濱！\n⏱️ 時間：車程約 45 分鐘。\n📍 下車：於【港未來站 (みなとみらい)】下車。' },
+    { id: '603', date: '2026-12-10', category: 'attraction', name: '港未來商圈漫步', time: '10:45', travelTime: 5, transportType: 'walk', note: '出站即達', description: '🚶 步行：出站後即是地標塔與皇后廣場。\n感受橫濱充滿現代感與海港交織的獨特氛圍。' },
+    { id: '604', date: '2026-12-10', category: 'attraction', name: '橫濱紅磚倉庫', time: '12:00', travelTime: 15, transportType: 'walk', note: '沿港灣步行15分', description: '🚶 步行：沿著海岸景觀步道散步至紅磚倉庫。\n🎄 12月的廣場有盛大的聖誕市集，可以在這裡吃午餐、喝熱紅酒！' },
+    { id: '605', date: '2026-12-10', category: 'attraction', name: '山下公園', time: '14:30', travelTime: 15, transportType: 'walk', note: '沿海岸步行15分', description: '🚶 步行：繼續沿著海岸線漫步至山下公園。\n看著巨大的冰川丸客船與成群的海鷗，非常愜意。' },
+    { id: '606', date: '2026-12-10', category: 'food', name: '橫濱中華街', time: '16:00', travelTime: 10, transportType: 'walk', note: '過馬路步行10分', description: '🚶 步行：從山下公園往內陸走約 10 分鐘即抵達日本最大中華街。\n品嚐著名的熊貓包子、生煎包或中華料理。' },
+    { id: '607', date: '2026-12-10', category: 'attraction', name: '港未來夜景纜車 (AIR CABIN)', time: '17:30', travelTime: 20, transportType: 'transit', note: '搭地鐵轉乘纜車', description: '🚇 交通：從中華街搭乘港未來線回【馬車道站/運河公園站】。\n🚠 轉乘景觀纜車「YOKOHAMA AIR CABIN」前往櫻木町，從高空俯瞰港灣百萬夜景，超級浪漫！' },
+    { id: '608', date: '2026-12-10', category: 'transport', name: '櫻木町 ➔ 池袋站', time: '19:00', travelTime: 55, transportType: 'transit', note: 'JR湘南新宿線直達', description: '🚇 交通：於纜車終點【JR櫻木町站】搭車至【橫濱站】，轉乘「JR 湘南新宿線」。\n⏱️ 時間：車程約 50 分鐘。\n📍 下車：免換車直達【池袋站】。' },
+    { id: '609', date: '2026-12-10', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:00', travelTime: 5, transportType: 'walk', note: '出站步行5分', description: '🚶 步行：回到熟悉的池袋，漫步回飯店休息。' },
 
     // Day 7
-    { id: '701', date: '2026-12-11', category: 'transport', name: '池袋 ➔ 鎌倉', time: '08:30', travelTime: 65, transportType: 'transit', note: '湘南新宿線 直達', description: '搭乘 JR 湘南新宿線，一班車免換乘直達古都鎌倉！' },
-    { id: '702', date: '2026-12-11', category: 'attraction', name: '鶴岡八幡宮', time: '09:45', travelTime: 10, transportType: 'walk', note: '鎌倉的信仰中心', description: '沿著若宮大路漫步至鶴岡八幡宮參拜。' },
-    { id: '703', date: '2026-12-11', category: 'shopping', name: '小町通 漫步吃午餐', time: '11:00', travelTime: 5, transportType: 'walk', note: '邊走邊吃', description: '在這條熱鬧的老街品嚐吻仔魚玉子燒、大佛可麗餅與各種特色小吃。' },
-    { id: '704', date: '2026-12-11', category: 'transport', name: '鎌倉 ➔ 長谷', time: '13:00', travelTime: 10, transportType: 'transit', note: '搭乘 江之電', description: '搭乘復古迷人的江之電前往長谷站。' },
-    { id: '705', date: '2026-12-11', category: 'attraction', name: '長谷寺 (觀音與海景)', time: '13:15', travelTime: 5, transportType: 'walk', note: '遠眺湘南海岸', description: '參觀十一面觀音，並在見晴台欣賞絕美的海岸線。' },
-    { id: '706', date: '2026-12-11', category: 'attraction', name: '高德院 鎌倉大佛', time: '14:30', travelTime: 10, transportType: 'walk', note: '青銅大佛', description: '近距離仰望壯觀的鎌倉大佛，可付費進入大佛內部參觀。' },
-    { id: '707', date: '2026-12-11', category: 'transport', name: '長谷 ➔ 江之島', time: '15:30', travelTime: 25, transportType: 'transit', note: '搭乘 江之電', description: '繼續搭乘江之電，前往江之島。' },
-    { id: '708', date: '2026-12-11', category: 'attraction', name: '江之島 弁財天仲見世通', time: '16:00', travelTime: 10, transportType: 'walk', note: '吃章魚仙貝', description: '走過江之島大橋，在老街品嚐現壓的巨大章魚仙貝。' },
-    { id: '709', date: '2026-12-11', category: 'attraction', name: '江之島 稚兒淵 (夕陽)', time: '16:45', travelTime: 15, transportType: 'walk', note: '關東百大夕陽', description: '走到江之島最深處的岩屋與稚兒淵，欣賞富士山與湘南海岸的絕美夕陽！' },
-    { id: '710', date: '2026-12-11', category: 'transport', name: '片瀨江之島 ➔ 池袋站', time: '19:00', travelTime: 75, transportType: 'transit', note: '小田急線 轉 JR', description: '晚餐後從龍宮造型的「片瀨江之島站」搭車回新宿，轉山手線回池袋。' },
-    { id: '711', date: '2026-12-11', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:30', travelTime: 5, transportType: 'walk', note: '連住第 3 晚', description: '回飯店休息。' },
+    { id: '701', date: '2026-12-11', category: 'transport', name: '飯店出發 ➔ 池袋站', time: '08:15', travelTime: 5, transportType: 'walk', note: '步行', description: '🚶 步行：從飯店散步至池袋站。' },
+    { id: '702', date: '2026-12-11', category: 'transport', name: '池袋 ➔ 鎌倉', time: '08:30', travelTime: 65, transportType: 'transit', note: 'JR湘南新宿線直達', description: '🚇 交通：於池袋搭乘「JR 湘南新宿線 (往逗子/大船方向)」。\n⏱️ 時間：車程約 1 小時 5 分鐘。\n📍 下車：免換車直達古都【鎌倉站】。' },
+    { id: '703', date: '2026-12-11', category: 'attraction', name: '鶴岡八幡宮', time: '09:45', travelTime: 15, transportType: 'walk', note: '出站步行15分', description: '🚶 步行：從鎌倉站東口出發，沿著若宮大路 (段葛) 漫步至鶴岡八幡宮參拜。' },
+    { id: '704', date: '2026-12-11', category: 'shopping', name: '小町通 漫步吃午餐', time: '11:00', travelTime: 5, transportType: 'walk', note: '神社旁老街', description: '🚶 步行：參拜完後走進旁邊平行的熱鬧老街「小町通」。\n品嚐吻仔魚玉子燒、大佛可麗餅與各種特色小吃。' },
+    { id: '705', date: '2026-12-11', category: 'transport', name: '鎌倉 ➔ 長谷', time: '13:00', travelTime: 10, transportType: 'transit', note: '搭乘 江之電', description: '🚇 交通：走回鎌倉站，轉搭復古迷人的路面電車「江之島電鐵 (江之電)」。\n⏱️ 時間：車程約 6 分鐘 (3站)。\n📍 下車：於【長谷站】下車。' },
+    { id: '706', date: '2026-12-11', category: 'attraction', name: '長谷寺 (觀音與海景)', time: '13:15', travelTime: 5, transportType: 'walk', note: '出站步行5分', description: '🚶 步行：出站步行約 5 分鐘抵達長谷寺。\n參觀十一面觀音，並在見晴台欣賞絕美的海岸線。' },
+    { id: '707', date: '2026-12-11', category: 'attraction', name: '高德院 鎌倉大佛', time: '14:30', travelTime: 10, transportType: 'walk', note: '步行10分', description: '🚶 步行：從長谷寺繼續往北走約 10 分鐘。\n近距離仰望壯觀的青銅鎌倉大佛，可付費進入大佛內部參觀。' },
+    { id: '708', date: '2026-12-11', category: 'transport', name: '長谷 ➔ 江之島', time: '15:30', travelTime: 25, transportType: 'transit', note: '搭乘 江之電', description: '🚇 交通：走回【長谷站】繼續搭乘「江之電」。\n⏱️ 時間：車程約 20 分鐘。\n📍 下車：於【江之島站】下車。' },
+    { id: '709', date: '2026-12-11', category: 'attraction', name: '江之島 弁財天老街 & 稚兒淵夕陽', time: '16:00', travelTime: 15, transportType: 'walk', note: '步行過跨海大橋', description: '🚶 步行：出站後步行過江之島大橋 (約15分)。\n在老街吃現壓章魚仙貝，傍晚走到江之島最深處的岩屋與稚兒淵，欣賞富士山與湘南海岸的絕美夕陽！\n💡 晚上別錯過島上的冬季限定點燈「湘南の宝石」。' },
+    { id: '710', date: '2026-12-11', category: 'transport', name: '片瀨江之島 ➔ 池袋站', time: '19:00', travelTime: 75, transportType: 'transit', note: '小田急線 轉 JR', description: '🚇 交通：離開江之島後，走到龍宮造型的【片瀨江之島站】搭乘「小田急線」直達新宿 (約65分)。\n在新宿站同站轉乘「JR 山手/埼京線」回池袋 (約6分)。' },
+    { id: '711', date: '2026-12-11', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:30', travelTime: 5, transportType: 'walk', note: '出站步行5分', description: '🚶 步行：回飯店休息。' },
 
     // Day 8
-    { id: '801', date: '2026-12-12', category: 'transport', name: '池袋 ➔ 新宿 ➔ 高尾山口站', time: '08:30', travelTime: 65, transportType: 'transit', note: 'JR轉京王線', description: '搭乘JR到新宿，轉乘「京王線特急」直達【高尾山口站】。' },
-    { id: '802', date: '2026-12-12', category: 'attraction', name: '高尾山登山纜車 / 吊椅', time: '10:00', travelTime: 15, transportType: 'transit', note: '輕鬆登半山腰', description: '搭乘日本最陡的登山纜車或浪漫雙人吊椅前往高尾山半山腰。' },
-    { id: '803', date: '2026-12-12', category: 'attraction', name: '高尾山藥王院', time: '11:00', travelTime: 20, transportType: 'walk', note: '天狗信仰聖地', description: '漫步參道前往藥王院參拜，欣賞古老建築與天狗雕像。' },
-    { id: '804', date: '2026-12-12', category: 'food', name: '高尾山山頂 & 名物蕎麥麵', time: '12:00', travelTime: 20, transportType: 'walk', note: '遠眺富士山', description: '攻頂遠眺壯麗冬景與富士山，午餐享用當地名物自然薯蕎麥麵。' },
-    { id: '805', date: '2026-12-12', category: 'transport', name: '高尾山口站 ➔ 新宿站', time: '14:30', travelTime: 55, transportType: 'transit', note: '搭乘 京王線', description: '搭乘京王線返回新宿。' },
-    { id: '806', date: '2026-12-12', category: 'shopping', name: '新宿 逛街與下午茶', time: '15:30', travelTime: 0, transportType: 'walk', note: '新宿東口/南口', description: '下山後在新宿商圈悠閒逛逛百貨公司（Lumine、伊勢丹）或喝個下午茶休息。' },
-    { id: '807', date: '2026-12-12', category: 'attraction', name: '歌舞伎町 一番街 & 哥吉拉', time: '17:30', travelTime: 10, transportType: 'walk', note: '新宿不夜城', description: '在著名的「歌舞伎町一番街」霓虹紅色拱門前拍照，抬頭看東寶大樓的超巨大「哥吉拉頭像」。' },
-    { id: '808', date: '2026-12-12', category: 'food', name: '新宿 晚餐', time: '18:30', travelTime: 0, transportType: 'walk', note: '周邊美食', description: '在新宿周邊享用晚餐（推薦燒肉、居酒屋或特色拉麵）。' },
-    { id: '809', date: '2026-12-12', category: 'transport', name: '新宿站 ➔ 池袋站', time: '20:30', travelTime: 10, transportType: 'transit', note: 'JR山手線/埼京線', description: '吃飽後搭乘 JR 只要 5~8 分鐘即可無腦直達池袋站。' },
-    { id: '810', date: '2026-12-12', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:45', travelTime: 5, transportType: 'walk', note: '池袋最後一晚', description: '回飯店休息，整理行李準備明天退房前往上野！' },
+    { id: '801', date: '2026-12-12', category: 'transport', name: '飯店出發 ➔ 池袋站', time: '08:15', travelTime: 5, transportType: 'walk', note: '步行', description: '🚶 步行：散步前往池袋站。' },
+    { id: '802', date: '2026-12-12', category: 'transport', name: '池袋 ➔ 新宿 ➔ 高尾山口', time: '08:30', travelTime: 65, transportType: 'transit', note: 'JR 轉 京王線', description: '🚇 交通：搭乘 JR 山手線/埼京線至【新宿站】(約6分)。\n轉乘「京王線 特急 (往高尾山口方向)」(約50分)。\n📍 下車：終點站【高尾山口站】。' },
+    { id: '803', date: '2026-12-12', category: 'attraction', name: '高尾山 登山纜車/吊椅', time: '10:00', travelTime: 5, transportType: 'walk', note: '出站步行5分', description: '🚶 步行：出站步行 5 分鐘抵達纜車站。\n🚠 搭乘日本最陡的登山纜車或浪漫雙人吊椅前往高尾山半山腰 (乘車時間約 12 分鐘)。' },
+    { id: '804', date: '2026-12-12', category: 'attraction', name: '高尾山藥王院', time: '11:00', travelTime: 20, transportType: 'walk', note: '出纜車站步行20分', description: '🚶 步行：下纜車後，沿著1號步道漫步約 20 分鐘抵達藥王院。\n參拜這座天狗信仰聖地，尋找各式天狗雕像。' },
+    { id: '805', date: '2026-12-12', category: 'food', name: '高尾山山頂 & 蕎麥麵', time: '12:00', travelTime: 20, transportType: 'walk', note: '繼續步行20分', description: '🚶 步行：從藥王院再往上走約 20 分鐘即可攻頂。\n天氣晴朗時可遠眺富士山，午餐享用山頂名物「自然薯蕎麥麵」。' },
+    { id: '806', date: '2026-12-12', category: 'transport', name: '高尾山下山 ➔ 新宿', time: '14:30', travelTime: 75, transportType: 'transit', note: '步行+纜車+京王線', description: '🚶 步行+纜車：原路走回纜車站搭車下山至【高尾山口站】(約20分)。\n🚇 交通：搭乘「京王線」特急列車 (約50分)。\n📍 下車：抵達【新宿站】。' },
+    { id: '807', date: '2026-12-12', category: 'attraction', name: '歌舞伎町 一番街 & 哥吉拉', time: '16:00', travelTime: 10, transportType: 'walk', note: '新宿東口步行10分', description: '🚶 步行：從新宿站東口出站，步行前往「歌舞伎町一番街」。\n在霓虹紅色拱門前拍照，抬頭看東寶大樓的超巨大「哥吉拉頭像」，感受新宿不夜城魅力。' },
+    { id: '808', date: '2026-12-12', category: 'food', name: '新宿 晚餐與逛街', time: '17:30', travelTime: 0, transportType: 'walk', note: '自由活動', description: '在新宿周邊享用晚餐（推薦燒肉、居酒屋或特色拉麵），並逛逛東口或南口商圈。' },
+    { id: '809', date: '2026-12-12', category: 'transport', name: '新宿 ➔ 池袋站', time: '20:30', travelTime: 10, transportType: 'transit', note: 'JR 山手線', description: '🚇 交通：走回【新宿站】搭乘「JR 山手線」或「埼京線」。\n⏱️ 時間：車程僅需 6 分鐘。\n📍 下車：【池袋站】。' },
+    { id: '810', date: '2026-12-12', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:45', travelTime: 5, transportType: 'walk', note: '準備明早退房', description: '🚶 步行：回飯店整理行李，池袋最後一晚！' },
 
     // Day 9
-    { id: '901', date: '2026-12-13', category: 'accommodation', name: '退房 東急Stay池袋 (寄放行李)', time: '08:30', travelTime: 0, transportType: 'walk', note: '輕裝遊川越', description: '早上辦理退房，將大行李寄放在飯店櫃檯或車站置物櫃，輕鬆前往川越。' },
-    { id: '902', date: '2026-12-13', category: 'transport', name: '池袋 ➔ 川越站', time: '09:00', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線', description: '搭乘東武東上線前往川越，一班車直達！' },
-    { id: '903', date: '2026-12-13', category: 'attraction', name: '川越 冰川神社', time: '10:00', travelTime: 15, transportType: 'transit', note: '求良緣、釣鯛魚籤', description: '搭乘小江戶巡迴巴士直達冰川神社，可以用釣竿釣可愛的「一年安鯛」。' },
-    { id: '904', date: '2026-12-13', category: 'attraction', name: '小江戶 藏造老街 & 時之鐘', time: '11:30', travelTime: 10, transportType: 'walk', note: '江戶風情', description: '漫步傳統老街，聽鐘塔鐘聲，品嚐川越地瓜與特色小吃。' },
-    { id: '905', date: '2026-12-13', category: 'shopping', name: '菓子屋橫丁 & 午餐', time: '12:30', travelTime: 5, transportType: 'walk', note: '傳統糖果零食', description: '尋找充滿童趣的古早味柑仔店，並在老街周邊享用午餐（推薦鰻魚飯或烏龍麵）。' },
-    { id: '906', date: '2026-12-13', category: 'transport', name: '川越站 ➔ 池袋站 (領行李)', time: '14:30', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線', description: '搭車回到池袋，領取早上的大行李。' },
-    { id: '907', date: '2026-12-13', category: 'transport', name: '池袋站 ➔ 鶯谷站', time: '15:30', travelTime: 20, transportType: 'transit', note: '山手線直達', description: '帶著行李搭乘 JR 山手線前往【鶯谷站】。' },
-    { id: '908', date: '2026-12-13', category: 'accommodation', name: '入住 上野公園光芒酒店', time: '16:00', travelTime: 5, transportType: 'walk', note: '鶯谷站南口步行3分', description: '抵達飯店辦理入住手續，放下行李準備去逛街！' },
-    { id: '909', date: '2026-12-13', category: 'transport', name: '鶯谷站 ➔ 秋葉原站', time: '16:45', travelTime: 10, transportType: 'transit', note: '搭乘 JR山手線', description: '從鶯谷搭山手線只要3站就到秋葉原！' },
-    { id: '910', date: '2026-12-13', category: 'food', name: '秋葉原站 5號月台 Milk Stand', time: '17:00', travelTime: 0, transportType: 'walk', note: '內行必訪', description: '抵達秋葉原站別急著出站，走上【5號月台 (總武線)】，尋找名店「酪農會館 Milk Stand」，站著開瓶超濃郁冰牛奶解渴！' },
-    { id: '911', date: '2026-12-13', category: 'shopping', name: '秋葉原 電器街與動漫巡禮', time: '17:30', travelTime: 5, transportType: 'walk', note: '御宅文化聖地', description: '從電器街口出站，逛 Radio Kaikan (無線電會館)、駿河屋、Animate 及各大電器商城。' },
-    { id: '912', date: '2026-12-13', category: 'shopping', name: '阿美橫丁 (上野)', time: '19:30', travelTime: 5, transportType: 'transit', note: '晚餐與採買', description: '搭山手線回上野/御徒町，逛充滿活力的阿美橫丁，並在此享用平價海鮮丼或居酒屋。' },
-    { id: '913', date: '2026-12-13', category: 'accommodation', name: '返回 上野公園光芒酒店', time: '21:00', travelTime: 10, transportType: 'walk', note: '休息', description: '從上野漫步回飯店休息。' },
+    { id: '901', date: '2026-12-13', category: 'accommodation', name: '退房 東急Stay池袋 (寄放行李)', time: '08:30', travelTime: 5, transportType: 'walk', note: '寄放飯店或車站', description: '🚶 步行：辦理退房，將大行李寄放在飯店櫃檯或車站置物櫃，輕裝前往川越。' },
+    { id: '902', date: '2026-12-13', category: 'transport', name: '池袋 ➔ 川越站', time: '09:00', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線', description: '🚇 交通：於池袋搭乘「東武東上線 (急行)」。\n⏱️ 時間：車程約 32 分鐘。\n📍 下車：免換車直達【川越站】。' },
+    { id: '903', date: '2026-12-13', category: 'attraction', name: '川越 冰川神社', time: '10:00', travelTime: 20, transportType: 'transit', note: '搭乘當地巴士', description: '🚌 交通：於川越站東口轉乘當地公車或小江戶巡迴巴士。\n⏱️ 時間：車程約 15 分鐘。\n在神社求良緣，並用釣竿釣可愛的「一年安鯛」籤。' },
+    { id: '904', date: '2026-12-13', category: 'attraction', name: '小江戶 藏造老街 & 時之鐘', time: '11:30', travelTime: 15, transportType: 'walk', note: '步行15分或搭公車', description: '🚶 步行：從冰川神社散步至藏造老街商圈。\n漫步傳統黑磚老街，聽百年鐘塔鐘聲，品嚐川越地瓜與特色小吃。' },
+    { id: '905', date: '2026-12-13', category: 'shopping', name: '菓子屋橫丁 & 午餐', time: '12:30', travelTime: 5, transportType: 'walk', note: '老街旁巷弄', description: '🚶 步行：走進老街旁的菓子屋橫丁。\n尋找充滿童趣的古早味柑仔店，並在周邊享用午餐（推薦鰻魚飯或烏龍麵）。' },
+    { id: '906', date: '2026-12-13', category: 'transport', name: '川越 ➔ 池袋站 (領行李)', time: '14:30', travelTime: 45, transportType: 'transit', note: '搭公車轉東上線', description: '🚌 交通：從老街搭公車回川越站，轉乘「東武東上線」回【池袋站】。\n🚶 步行：領取早上的大行李箱。' },
+    { id: '907', date: '2026-12-13', category: 'transport', name: '池袋 ➔ 鶯谷站', time: '15:30', travelTime: 20, transportType: 'transit', note: 'JR 山手線直達', description: '🚇 交通：帶著行李搭乘「JR 山手線 (內環)」。\n⏱️ 時間：車程約 18 分鐘。\n📍 下車：直達【鶯谷站】。' },
+    { id: '908', date: '2026-12-13', category: 'accommodation', name: '入住 上野公園光芒酒店', time: '16:00', travelTime: 5, transportType: 'walk', note: '鶯谷站南口出發', description: '🚶 步行：從鶯谷站南口步行約 3 分鐘抵達飯店。\n辦理入住手續，放下行李準備去逛秋葉原！' },
+    { id: '909', date: '2026-12-13', category: 'transport', name: '鶯谷 ➔ 秋葉原站', time: '16:45', travelTime: 10, transportType: 'transit', note: 'JR 山手/京濱東北線', description: '🚇 交通：走回鶯谷站搭乘「JR 山手線」或「京濱東北線」。\n⏱️ 時間：車程僅需 6 分鐘 (3站)。\n📍 下車：直達【秋葉原站】。' },
+    { id: '910', date: '2026-12-13', category: 'food', name: 'JR 5號月台 Milk Stand', time: '17:00', travelTime: 0, transportType: 'walk', note: '就在車站月台上！', description: '💡 內行必訪：下車後別急著出站！\n走到【5號月台 (總武線往千葉方向)】，尋找名店「酪農會館 Milk Stand」，站著開瓶超濃郁冰牛奶解渴！' },
+    { id: '911', date: '2026-12-13', category: 'shopping', name: '秋葉原 動漫與電器街', time: '17:30', travelTime: 5, transportType: 'walk', note: '電器街口出站', description: '🚶 步行：喝完牛奶後，從「電器街口」出站。\n逛 Radio Kaikan (無線電會館)、駿河屋、Animate 及各大電器商城，感受御宅文化聖地。' },
+    { id: '912', date: '2026-12-13', category: 'shopping', name: '阿美橫丁 (上野) & 晚餐', time: '19:30', travelTime: 10, transportType: 'transit', note: '搭山手線2站', description: '🚇 交通：從秋葉原搭山手線往回坐 2 站至【御徒町站】或【上野站】下車。\n逛充滿活力的阿美橫丁，並在此享用平價海鮮丼或居酒屋。' },
+    { id: '913', date: '2026-12-13', category: 'accommodation', name: '返回 上野公園光芒酒店', time: '21:00', travelTime: 15, transportType: 'walk', note: '從上野步行回飯店', description: '🚶 步行：吃飽後從上野公園周邊漫步約 10~15 分鐘回到鶯谷的飯店休息。' },
 
     // Day 10
-    { id: '1001', date: '2026-12-14', category: 'transport', name: '鶯谷站 ➔ 根津', time: '09:00', travelTime: 15, transportType: 'transit', note: '公車或步行', description: '早上前往充滿下町風情的根津與谷中一帶。' },
-    { id: '1002', date: '2026-12-14', category: 'attraction', name: '根津神社', time: '09:15', travelTime: 0, transportType: 'walk', note: '迷你千本鳥居', description: '參觀歷史悠久的根津神社，穿梭在絕美的迷你千本鳥居之中。' },
-    { id: '1003', date: '2026-12-14', category: 'attraction', name: '谷中銀座 ＆ 夕やけだんだん', time: '10:30', travelTime: 15, transportType: 'walk', note: '貓咪與下町老街', description: '從「夕陽階梯」往下拍老街全景，一路品嚐炸肉餅、貓咪尾巴雞蛋糕。' },
-    { id: '1004', date: '2026-12-14', category: 'transport', name: '日暮里 ➔ 葛西臨海公園', time: '12:30', travelTime: 45, transportType: 'transit', note: 'JR 轉 京葉線', description: '搭乘電車前往位於東京灣畔的葛西臨海公園。' },
-    { id: '1005', date: '2026-12-14', category: 'attraction', name: '葛西臨海水族園', time: '13:30', travelTime: 5, transportType: 'walk', note: '巨大黑鮪魚水槽', description: '參觀這座獨特玻璃巨蛋造型的水族館，必看壯觀的黑鮪魚群游。' },
-    { id: '1006', date: '2026-12-14', category: 'attraction', name: '葛西臨海公園 (東京灣夕陽)', time: '15:30', travelTime: 0, transportType: 'walk', note: '鑽石與摩天輪', description: '在海濱公園散步，搭乘日本最大的摩天輪之一，並欣賞絕美的東京灣日落。' },
-    { id: '1007', date: '2026-12-14', category: 'transport', name: '葛西臨海公園 ➔ 東京車站', time: '17:00', travelTime: 15, transportType: 'transit', note: 'JR 京葉線直達', description: '搭乘京葉線快速回到東京車站。' },
-    { id: '1008', date: '2026-12-14', category: 'attraction', name: '東京車站 ＆ 丸之內冬季燈飾', time: '17:30', travelTime: 5, transportType: 'walk', note: '浪漫璀璨夜景', description: '欣賞點亮數十萬盞香檳金燈飾的丸之內仲通，極度浪漫！晚餐可於東京車站內（一番街）享用。' },
-    { id: '1009', date: '2026-12-14', category: 'transport', name: '東京車站 ➔ 鶯谷/上野', time: '20:30', travelTime: 10, transportType: 'transit', note: 'JR 山手線', description: '搭乘山手線返回飯店。' },
-    { id: '1010', date: '2026-12-14', category: 'accommodation', name: '返回 上野公園光芒酒店', time: '20:45', travelTime: 5, transportType: 'walk', note: '整理行李', description: '最後一晚，將所有戰利品塞進行李箱！' },
+    { id: '1001', date: '2026-12-14', category: 'transport', name: '飯店出發 ➔ 根津神社', time: '09:00', travelTime: 20, transportType: 'walk', note: '步行或搭公車', description: '🚶 步行：從鶯谷站飯店出發，穿越上野公園或搭乘當地公車前往根津 (約15-20分)。' },
+    { id: '1002', date: '2026-12-14', category: 'attraction', name: '根津神社', time: '09:20', travelTime: 0, transportType: 'walk', note: '迷你千本鳥居', description: '參觀歷史悠久的根津神社，穿梭在絕美的迷你千本鳥居之中，享受下町的寧靜。' },
+    { id: '1003', date: '2026-12-14', category: 'attraction', name: '谷中銀座 ＆ 夕陽階梯', time: '10:30', travelTime: 15, transportType: 'walk', note: '從根津步行15分', description: '🚶 步行：散步前往谷中銀座老街。\n從「夕やけだんだん (夕陽階梯)」往下拍老街全景，一路品嚐炸肉餅、貓咪尾巴雞蛋糕。' },
+    { id: '1004', date: '2026-12-14', category: 'transport', name: '日暮里 ➔ 葛西臨海公園', time: '12:30', travelTime: 40, transportType: 'transit', note: 'JR 轉 京葉線', description: '🚇 交通：走到【日暮里站】搭山手線至【東京車站】(約13分)。\n在東京車站內轉乘「JR 京葉線」 (往蘇我/海濱幕張方向，約15分)。\n📍 下車：於【葛西臨海公園站】下車。' },
+    { id: '1005', date: '2026-12-14', category: 'attraction', name: '葛西臨海水族園', time: '13:30', travelTime: 5, transportType: 'walk', note: '出站步行5分', description: '🚶 步行：出站進入公園即達。\n參觀這座獨特玻璃巨蛋造型的水族館，必看壯觀的黑鮪魚群游。' },
+    { id: '1006', date: '2026-12-14', category: 'attraction', name: '葛西臨海公園 (東京灣夕陽)', time: '15:30', travelTime: 10, transportType: 'walk', note: '園內漫步', description: '🚶 步行：從水族園走到海濱區。\n搭乘日本最大的摩天輪之一，並欣賞絕美的東京灣日落與跨海大橋。' },
+    { id: '1007', date: '2026-12-14', category: 'transport', name: '葛西臨海公園 ➔ 東京車站', time: '17:00', travelTime: 15, transportType: 'transit', note: 'JR 京葉線直達', description: '🚇 交通：走回車站搭乘「JR 京葉線」。\n⏱️ 時間：車程約 15 分鐘。\n📍 下車：直達【東京車站】。' },
+    { id: '1008', date: '2026-12-14', category: 'attraction', name: '東京車站 ＆ 丸之內冬季燈飾', time: '17:30', travelTime: 10, transportType: 'walk', note: '丸之內出口', description: '🚶 步行：從東京車站「丸之內口」出站。\n欣賞點亮數十萬盞香檳金燈飾的丸之內仲通，極度浪漫！晚餐可於東京車站內（一番街）享用。' },
+    { id: '1009', date: '2026-12-14', category: 'transport', name: '東京車站 ➔ 鶯谷/上野', time: '20:30', travelTime: 15, transportType: 'transit', note: 'JR 山手線', description: '🚇 交通：搭乘「JR 山手線」或「京濱東北線」。\n⏱️ 時間：車程約 10 分鐘。\n📍 下車：【鶯谷站】或【上野站】。' },
+    { id: '1010', date: '2026-12-14', category: 'accommodation', name: '返回 上野公園光芒酒店', time: '20:45', travelTime: 5, transportType: 'walk', note: '整理行李', description: '🚶 步行：走回飯店。\n最後一晚，將所有戰利品塞進行李箱！' },
 
     // Day 11
-    { id: '1101', date: '2026-12-15', category: 'accommodation', name: '退房 上野公園光芒酒店', time: '08:30', travelTime: 5, transportType: 'walk', note: '步行至鶯谷站', description: '早上辦理退房，準備搭車前往成田機場！' },
-    { id: '1102', date: '2026-12-15', category: 'transport', name: '鶯谷 ➔ 上野 ➔ 成田機場(T2)', time: '09:00', travelTime: 50, transportType: 'transit', note: '山手線 轉 Skyliner', description: '搭乘山手線至上野站，步行至京成上野站，搭乘 Skyliner 快速直達機場。' },
-    { id: '1103', date: '2026-12-15', category: 'flight', name: '航班 IT-281 NRT ➔ KHH', time: '13:00', travelTime: 280, transportType: 'flight', note: '起飛 13:00 / 抵達 16:40', description: '帶著滿滿的蜜月與雪國回憶準備回家囉！' }
+    { id: '1101', date: '2026-12-15', category: 'accommodation', name: '退房 上野公園光芒酒店', time: '08:30', travelTime: 5, transportType: 'walk', note: '步行至鶯谷站', description: '🚶 步行：早上辦理退房，帶著行李散步至鶯谷站。' },
+    { id: '1102', date: '2026-12-15', category: 'transport', name: '鶯谷 ➔ 上野 ➔ 成田機場', time: '09:00', travelTime: 60, transportType: 'transit', note: '山手線 轉 Skyliner', description: '🚇 交通：搭山手線從鶯谷到【上野站】(1站)，步行出站前往「京成上野站」。\n於京成上野站搭乘對號快車「Skyliner」。\n⏱️ 時間：Skyliner 車程約 45 分鐘。\n📍 下車：直達【成田機場第2航廈】。' },
+    { id: '1103', date: '2026-12-15', category: 'flight', name: '航班 IT-281 NRT ➔ KHH', time: '13:00', travelTime: 280, transportType: 'flight', note: '起飛 13:00 / 抵達 16:40', description: '✈️ 交通：台灣虎航\n💡 建議最晚於 10:30 完成報到與托運。\n帶著滿滿的蜜月與雪國回憶準備回家囉！' }
   ];
 </script>
 
