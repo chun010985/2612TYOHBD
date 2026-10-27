@@ -39,6 +39,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
   <!-- Vue 3 -->
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- Tone.js 音樂引擎 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 
   <script>
     // 冬季主題顏色設定區 (冰藍色系)
@@ -58,6 +60,7 @@
             'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             'marquee': 'marquee 15s linear infinite',
             'run': 'run 0.4s ease-in-out infinite',
+            'walk-cycle': 'walkCycle 0.5s ease-in-out infinite'
           },
           keyframes: {
             float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
@@ -77,6 +80,12 @@
             run: {
               '0%, 100%': { transform: 'translateY(0)' },
               '50%': { transform: 'translateY(-2px)' }
+            },
+            walkCycle: {
+              '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+              '25%': { transform: 'translateY(-3px) rotate(-6deg)' },
+              '50%': { transform: 'translateY(0) rotate(0deg)' },
+              '75%': { transform: 'translateY(-3px) rotate(6deg)' }
             }
           }
         }
@@ -89,19 +98,8 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .app-container { max-width: 480px; margin: 0 auto; background-color: #fafafa; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); padding-bottom: 80px; }
-    .snowflake { position: absolute; color: #ffffff; opacity: 0; top: -20px; text-shadow: 0 0 6px rgba(255, 255, 255, 0.8); }
     .blur-sm { filter: blur(1px); }
     .glass-modal { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
-    
-    /* 專屬走路動畫 */
-    @keyframes walk-cycle {
-      0% { transform: translateY(0) rotate(-12deg); }
-      25% { transform: translateY(-3px) rotate(0deg); }
-      50% { transform: translateY(0) rotate(12deg); }
-      75% { transform: translateY(-3px) rotate(0deg); }
-      100% { transform: translateY(0) rotate(-12deg); }
-    }
-    .animate-walk { animation: walk-cycle 0.9s infinite linear; }
   </style>
 </head>
 
@@ -111,10 +109,10 @@
   <!-- Splash Screen -->
   <div id="splash-screen" v-if="showSplash" class="fixed inset-0 z-[100] bg-gradient-to-b from-[#e8f0fe] to-white flex flex-col items-center justify-center overflow-hidden transition-opacity duration-700">
     <div class="absolute inset-0 pointer-events-none z-10 w-full h-full overflow-hidden">
-      <i class="fa-solid fa-snowflake snowflake text-sm animate-fall-1" style="--start-left: 15%; animation-duration: 5s;"></i>
-      <i class="fa-solid fa-snowflake snowflake text-base animate-fall-1" style="--start-left: 35%; animation-duration: 7s; animation-delay: 1s;"></i>
-      <i class="fa-solid fa-snowflake snowflake text-xs animate-fall-1" style="--start-left: 65%; animation-duration: 6s; animation-delay: 2s;"></i>
-      <i class="fa-solid fa-snowflake snowflake text-lg animate-fall-1" style="--start-left: 85%; animation-duration: 8s; animation-delay: 0.5s;"></i>
+      <i class="fa-solid fa-snowflake text-blue-200 absolute animate-fall-1" style="--start-left: 15%; font-size: 14px; animation-duration: 5s;"></i>
+      <i class="fa-solid fa-snowflake text-blue-100 absolute animate-fall-1" style="--start-left: 35%; font-size: 18px; animation-duration: 7s; animation-delay: 1s;"></i>
+      <i class="fa-solid fa-snowflake text-blue-200 absolute animate-fall-1" style="--start-left: 65%; font-size: 12px; animation-duration: 6s; animation-delay: 2s;"></i>
+      <i class="fa-solid fa-snowflake text-blue-100 absolute animate-fall-1" style="--start-left: 85%; font-size: 20px; animation-duration: 8s; animation-delay: 0.5s;"></i>
     </div>
     <div class="relative z-10 text-center animate-float">
       <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft border-4 border-white">
@@ -131,18 +129,18 @@
     </div>
   </div>
 
-  <!-- 全域飄雪效果 -->
-  <div class="fixed inset-0 pointer-events-none z-[45] overflow-hidden opacity-60 mix-blend-screen" aria-hidden="true">
-    <i class="fa-solid fa-snowflake snowflake text-[10px] animate-fall-1" style="--start-left: 5%; animation-duration: 10s; animation-delay: -2s;"></i>
-    <i class="fa-solid fa-snowflake snowflake text-[14px] animate-fall-1" style="--start-left: 15%; animation-duration: 14s; animation-delay: -6s;"></i>
-    <i class="fa-solid fa-snowflake snowflake text-[12px] animate-fall-1" style="--start-left: 25%; animation-duration: 12s; animation-delay: -1s;"></i>
-    <i class="fa-solid fa-snowflake snowflake text-[8px] animate-fall-1" style="--start-left: 35%; animation-duration: 9s; animation-delay: -5s;"></i>
-    <i class="fa-solid fa-snowflake snowflake text-[16px] animate-fall-1" style="--start-left: 45%; animation-duration: 15s; animation-delay: -8s;"></i>
-    <i class="fa-solid fa-snowflake snowflake text-[10px] animate-fall-1" style="--start-left: 55%; animation-duration: 11s; animation-delay: -3s;"></i>
-    <i class="fa-solid fa-snowflake snowflake text-[12px] animate-fall-1" style="--start-left: 65%; animation-duration: 13s; animation-delay: -7s;"></i>
-    <i class="fa-solid fa-snowflake snowflake text-[14px] animate-fall-1" style="--start-left: 75%; animation-duration: 16s; animation-delay: -4s;"></i>
-    <i class="fa-solid fa-snowflake snowflake text-[8px] animate-fall-1" style="--start-left: 85%; animation-duration: 10s; animation-delay: -9s;"></i>
-    <i class="fa-solid fa-snowflake snowflake text-[12px] animate-fall-1" style="--start-left: 95%; animation-duration: 14s; animation-delay: -2s;"></i>
+  <!-- 全域飄雪效果 (改為雪花 icon) -->
+  <div class="fixed inset-0 pointer-events-none z-[45] overflow-hidden opacity-70 mix-blend-screen" aria-hidden="true">
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 5%; font-size: 8px; animation-duration: 10s; animation-delay: -2s;"></i>
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 15%; font-size: 12px; animation-duration: 14s; animation-delay: -6s;"></i>
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 25%; font-size: 10px; animation-duration: 12s; animation-delay: -1s;"></i>
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 35%; font-size: 8px; animation-duration: 9s; animation-delay: -5s;"></i>
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 45%; font-size: 14px; animation-duration: 15s; animation-delay: -8s;"></i>
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 55%; font-size: 9px; animation-duration: 11s; animation-delay: -3s;"></i>
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 65%; font-size: 11px; animation-duration: 13s; animation-delay: -7s;"></i>
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 75%; font-size: 13px; animation-duration: 16s; animation-delay: -4s;"></i>
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 85%; font-size: 8px; animation-duration: 10s; animation-delay: -9s;"></i>
+    <i class="fa-solid fa-snowflake text-white absolute animate-fall-1" style="--start-left: 95%; font-size: 12px; animation-duration: 14s; animation-delay: -2s;"></i>
   </div>
 
   <!-- Top Bar -->
@@ -162,12 +160,9 @@
       </div>
   </div>
 
-  <!-- 用於行程景點上傳照片的隱藏按鈕 -->
-  <input type="file" ref="globalImageInput" class="hidden" accept="image/*" @change="handleGlobalImageUpload">
-
-  <!-- Header Banner -->
+  <!-- Header Banner (固定版頭) -->
   <header class="relative h-[200px] w-full overflow-hidden bg-gray-100">
-    <img :src="bannerImage" class="w-full h-full object-cover object-bottom origin-center opacity-100" @error="handleImageError">
+    <img src="https://i.ibb.co/cSPPwNm1/image.png" class="w-full h-full object-cover object-bottom origin-center opacity-100">
     
     <!-- Countdown Badge -->
     <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/50 shadow-lg flex items-center gap-3 z-20">
@@ -195,7 +190,7 @@
     <!-- Cloud Status -->
     <div class="fixed top-4 left-4 z-50 flex items-center gap-2 cursor-pointer" @click="reconnectFirebase">
       <div class="w-3 h-3 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.2)] border border-white transition-all duration-500"
-            :class="isSaving ? 'bg-yellow-400 animate-pulse' : (firebaseStatus === 'error' ? 'bg-red-500' : (firebaseStatus === 'connected' ? 'bg-green-400' : 'bg-yellow-400'))">
+           :class="isSaving ? 'bg-yellow-400 animate-pulse' : (firebaseStatus === 'error' ? 'bg-red-500' : (firebaseStatus === 'connected' ? 'bg-green-400' : 'bg-yellow-400'))">
       </div>
     </div>
 
@@ -203,58 +198,60 @@
     <div v-if="currentTab === 'itinerary'">
       
       <!-- Stylish Date Selector (Dropdown) -->
-      <div class="mb-6 relative mt-6 px-1">
-        <!-- 可愛裝飾：左上的小雪人 -->
-        <div class="absolute -top-5 -left-1 z-20 animate-bounce" style="animation-duration: 2.5s;">
-            <div class="bg-white text-blue-400 w-11 h-11 rounded-full flex items-center justify-center shadow-[0_4px_10px_rgba(109,163,235,0.3)] border-2 border-blue-100 text-xl transform -rotate-12">
-                ⛄
-            </div>
-        </div>
-        <!-- 可愛裝飾：右上的閃亮亮 -->
-        <div class="absolute -top-3 right-1 z-20 animate-pulse-fast">
-            <span class="text-2xl drop-shadow-sm opacity-90">✨</span>
+      <div class="mb-6 relative mt-5 z-20 mx-1">
+        <!-- 漂浮裝飾 -->
+        <div class="absolute -top-4 -right-1 animate-float" style="animation-duration: 4s;">
+          <i class="fa-solid fa-snowflake text-winter-light/60 text-2xl drop-shadow-sm"></i>
         </div>
 
-        <!-- 柔和漸層背景光暈 -->
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-100 to-pink-100 rounded-full blur-md opacity-70"></div>
-        
-        <!-- 圓潤可愛的膠囊選單 -->
-        <div class="relative bg-white/95 backdrop-blur-xl border-2 border-white shadow-[0_2px_12px_rgba(109,163,235,0.15)] rounded-full p-1.5 flex items-center transition-transform active:scale-[0.98] group cursor-pointer hover:shadow-[0_4px_16px_rgba(109,163,235,0.25)]">
+        <!-- 流線型膠囊主體 -->
+        <div class="relative bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_-5px_rgba(109,163,235,0.25)] rounded-full p-1.5 flex items-center transition-all duration-300 hover:shadow-[0_10px_40px_-5px_rgba(109,163,235,0.35)] active:scale-[0.98] group">
           
-          <!-- 左側圓形圖示 -->
-          <div class="w-10 h-10 bg-gradient-to-br from-blue-200 to-blue-400 rounded-full flex items-center justify-center text-white shadow-inner shrink-0 relative overflow-hidden">
-            <i class="fa-solid fa-person-walking text-lg relative z-10 animate-walk"></i>
-            <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+          <!-- 動畫小人圓形徽章 (左側) -->
+          <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-300 to-winter flex items-center justify-center text-white shadow-[0_2px_10px_rgba(109,163,235,0.4)] shrink-0 relative overflow-hidden">
+            <!-- 走路的地平線 -->
+            <div class="absolute bottom-2.5 w-6 h-[2px] bg-white/40 rounded-full"></div> 
+            <i class="fa-solid fa-person-walking text-2xl relative z-10 animate-walk-cycle pb-1"></i>
           </div>
           
-          <!-- 下拉選單本體 -->
-          <select v-model="selectedDate" class="appearance-none bg-transparent w-full px-2 py-2 text-gray-700 font-bold text-[15px] outline-none cursor-pointer relative z-10 tracking-wide text-center text-ellipsis">
-            <option v-for="(day, index) in days" :key="index" :value="day.dateStr">
-              Day {{ index + 1 }} ❄️ {{ day.displayDate }} ({{ day.dayOfWeek }}) 📍 {{ day.mainCity }}
-            </option>
-          </select>
-          
-          <!-- 右側粉嫩下拉箭頭 -->
-          <div class="w-10 h-10 bg-pink-50 rounded-full flex items-center justify-center text-pink-400 shrink-0 pointer-events-none transition-colors shadow-sm border border-pink-100">
-            <i class="fa-solid fa-chevron-down text-sm"></i>
+          <!-- 下拉選單區塊 (右側) -->
+          <div class="flex-1 relative pl-4 pr-10">
+            <div class="text-[10px] text-gray-400 font-bold tracking-widest uppercase mb-0.5 flex items-center gap-1">
+               <i class="fa-solid fa-map-location-dot text-winter-light"></i> Itinerary
+            </div>
+            <select v-model="selectedDate" class="appearance-none bg-transparent w-full text-gray-700 font-black text-[15px] outline-none cursor-pointer relative z-10 p-0 truncate">
+              <option v-for="(day, index) in days" :key="index" :value="day.dateStr">
+                Day {{ index + 1 }} ❄️ {{ day.displayDate }} 📍 {{ day.mainCity }}
+              </option>
+            </select>
+          </div>
+
+          <!-- 下拉箭頭 -->
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 w-7 h-7 bg-gray-50 rounded-full flex items-center justify-center text-winter-dark pointer-events-none transition-all border border-gray-100 shadow-inner group-hover:bg-winter-light group-hover:text-white">
+            <i class="fa-solid fa-chevron-down text-xs"></i>
           </div>
         </div>
       </div>
 
       <!-- Birthday Surprise Banner -->
-      <div v-if="selectedDate === '2026-12-10' && isBirthdayUnlocked" @click="triggerConfetti" class="relative bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 rounded-3xl p-5 shadow-[0_10px_30px_-10px_rgba(236,72,153,0.5)] mb-4 text-white text-center overflow-hidden cursor-pointer transform transition-transform active:scale-95 animate-slide-up">
+      <div v-if="selectedDate === '2026-12-10' && isBirthdayUnlocked" @click="triggerBirthdaySurprise" class="relative bg-gradient-to-r from-red-400 via-pink-500 to-purple-500 rounded-3xl p-5 shadow-[0_10px_30px_-10px_rgba(236,72,153,0.5)] mb-4 text-white text-center overflow-hidden cursor-pointer transform transition-transform active:scale-95 animate-slide-up">
         <div class="absolute inset-0 bg-white/20 animate-pulse" style="animation-duration: 2s;"></div>
         <div class="absolute -right-6 -top-6 text-white/10 text-7xl transform rotate-12"><i class="fa-solid fa-cake-candles"></i></div>
         <div class="absolute -left-6 -bottom-6 text-white/10 text-7xl transform -rotate-12"><i class="fa-solid fa-gift"></i></div>
         <div class="relative z-10">
-            <h2 class="text-2xl font-black tracking-wider mb-1 flex items-center justify-center gap-2 drop-shadow-md">
+            <h2 class="text-2xl font-black tracking-wider mb-2 flex items-center justify-center gap-2 drop-shadow-md">
                 <i class="fa-solid fa-star text-yellow-300 animate-spin" style="animation-duration: 3s;"></i>
                 HAPPY BIRTHDAY
                 <i class="fa-solid fa-star text-yellow-300 animate-spin" style="animation-duration: 3s; animation-direction: reverse;"></i>
             </h2>
-            <p class="text-sm font-bold opacity-95 drop-shadow-sm">親愛的寶貝翔生日快樂！🎂</p>
-            <div class="mt-3 inline-block bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full border border-white/30 shadow-sm">
-                <p class="text-[10px] font-bold tracking-widest">點擊卡片再放一次彩帶 🎉</p>
+            <div class="space-y-1.5 drop-shadow-sm font-bold text-[13px] leading-relaxed tracking-wide mb-3">
+                <p>親愛的寶貝簡士翔生日快樂!!🎂</p>
+                <p>這是我們結婚後的第一個出國旅遊</p>
+                <p>未來還請你多多包涵跟照顧了!!!</p>
+                <p>希望我們一直能開心的生活~</p>
+            </div>
+            <div class="inline-block bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/30 shadow-sm">
+                <p class="text-[10px] font-bold tracking-widest"><i class="fa-solid fa-music mr-1"></i>點擊卡片播放生日歌與放彩帶 🎉</p>
             </div>
         </div>
       </div>
@@ -403,7 +400,7 @@
           
           <!-- Card Container -->
           <div class="w-full bg-white/90 backdrop-blur-md rounded-[20px] shadow-[0_4px_16px_rgba(109,163,235,0.08)] border border-white/80 transition-all duration-300 hover:shadow-[0_8px_24px_rgba(109,163,235,0.15)] hover:border-winter-light/50 hover:-translate-y-0.5 relative overflow-hidden"
-                :class="{'bg-gradient-to-br from-blue-50/80 to-white/90': item.category === 'flight'}">
+               :class="{'bg-gradient-to-br from-blue-50/80 to-white/90': item.category === 'flight'}">
             
             <div class="absolute inset-0 rounded-[20px] shadow-[inset_0_2px_4px_rgba(255,255,255,1)] pointer-events-none"></div>
 
@@ -594,45 +591,54 @@
 
         <div v-show="isHotelExpanded" class="px-4 sm:px-5 pb-5 animate-fade-in border-t border-gray-50 pt-4">
           <!-- Hotel 1 (淺草) -->
-          <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
-            <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
+          <div class="relative bg-rose-50/50 rounded-xl p-4 border border-rose-100 overflow-hidden mb-4">
+            <div class="absolute top-0 right-0 bg-rose-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
               第 1~3 晚 (12/05-12/07)
             </div>
             <div class="flex gap-3 mb-3 mt-1">
-               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
+               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-rose-100 flex items-center justify-center text-rose-300 relative z-10">
                     <i class="fa-solid fa-bed text-2xl"></i>
                </div>
                <div class="flex-1 min-w-0 py-0.5 relative z-10">
                  <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Richmond Hotel Asakusa</h4>
                  <p class="text-xs text-gray-500 mb-1.5 mt-0.5">里士滿淺草飯店</p>
                  <div class="flex gap-1 flex-wrap">
-                   <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">淺草商圈</span>
+                   <span class="text-[10px] bg-white text-rose-600 px-1.5 py-0.5 rounded border border-rose-100 font-medium">淺草商圈</span>
                    <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">交通便利</span>
                  </div>
                </div>
             </div>
             
             <div class="space-y-2 relative z-10">
-                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-rose-100/50 shadow-sm">
                     <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
                     <div class="flex-1">
                         <p class="font-bold text-gray-700 text-[13px] leading-snug">Asakusa 2-7-10, 台東區</p>
                         <p class="text-[10px] text-gray-400 mt-0.5">111-0032 東京都, 日本</p>
                     </div>
                 </div>
-                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-rose-100/50 shadow-sm">
+                    <i class="fa-solid fa-cart-shopping text-orange-400 mt-0.5 ml-1 text-xs"></i>
+                    <div class="flex-1">
+                        <p class="font-bold text-gray-700 text-[12px] leading-snug">附近超市：LIFE 淺草店</p>
+                        <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                            • 距離：步行約 4-5 分鐘 (400m)<br>
+                            • 地址：西浅草 2-27-8 (09:30–00:00)
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-rose-100/50 shadow-sm">
                     <i class="fa-solid fa-train-subway text-emerald-500 mt-0.5 ml-1 text-xs"></i>
                     <div class="flex-1">
                         <p class="font-bold text-gray-700 text-[12px] leading-snug">鄰近交通</p>
                         <p class="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
-                            • 筑波快線(TX) 淺草站：步行約 1 分鐘 (100m)<br>
-                            • 銀座線 田原町站：步行約 7 分鐘 (500m)<br>
-                            • 銀座線/都營線 淺草站：步行約 8 分鐘 (600m)
+                            • 筑波快線(TX) 淺草站：步行約 1 分鐘<br>
+                            • 銀座線/都營線 淺草站：步行約 8 分鐘
                         </p>
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <button @click="openMap('里士滿淺草飯店 Asakusa 2-7-10')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                    <button @click="openMap('里士滿淺草飯店 Asakusa 2-7-10')" class="flex-1 bg-rose-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-rose-500 transition-colors">
                         <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
                     </button>
                      <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
@@ -643,26 +649,26 @@
           </div>
 
           <!-- Hotel 2 (河口湖) -->
-          <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
-            <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
+          <div class="relative bg-teal-50/50 rounded-xl p-4 border border-teal-100 overflow-hidden mb-4">
+            <div class="absolute top-0 right-0 bg-teal-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
               第 4 晚 (12/08 入住)
             </div>
             <div class="flex gap-3 mb-3 mt-1">
-               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
+               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-teal-100 flex items-center justify-center text-teal-300 relative z-10">
                     <i class="fa-solid fa-bed text-2xl"></i>
                </div>
                <div class="flex-1 min-w-0 py-0.5 relative z-10">
                  <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Fujikawaguchiko Resort Hotel</h4>
                  <p class="text-xs text-gray-500 mb-1.5 mt-0.5">富士河口湖度假飯店</p>
                  <div class="flex gap-1 flex-wrap">
-                   <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">河口湖周邊</span>
+                   <span class="text-[10px] bg-white text-teal-600 px-1.5 py-0.5 rounded border border-teal-100 font-medium">河口湖周邊</span>
                    <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">溫泉飯店</span>
                  </div>
                </div>
             </div>
             
             <div class="space-y-2 relative z-10">
-                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-teal-100/50 shadow-sm">
                     <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
                     <div class="flex-1">
                         <p class="font-bold text-gray-700 text-[13px] leading-snug">4902-2 Funatsu, Fujikawaguchiko</p>
@@ -670,7 +676,7 @@
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <button @click="openMap('Fujikawaguchiko Resort Hotel, 4902-2 Funatsu')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                    <button @click="openMap('Fujikawaguchiko Resort Hotel, 4902-2 Funatsu')" class="flex-1 bg-teal-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-teal-500 transition-colors">
                         <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
                     </button>
                      <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
@@ -681,26 +687,26 @@
           </div>
           
           <!-- Hotel 3 (池袋) -->
-          <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
-            <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
+          <div class="relative bg-indigo-50/50 rounded-xl p-4 border border-indigo-100 overflow-hidden mb-4">
+            <div class="absolute top-0 right-0 bg-indigo-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
               第 5~8 晚 (12/09-12/12)
             </div>
             <div class="flex gap-3 mb-3 mt-1">
-               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
+               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-indigo-100 flex items-center justify-center text-indigo-300 relative z-10">
                     <i class="fa-solid fa-bed text-2xl"></i>
                </div>
                <div class="flex-1 min-w-0 py-0.5 relative z-10">
                  <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Tokyu Stay Ikebukuro</h4>
                  <p class="text-xs text-gray-500 mb-1.5 mt-0.5">東急Stay池袋</p>
                  <div class="flex gap-1 flex-wrap">
-                   <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">池袋商圈</span>
+                   <span class="text-[10px] bg-white text-indigo-600 px-1.5 py-0.5 rounded border border-indigo-100 font-medium">池袋商圈</span>
                    <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">房內洗脫烘</span>
                  </div>
                </div>
             </div>
             
             <div class="space-y-2 relative z-10">
-                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-indigo-100/50 shadow-sm">
                     <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
                     <div class="flex-1">
                         <p class="font-bold text-gray-700 text-[13px] leading-snug">Ikebukuro 2-12-2, 豐島區</p>
@@ -708,7 +714,7 @@
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <button @click="openMap('Tokyu Stay Ikebukuro')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                    <button @click="openMap('Tokyu Stay Ikebukuro')" class="flex-1 bg-indigo-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-indigo-500 transition-colors">
                         <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
                     </button>
                      <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
@@ -719,26 +725,26 @@
           </div>
 
           <!-- Hotel 4 (上野) -->
-          <div class="relative bg-purple-50/50 rounded-xl p-4 border border-purple-100 overflow-hidden mb-4">
-            <div class="absolute top-0 right-0 bg-purple-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
+          <div class="relative bg-orange-50/50 rounded-xl p-4 border border-orange-100 overflow-hidden mb-4">
+            <div class="absolute top-0 right-0 bg-orange-500 text-white text-xs px-3 py-1 rounded-bl-xl font-bold tracking-wider z-10 shadow-sm">
               第 9~10 晚 (12/13-12/14)
             </div>
             <div class="flex gap-3 mb-3 mt-1">
-               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-purple-100 flex items-center justify-center text-purple-300 relative z-10">
+               <div class="w-16 h-16 bg-white rounded-xl overflow-hidden shrink-0 shadow-sm border border-orange-100 flex items-center justify-center text-orange-300 relative z-10">
                     <i class="fa-solid fa-bed text-2xl"></i>
                </div>
                <div class="flex-1 min-w-0 py-0.5 relative z-10">
                  <h4 class="font-bold text-gray-800 text-base leading-tight pr-12">Candeo Hotels Uenokoen</h4>
                  <p class="text-xs text-gray-500 mb-1.5 mt-0.5">上野公園光芒酒店</p>
                  <div class="flex gap-1 flex-wrap">
-                   <span class="text-[10px] bg-white text-purple-600 px-1.5 py-0.5 rounded border border-purple-100 font-medium">鶯谷站旁</span>
+                   <span class="text-[10px] bg-white text-orange-600 px-1.5 py-0.5 rounded border border-orange-100 font-medium">鶯谷站旁</span>
                    <span class="text-[10px] bg-white text-sky-600 px-1.5 py-0.5 rounded border border-sky-100 font-medium">交通便利</span>
                  </div>
                </div>
             </div>
             
             <div class="space-y-2 relative z-10">
-                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-purple-100/50 shadow-sm">
+                <div class="flex items-start gap-2 text-sm text-gray-600 bg-white p-2.5 rounded-xl border border-orange-100/50 shadow-sm">
                     <i class="fa-solid fa-location-dot text-red-400 mt-0.5 ml-1 text-xs"></i>
                     <div class="flex-1">
                         <p class="font-bold text-gray-700 text-[13px] leading-snug">Negishi 1-2-13, 台東區</p>
@@ -746,7 +752,7 @@
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <button @click="openMap('Candeo Hotels Uenokoen')" class="flex-1 bg-purple-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-purple-500 transition-colors">
+                    <button @click="openMap('Candeo Hotels Uenokoen')" class="flex-1 bg-orange-400 text-white py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-orange-500 transition-colors">
                         <i class="fa-solid fa-map-location-dot mr-1"></i>Google 導航
                     </button>
                      <a href="#" class="flex-1 bg-white text-gray-600 border border-gray-200 py-2 rounded-xl text-xs font-bold shadow-sm hover:bg-gray-50 transition-colors flex items-center justify-center">
@@ -999,21 +1005,6 @@
     </div>
   </div>
 
-  <!-- Crop Modal -->
-  <div v-if="cropState.show" class="fixed inset-0 bg-black z-[70] flex flex-col animate-fade-in">
-    <div class="flex justify-between items-center p-4 bg-black text-white">
-        <h3 class="font-bold text-lg">裁切圖片</h3>
-        <button @click="closeCropModal"><i class="fa-solid fa-xmark text-2xl"></i></button>
-    </div>
-    <div class="flex-1 w-full relative overflow-hidden bg-black flex items-center justify-center">
-        <img id="crop-image" :src="cropState.src" style="display: block; max-width: 100%; max-height: 100%;">
-    </div>
-    <div class="p-6 bg-black pb-12 flex gap-4">
-        <button @click="closeCropModal" class="flex-1 bg-gray-800 text-white font-bold py-3 rounded-xl border border-gray-700">取消</button>
-        <button @click="confirmCrop" class="flex-[2] bg-winter text-white font-bold py-3 rounded-xl">確認裁切</button>
-    </div>
-  </div>
-  
   <!-- Confirm Modal -->
   <div v-if="confirmState.show" class="fixed inset-0 z-[60] flex items-center justify-center px-4 bg-black/20 backdrop-blur-sm animate-fade-in">
     <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl transform transition-all scale-100 glass-modal border border-white/50">
@@ -1049,119 +1040,127 @@
 <script>
   window.__FULL_ITINERARY_DATA__ = [
     // Day 1
-    { id: '101', date: '2026-12-05', category: 'flight', name: '航班 IT-280 KHH ➔ NRT', time: '08:15', travelTime: 195, transportType: 'flight', note: '起飛 08:15 / 抵達 12:10', description: '準備飛往東京成田機場，感受日本冬日風情！' },
-    { id: '102', date: '2026-12-05', category: 'transport', name: '成田機場 ➔ 淺草站', time: '13:30', travelTime: 60, transportType: 'transit', note: '搭乘 京成Access特急', description: '🚇 交通：搭乘「京成成田Sky Access特急」(往羽田/西馬込方向)。\n⏱️ 時間：車程約 60 分鐘，免換車直達。\n📍 下車：抵達【淺草站】。對拿大行李最友善！' },
-    { id: '103', date: '2026-12-05', category: 'accommodation', name: '里士滿淺草飯店 寄放行李', time: '14:45', travelTime: 10, transportType: 'walk', note: '淺草站步行約8分鐘', description: '🚶 步行：從都營淺草線「淺草站」A2-b 出口出站，步行約 8 分鐘抵達飯店寄放行李。' },
-    { id: '104', date: '2026-12-05', category: 'attraction', name: '淺草 雷門 & 仲見世通', time: '15:15', travelTime: 5, transportType: 'walk', note: '經典東京起點', description: '🚶 步行：從飯店出發步行約 5 分鐘抵達雷門。\n穿過巨大的紅燈籠，沿著仲見世通品嚐人形燒、炸肉餅等道地小吃。' },
-    { id: '105', date: '2026-12-05', category: 'attraction', name: '淺草寺參拜 & 拍夕陽', time: '16:00', travelTime: 0, transportType: 'walk', note: '傍晚時分', description: '這時候可以同時拍到白天與點燈的雙重美景。' },
-    { id: '106', date: '2026-12-05', category: 'attraction', name: '隅田川漫步 (Sumida River Walk)', time: '17:00', travelTime: 20, transportType: 'walk', note: '跨河景觀步道', description: '🚶 步行：沿著隅田川專屬的跨河步道散步前往晴空塔，看著塔慢慢變大非常浪漫。' },
-    { id: '107', date: '2026-12-05', category: 'attraction', name: '晴空塔 Skytree', time: '17:45', travelTime: 0, transportType: 'walk', note: '看夜景 + 吃晚餐', description: '俯瞰夜景與聖誕點燈，晚餐可以直接在底下的 Solamachi 商場享用。' },
-    { id: '108', date: '2026-12-05', category: 'accommodation', name: '入住 里士滿淺草飯店', time: '20:30', travelTime: 15, transportType: 'transit', note: '連住 3 晚', description: '🚇 交通：從押上站搭乘都營淺草線，搭 1 站回到【淺草站】。' },
+    { id: '101', date: '2026-12-05', category: 'flight', name: '航班 IT-280 KHH ➔ NRT', time: '08:15', travelTime: 195, transportType: 'flight', note: '起飛 08:15 / 抵達 12:10', description: '✈️ 準備飛往東京成田機場，感受日本冬日風情！' },
+    { id: '102', date: '2026-12-05', category: 'transport', name: '成田機場 ➔ 淺草站', time: '13:30', travelTime: 60, transportType: 'transit', note: '搭乘 京成Access特急', description: '🚇 交通：最推薦搭乘「京成成田Sky Access特急」(往羽田機場/西馬込方向)，免換車直達【淺草站】，對拿大行李最友善！' },
+    { id: '103', date: '2026-12-05', category: 'accommodation', name: '里士滿淺草飯店 寄放行李', time: '14:45', travelTime: 10, transportType: 'walk', note: '淺草站步行約8分鐘', description: '🚶 步行：抵達都營淺草線「淺草站」後，建議從 A2-b 出口出站，步行抵達飯店寄放行李，減輕負擔輕鬆逛街！' },
+    { id: '104', date: '2026-12-05', category: 'attraction', name: '淺草 雷門 & 仲見世通', time: '15:15', travelTime: 0, transportType: 'walk', note: '經典東京起點', description: '🚶 步行：穿過巨大的紅燈籠，沿著仲見世通品嚐人形燒、炸肉餅等道地小吃。' },
+    { id: '105', date: '2026-12-05', category: 'attraction', name: '淺草寺參拜', time: '16:00', travelTime: 0, transportType: 'walk', note: '傍晚時分', description: '🚶 步行：這時候可以同時拍到白天與準備點燈的雙重美景。' },
+    { id: '106', date: '2026-12-05', category: 'attraction', name: '隅田川漫步 (Sumida River Walk)', time: '17:00', travelTime: 20, transportType: 'walk', note: '跨河景觀步道', description: '🚶 步行：走在隅田川專屬的跨河步道上，看著晴空塔慢慢變大，非常浪漫。' },
+    { id: '107', date: '2026-12-05', category: 'attraction', name: '晴空塔 Skytree', time: '17:45', travelTime: 0, transportType: 'walk', note: '看夜景 + 吃晚餐', description: '🚶 步行：俯瞰夜景與聖誕點燈，晚餐可以直接在底下的 Solamachi 商場享用。' },
+    { id: '108', date: '2026-12-05', category: 'accommodation', name: '入住 里士滿淺草飯店', time: '20:30', travelTime: 15, transportType: 'transit', note: '連住 3 晚', description: '🚇 交通：搭乘一站地鐵回到淺草，辦理入住手續並休息。' },
 
-    // Day 2
-    { id: '201', date: '2026-12-06', category: 'transport', name: '飯店出發 ➔ 淺草站', time: '08:15', travelTime: 10, transportType: 'walk', note: '步行', description: '🚶 步行：從飯店步行約 10 分鐘前往淺草站。' },
-    { id: '202', date: '2026-12-06', category: 'transport', name: '淺草 ➔ 人形町站', time: '08:30', travelTime: 10, transportType: 'transit', note: '搭乘 都營淺草線', description: '🚇 交通：搭乘都營淺草線。\n📍 下車：抵達【人形町站】，從 A5 出口出站。' },
-    { id: '203', date: '2026-12-06', category: 'attraction', name: '小網神社 (洗錢 / 強運厄除)', time: '08:45', travelTime: 5, transportType: 'walk', note: '提早抵達免排隊', description: '🚶 步行：從人形町站 A5 出口步行約 5 分鐘。\n假日人潮眾多！提早抵達排隊等 9:00 開門，洗錢當錢母祈求好運。' },
-    { id: '204', date: '2026-12-06', category: 'transport', name: '人形町 ➔ 銀座站', time: '09:45', travelTime: 10, transportType: 'transit', note: '搭乘 日比谷線', description: '🚇 交通：在人形町站轉乘「日比谷線(往中目黑方向)」。\n📍 下車：直達【銀座站】。' },
-    { id: '205', date: '2026-12-06', category: 'attraction', name: '銀座 ➔ 東京車站 (漫步逛街)', time: '10:00', travelTime: 0, transportType: 'walk', note: '步行者天國', description: '🚶 步行：假日銀座實施封街，沿著中央通漫步到東京車站，沿路吃午餐、買伴手禮。' },
-    { id: '206', date: '2026-12-06', category: 'transport', name: '市區 ➔ 赤羽橋站', time: '15:15', travelTime: 20, transportType: 'transit', note: '轉乘 大江戶線', description: '🚇 交通：搭車至有「都營大江戶線」的車站，搭乘大江戶線前往【赤羽橋站】，準備看夕陽。' },
-    { id: '207', date: '2026-12-06', category: 'attraction', name: '東京鐵塔 (拍夕陽與點燈)', time: '16:00', travelTime: 5, transportType: 'walk', note: '經典地標', description: '🚶 步行：從赤羽橋站步行約 5 分鐘抵達鐵塔下方。\n東京鐵塔冬季預計於【16:30 左右點燈】，這時間抵達可以一次收集白天、夕陽與絕美夜景！' },
-    { id: '208', date: '2026-12-06', category: 'transport', name: '赤羽橋 ➔ 淺草站', time: '19:30', travelTime: 30, transportType: 'transit', note: '大江戶線 轉 淺草線', description: '🚇 交通：搭乘大江戶線至【大門站】，同站轉乘淺草線回到【淺草站】吃晚餐。' },
-    { id: '209', date: '2026-12-06', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '21:00', travelTime: 10, transportType: 'walk', note: '連住第 2 晚', description: '🚶 步行：吃飽後散步回飯店休息。' },
+    // Day 2 (蠟筆小新之旅 + 增上寺/鐵塔)
+    { id: '201', date: '2026-12-06', category: 'transport', name: '飯店出發 ➔ 淺草站', time: '08:15', travelTime: 10, transportType: 'walk', note: '步行', description: '🚶 步行：從飯店步行出發前往淺草站。' },
+    { id: '202', date: '2026-12-06', category: 'transport', name: '淺草 ➔ 人形町站', time: '08:30', travelTime: 10, transportType: 'transit', note: '搭乘 都營淺草線', description: '🚇 交通：搭乘都營淺草線至【人形町站】，A5出口出站。' },
+    { id: '203', date: '2026-12-06', category: 'attraction', name: '小網神社 (洗錢 / 強運厄除)', time: '08:45', travelTime: 0, transportType: 'walk', note: '提早抵達免排隊', description: '🚶 步行：假日人潮眾多！提早抵達排隊等 9:00 開門，洗錢當錢母祈求好運。' },
+    { id: '204', date: '2026-12-06', category: 'transport', name: '人形町 ➔ 春日部站', time: '09:45', travelTime: 50, transportType: 'transit', note: '半藏門線直通', description: '🚇 交通：【無腦直達密技】步行5分鐘到水天宮前站，搭乘半藏門線 (往久喜方向，直通運轉東武晴空塔線)，免換車一路睡到【春日部站】！' },
+    { id: '205', date: '2026-12-06', category: 'attraction', name: '春日部車站 (小新發車音樂)', time: '10:45', travelTime: 0, transportType: 'walk', note: '車站打卡', description: '🚶 步行：下車記得聽專屬的「蠟筆小新發車旋律」，月台上還有小新的站牌看板可以合照！' },
+    { id: '206', date: '2026-12-06', category: 'attraction', name: 'LaLaGarden 蠟筆小新遊樂場', time: '11:15', travelTime: 5, transportType: 'walk', note: '童年回憶殺', description: '🚶 步行：從西口步行 5 分鐘抵達。\n這裡有全國唯一的「蠟筆小新遊樂場」，超多限定周邊買到手軟！' },
+    { id: '207', date: '2026-12-06', category: 'food', name: '伊藤洋華堂 (真實版五右衛門超市)', time: '13:00', travelTime: 10, transportType: 'walk', note: '午餐與採買', description: '🚶 步行：走到東口。\n這間就是動畫裡美冴最愛去搶特價品的原型！可以在裡面吃午餐。' },
+    { id: '208', date: '2026-12-06', category: 'transport', name: '春日部 ➔ 御成門站', time: '14:30', travelTime: 75, transportType: 'transit', note: '東武線 轉 淺草線/三田線', description: '🚇 交通：搭乘東武晴空塔線到三田站或大門站，轉乘三田線至【御成門站】，前往增上寺。' },
+    { id: '209', date: '2026-12-06', category: 'attraction', name: '增上寺 & 芝公園', time: '15:45', travelTime: 5, transportType: 'walk', note: '東京鐵塔經典同框', description: '🚶 步行：漫步芝公園與歷史悠久的增上寺，這裡是拍攝東京鐵塔同框的最佳地點！' },
+    { id: '210', date: '2026-12-06', category: 'attraction', name: '東京鐵塔 (拍夕陽與點燈)', time: '16:30', travelTime: 10, transportType: 'walk', note: '經典地標', description: '🚶 步行：從增上寺步行即達。\n東京鐵塔冬季預計於【16:30 左右點燈】，這時間抵達可以一次收集白天、夕陽與絕美夜景！' },
+    { id: '211', date: '2026-12-06', category: 'transport', name: '赤羽橋 ➔ 淺草站', time: '19:00', travelTime: 30, transportType: 'transit', note: '大江戶線 轉 淺草線', description: '🚇 交通：搭乘大江戶線至大門站，轉乘淺草線回淺草，在淺草周邊吃晚餐。' },
+    { id: '212', date: '2026-12-06', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '20:30', travelTime: 5, transportType: 'walk', note: '連住第 2 晚', description: '🚶 步行：回飯店休息。' },
 
-    // Day 3
-    { id: '301', date: '2026-12-07', category: 'transport', name: '飯店出發 ➔ 淺草站', time: '08:45', travelTime: 10, transportType: 'walk', note: '步行', description: '🚶 步行：從飯店步行約 10 分鐘至淺草站。' },
-    { id: '302', date: '2026-12-07', category: 'transport', name: '淺草 ➔ 東銀座站', time: '09:00', travelTime: 12, transportType: 'transit', note: '搭乘 都營淺草線', description: '🚇 交通：搭乘都營淺草線直達【東銀座站】。' },
-    { id: '303', date: '2026-12-07', category: 'food', name: '築地場外市場', time: '09:15', travelTime: 5, transportType: 'walk', note: '海鮮早午餐', description: '🚶 步行：從東銀座站步行約 5 分鐘。\n品嚐新鮮的海鮮丼、玉子燒與各式烤物！' },
-    { id: '304', date: '2026-12-07', category: 'attraction', name: '濱離宮恩賜庭園', time: '11:00', travelTime: 10, transportType: 'walk', note: '日式庭園漫步', description: '🚶 步行：吃飽後步行約 10 分鐘到旁邊的濱離宮，欣賞傳統日式庭園。' },
-    { id: '305', date: '2026-12-07', category: 'transport', name: '東銀座 ➔ 大森海岸站', time: '12:30', travelTime: 25, transportType: 'transit', note: '淺草線直通京急線', description: '🚇 交通：走回東銀座站，搭乘「淺草線直通運轉京急本線 (普通或急行)」。\n📍 下車：抵達【大森海岸站】。' },
-    { id: '306', date: '2026-12-07', category: 'attraction', name: '品川水族館 (しながわ水族館)', time: '13:00', travelTime: 10, transportType: 'walk', note: '超美海底隧道', description: '🚶 步行：從大森海岸站步行約 8 分鐘穿越公園抵達。\n欣賞充滿活力的海豚秀與著名的夢幻海底隧道！' },
-    { id: '307', date: '2026-12-07', category: 'transport', name: '大森海岸 ➔ 新橋 ➔ 台場站', time: '15:30', travelTime: 35, transportType: 'transit', note: '京急線 轉 百合鷗號', description: '🚇 交通：搭乘京急線回【新橋站】，轉乘無人駕駛的「百合鷗號」前往【台場站】，沿途可欣賞跨海大橋美景。' },
-    { id: '308', date: '2026-12-07', category: 'attraction', name: '台場 & 彩虹大橋夜景', time: '16:15', travelTime: 5, transportType: 'walk', note: '看夕陽與百萬夜景', description: '逛 DiverCity 看鋼彈，傍晚欣賞彩虹大橋，並在 Aqua City 或周邊商場享用晚餐。' },
-    { id: '309', date: '2026-12-07', category: 'transport', name: '台場 ➔ 淺草站', time: '19:30', travelTime: 45, transportType: 'transit', note: '百合鷗號 轉 淺草線', description: '🚇 交通：搭乘百合鷗號回到【新橋站】，同站轉乘都營淺草線一路睡回【淺草站】。' },
+    // Day 3 (大森海岸水族館)
+    { id: '301', date: '2026-12-07', category: 'transport', name: '飯店出發 ➔ 淺草站', time: '08:45', travelTime: 10, transportType: 'walk', note: '步行', description: '🚶 步行：從飯店步行至淺草站。' },
+    { id: '302', date: '2026-12-07', category: 'transport', name: '淺草 ➔ 東銀座站', time: '09:00', travelTime: 12, transportType: 'transit', note: '搭乘 都營淺草線', description: '🚇 交通：搭乘都營淺草線直達【東銀座站】，步行即達築地市場。' },
+    { id: '303', date: '2026-12-07', category: 'food', name: '築地場外市場', time: '09:15', travelTime: 0, transportType: 'walk', note: '海鮮早午餐', description: '🚶 步行：品嚐新鮮的海鮮丼、玉子燒與各式烤物！' },
+    { id: '304', date: '2026-12-07', category: 'attraction', name: '濱離宮恩賜庭園', time: '11:00', travelTime: 10, transportType: 'walk', note: '日式庭園漫步', description: '🚶 步行：吃飽後散步到旁邊的濱離宮，欣賞傳統日式庭園。' },
+    { id: '305', date: '2026-12-07', category: 'transport', name: '汐留 ➔ 大森海岸站', time: '12:30', travelTime: 25, transportType: 'transit', note: '淺草線直通京急線', description: '🚇 交通：走到汐留站(或新橋)，搭乘直通京急本線的班次，前往【大森海岸站】(注意搭乘普通/急行)。' },
+    { id: '306', date: '2026-12-07', category: 'attraction', name: '品川水族館 (大森海岸)', time: '13:00', travelTime: 10, transportType: 'walk', note: '大森海岸站步行', description: '🚶 步行：出站後步行約8分鐘。\n欣賞海底隧道與充滿活力的海豚、海獅表演，感受悠閒的氛圍！' },
+    { id: '307', date: '2026-12-07', category: 'transport', name: '大森海岸 ➔ 新橋 ➔ 台場站', time: '15:30', travelTime: 40, transportType: 'transit', note: '京急線 轉 百合鷗號', description: '🚇 交通：搭乘京急線回新橋，無縫轉乘「百合鷗號」前往台場，沿途可欣賞跨海大橋美景。' },
+    { id: '308', date: '2026-12-07', category: 'attraction', name: '台場 DiverCity & 彩虹大橋', time: '16:15', travelTime: 0, transportType: 'walk', note: '看夕陽與百萬夜景', description: '🚶 步行：逛 DiverCity 看鋼彈，傍晚欣賞彩虹大橋，並在商場享用晚餐。' },
+    { id: '309', date: '2026-12-07', category: 'transport', name: '台場 ➔ 淺草站', time: '19:30', travelTime: 45, transportType: 'transit', note: '百合鷗號 轉 淺草線', description: '🚇 交通：搭乘百合鷗號回到新橋，同站轉乘都營淺草線一路睡回淺草。' },
     { id: '310', date: '2026-12-07', category: 'accommodation', name: '返回 里士滿淺草飯店', time: '20:30', travelTime: 10, transportType: 'walk', note: '準備明早退房', description: '🚶 步行：回飯店收拾行李，準備明天出發去富士山！' },
 
-    // Day 4
-    { id: '401', date: '2026-12-08', category: 'accommodation', name: '退房 里士滿淺草飯店', time: '07:30', travelTime: 0, transportType: 'walk', note: '告別淺草', description: '辦理退房手續。' },
-    { id: '402', date: '2026-12-08', category: 'transport', name: '淺草 ➔ 新宿站', time: '07:45', travelTime: 35, transportType: 'transit', note: '淺草線 轉 總武線', description: '🚇 交通：搭乘淺草線至【淺草橋站】或【東日本橋站】轉乘 JR 總武線，前往【新宿站】。' },
-    { id: '403', date: '2026-12-08', category: 'accommodation', name: '新宿車站 寄放大型行李', time: '08:30', travelTime: 0, transportType: 'walk', note: '減輕上山負擔', description: '【內行秘訣】把大行李箱鎖在新宿車站的置物櫃，只帶兩天一夜輕便行李上富士山！' },
-    { id: '404', date: '2026-12-08', category: 'transport', name: '新宿 ➔ 河口湖', time: '09:30', travelTime: 118, transportType: 'transit', note: '富士回遊 11號', description: '🚇 交通：搭乘 JR 特急「富士回遊 11號」直達。\n⏱️ 時間：09:30 新宿發車，11:28 抵達河口湖 (車程約 118 分鐘)。\n⚠️ 建議：新宿站如迷宮且須寄放行李，強烈建議 08:40~08:50 抵達車站！\n📍 下車：直達【河口湖站】。' },
-    { id: '405', date: '2026-12-08', category: 'attraction', name: '河口湖 大石公園', time: '12:00', travelTime: 25, transportType: 'transit', note: '搭乘紅線巴士', description: '🚌 巴士：在河口湖站外搭乘「紅線周遊巴士」。\n先坐到最遠的【大石公園】，欣賞毫無遮蔽的富士山與湖面倒影。' },
-    { id: '406', date: '2026-12-08', category: 'attraction', name: '天上山纜車 & 湖畔散步', time: '14:00', travelTime: 20, transportType: 'transit', note: '由遠玩回市區', description: '🚌 巴士：搭巴士往回坐到【遊覽船・纜車入口站】。\n搭狸貓兔子纜車上山飽覽全景。' },
-    { id: '407', date: '2026-12-08', category: 'accommodation', name: '入住 Fujikawaguchiko Resort', time: '16:30', travelTime: 15, transportType: 'walk', note: '溫泉度假飯店', description: '🚶 步行：返回河口湖站後，步行約 10 餘分鐘抵達飯店。\n提早到飯店 Check-in！換上浴衣享用晚餐，晚上泡溫泉。' },
+    // Day 4 (富士山 去程)
+    { id: '401', date: '2026-12-08', category: 'accommodation', name: '退房 里士滿淺草飯店', time: '07:30', travelTime: 0, transportType: 'walk', note: '告別淺草', description: '🚶 步行：辦理退房手續。' },
+    { id: '402', date: '2026-12-08', category: 'transport', name: '淺草 ➔ 新宿站', time: '07:45', travelTime: 35, transportType: 'transit', note: '淺草線 轉 總武線', description: '🚇 交通：帶著行李搭乘淺草線轉總武線前往新宿站。' },
+    { id: '403', date: '2026-12-08', category: 'accommodation', name: '新宿車站 寄放大型行李', time: '08:30', travelTime: 0, transportType: 'walk', note: '⚠️ 建議提早 40-50分抵達', description: '🚶 步行：【內行秘訣】把大行李箱鎖在新宿車站的置物櫃，只帶兩天一夜輕便行李上富士山！' },
+    { id: '404', date: '2026-12-08', category: 'transport', name: '富士回遊 11號 (直達車)', time: '09:30', travelTime: 118, transportType: 'transit', note: '新宿 ➔ 河口湖', description: '🚇 交通：搭乘 09:30 發車的「特急 富士回遊 11號」，預計 11:28 抵達河口湖。全車對號座，請務必準時上車！' },
+    { id: '405', date: '2026-12-08', category: 'attraction', name: '河口湖 大石公園', time: '12:00', travelTime: 25, transportType: 'transit', note: '搭乘紅線巴士', description: '🚌 公車：先搭巴士到最遠的【大石公園】，欣賞毫無遮蔽的富士山與湖面倒影。' },
+    { id: '406', date: '2026-12-08', category: 'attraction', name: '天上山纜車 & 湖畔散步', time: '14:00', travelTime: 20, transportType: 'transit', note: '由遠玩回市區', description: '🚌 公車：搭巴士往回坐到纜車站，搭狸貓兔子纜車上山飽覽全景，回程湖畔散步。' },
+    { id: '407', date: '2026-12-08', category: 'accommodation', name: '入住 Fujikawaguchiko Resort', time: '16:30', travelTime: 15, transportType: 'walk', note: '溫泉度假飯店', description: '🚶 步行：提早到飯店 Check-in！換上浴衣享用晚餐，晚上泡溫泉。' },
 
-    // Day 5
-    { id: '501', date: '2026-12-09', category: 'accommodation', name: '退房 富士河口湖飯店', time: '09:00', travelTime: 0, transportType: 'walk', note: '告別河口湖', description: '早上看完逆富士後退房。' },
-    { id: '502', date: '2026-12-09', category: 'transport', name: '飯店 ➔ 下吉田站', time: '09:15', travelTime: 30, transportType: 'transit', note: '接駁/步行 轉 富士急行線', description: '🚇 交通：前往河口湖站，搭乘「富士急行線」電車前往【下吉田站】。' },
-    { id: '503', date: '2026-12-09', category: 'attraction', name: '新倉山淺間公園 & 神社', time: '10:00', travelTime: 15, transportType: 'walk', note: '經典五重塔', description: '🚶 步行：出站後步行爬階梯約 15 分鐘。\n拍攝明信片上最經典的「五重塔與富士山」同框絕景！' },
-    { id: '504', date: '2026-12-09', category: 'attraction', name: '下吉田本町二丁目 散步', time: '12:00', travelTime: 15, transportType: 'walk', note: '復古富士山街景', description: '🚶 步行：從神社走回車站附近市區。\n拍攝巨大的富士山矗立在街道盡頭的壯觀畫面，並在附近吃午餐。' },
-    { id: '505', date: '2026-12-09', category: 'transport', name: '下吉田 ➔ 新宿站', time: '15:12', travelTime: 107, transportType: 'transit', note: '富士回遊 36號', description: '🚇 交通：搭乘 JR 特急「富士回遊 36號」直達東京市區。\n⏱️ 時間：15:12 下吉田發車，16:59 抵達新宿 (車程約 107 分鐘)。\n⚠️ 建議：提早 15 分鐘 (約 14:55) 抵達月台，可悠閒拍攝復古車站。\n📍 下車：抵達【新宿站】。' },
-    { id: '506', date: '2026-12-09', category: 'accommodation', name: '新宿車站 領取行李', time: '17:00', travelTime: 0, transportType: 'walk', note: '拿回大行李箱', description: '抵達新宿後，去置物櫃領回昨天寄放的大行李。' },
-    { id: '507', date: '2026-12-09', category: 'transport', name: '新宿 ➔ 池袋站', time: '17:30', travelTime: 15, transportType: 'transit', note: 'JR 埼京線', description: '🚇 交通：搭乘 JR 埼京線或山手線前往【池袋站】。' },
-    { id: '508', date: '2026-12-09', category: 'accommodation', name: '入住 東急Stay池袋', time: '18:00', travelTime: 5, transportType: 'walk', note: '將在此連住 4 晚', description: '🚶 步行：從池袋西口步行約 5 分鐘。\n辦理入住！房間內有洗脫烘衣機可以洗衣服。' },
-    { id: '509', date: '2026-12-09', category: 'shopping', name: '池袋商圈 晚餐與逛街', time: '19:00', travelTime: 0, transportType: 'walk', note: '自由活動', description: '放下行李一身輕，在熱鬧的池袋吃晚餐（如無敵家拉麵）、逛藥妝店。' },
+    // Day 5 (富士山 回程)
+    { id: '501', date: '2026-12-09', category: 'accommodation', name: '退房 富士河口湖飯店', time: '09:00', travelTime: 0, transportType: 'walk', note: '告別河口湖', description: '🚶 步行：早上看完逆富士後退房。' },
+    { id: '502', date: '2026-12-09', category: 'transport', name: '飯店 ➔ 下吉田站', time: '09:15', travelTime: 30, transportType: 'transit', note: '接駁/步行 轉 富士急行線', description: '🚇 交通：前往河口湖站，轉乘電車前往下吉田。' },
+    { id: '503', date: '2026-12-09', category: 'attraction', name: '新倉山淺間公園 & 忠靈塔', time: '10:00', travelTime: 15, transportType: 'walk', note: '經典五重塔', description: '🚶 步行：出站後爬階梯，拍攝明信片上最經典的「五重塔與富士山」同框絕景！' },
+    { id: '504', date: '2026-12-09', category: 'attraction', name: '下吉田本町二丁目 散步', time: '12:00', travelTime: 15, transportType: 'walk', note: '復古富士山街景', description: '🚶 步行：拍攝巨大的富士山矗立在街道盡頭的壯觀畫面，並在附近吃午餐。' },
+    { id: '505', date: '2026-12-09', category: 'transport', name: '下吉田站 月台候車', time: '14:50', travelTime: 0, transportType: 'walk', note: '⚠️ 建議提早 15分抵達', description: '🚶 步行：車站不大，提早抵達拍拍復古車站的風景，準備搭車。' },
+    { id: '506', date: '2026-12-09', category: 'transport', name: '富士回遊 36號 (直達車)', time: '15:12', travelTime: 107, transportType: 'transit', note: '下吉田 ➔ 新宿', description: '🚇 交通：搭乘 15:12 發車的「特急 富士回遊 36號」，預計 16:59 抵達新宿站。' },
+    { id: '507', date: '2026-12-09', category: 'accommodation', name: '新宿車站 領取行李', time: '17:00', travelTime: 0, transportType: 'walk', note: '拿回大行李箱', description: '🚶 步行：抵達新宿後，去置物櫃領回昨天寄放的大行李。' },
+    { id: '508', date: '2026-12-09', category: 'transport', name: '新宿 ➔ 池袋站', time: '17:30', travelTime: 15, transportType: 'transit', note: 'JR 埼京線', description: '🚇 交通：帶著行李搭車前往池袋。' },
+    { id: '509', date: '2026-12-09', category: 'accommodation', name: '入住 東急Stay池袋', time: '18:00', travelTime: 5, transportType: 'walk', note: '將在此連住 4 晚', description: '🚶 步行：辦理入住！房間內有洗脫烘衣機可以洗衣服。' },
 
-    // Day 6
-    { id: '601', date: '2026-12-10', category: 'transport', name: '飯店出發 ➔ 池袋站', time: '09:30', travelTime: 5, transportType: 'walk', note: '步行', description: '🚶 步行：步行約 5 分鐘前往池袋站。' },
-    { id: '602', date: '2026-12-10', category: 'transport', name: '池袋 ➔ 港未來站', time: '09:45', travelTime: 45, transportType: 'transit', note: '副都心線 直通運轉', description: '🚇 交通：【超強搭車密技】在池袋搭乘「副都心線 (往元町・中華街方向)」。\n直通運轉東急東橫線與港未來線，免換車直達【港未來站 (みなとみらい)】！' },
-    { id: '603', date: '2026-12-10', category: 'attraction', name: '港未來商圈漫步', time: '10:45', travelTime: 10, transportType: 'walk', note: '現代港灣風情', description: '🚶 步行：出站即是精華商圈。\n感受橫濱充滿現代感與海港交織的獨特氛圍。' },
-    { id: '604', date: '2026-12-10', category: 'attraction', name: '橫濱紅磚倉庫', time: '12:00', travelTime: 15, transportType: 'walk', note: '聖誕市集', description: '🚶 步行：沿著海岸線散步約 15 分鐘抵達。\n12月的廣場有盛大的聖誕市集，可以在這裡吃午餐、喝熱紅酒！' },
-    { id: '605', date: '2026-12-10', category: 'attraction', name: '山下公園', time: '14:30', travelTime: 15, transportType: 'walk', note: '無敵海景散步', description: '🚶 步行：繼續沿海散步約 15 分鐘。\n沿著海岸線漫步，看著巨大的冰川丸客船與海鷗。' },
-    { id: '606', date: '2026-12-10', category: 'food', name: '橫濱中華街', time: '16:00', travelTime: 10, transportType: 'walk', note: '日本最大中華街', description: '🚶 步行：從山下公園往內陸走約 10 分鐘。\n品嚐著名的熊貓包子、生煎包，感受熱鬧氣氛。' },
-    { id: '607', date: '2026-12-10', category: 'attraction', name: '港未來夜景纜車 (YOKOHAMA AIR CABIN)', time: '17:30', travelTime: 20, transportType: 'transit', note: '浪漫高空夜景', description: '🚇 交通：從運河公園站搭乘景觀纜車前往【櫻木町站】。\n從高空俯瞰橫濱港灣與摩天輪夜景，超級浪漫！' },
-    { id: '608', date: '2026-12-10', category: 'transport', name: '櫻木町 ➔ 池袋站', time: '19:00', travelTime: 55, transportType: 'transit', note: 'JR 湘南新宿線', description: '🚇 交通：在櫻木町搭乘 JR 根岸線到【橫濱站】，轉乘「JR 湘南新宿線」直達【池袋站】。' },
+    // Day 6 (橫濱)
+    { id: '601', date: '2026-12-10', category: 'transport', name: '飯店出發 ➔ 池袋站', time: '09:30', travelTime: 5, transportType: 'walk', note: '步行', description: '🚶 步行前往池袋站。' },
+    { id: '602', date: '2026-12-10', category: 'transport', name: '池袋 ➔ 港未來站', time: '09:45', travelTime: 45, transportType: 'transit', note: '副都心線 直通運轉', description: '🚇 交通：【超強搭車密技】搭乘副都心線，直通運轉東急東橫線與港未來線，免換車直達橫濱！' },
+    { id: '603', date: '2026-12-10', category: 'attraction', name: '港未來商圈漫步', time: '10:45', travelTime: 10, transportType: 'walk', note: '現代港灣風情', description: '🚶 步行：感受橫濱充滿現代感與海港交織的獨特氛圍。' },
+    { id: '604', date: '2026-12-10', category: 'attraction', name: '橫濱紅磚倉庫', time: '12:00', travelTime: 15, transportType: 'walk', note: '聖誕市集', description: '🚶 步行：12月的廣場有盛大的聖誕市集，可以在這裡吃午餐、喝熱紅酒！' },
+    { id: '605', date: '2026-12-10', category: 'attraction', name: '山下公園', time: '14:30', travelTime: 15, transportType: 'walk', note: '無敵海景散步', description: '🚶 步行：沿著海岸線漫步，看著巨大的冰川丸客船與海鷗。' },
+    { id: '606', date: '2026-12-10', category: 'food', name: '橫濱中華街', time: '16:00', travelTime: 10, transportType: 'walk', note: '日本最大中華街', description: '🚶 步行：品嚐著名的熊貓包子、生煎包。' },
+    { id: '607', date: '2026-12-10', category: 'attraction', name: '港未來夜景纜車', time: '17:30', travelTime: 20, transportType: 'transit', note: '浪漫高空夜景', description: '🚇 交通：搭乘景觀纜車前往櫻木町，從高空俯瞰港灣夜景，超級浪漫！' },
+    { id: '608', date: '2026-12-10', category: 'transport', name: '櫻木町 ➔ 池袋站', time: '19:00', travelTime: 55, transportType: 'transit', note: 'JR 湘南新宿線', description: '🚇 交通：從橫濱轉乘 JR 湘南新宿線直達池袋。' },
     { id: '609', date: '2026-12-10', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:00', travelTime: 5, transportType: 'walk', note: '連住第 2 晚', description: '🚶 步行：回飯店休息。' },
 
-    // Day 7
-    { id: '701', date: '2026-12-11', category: 'transport', name: '飯店出發 ➔ 池袋站', time: '08:15', travelTime: 5, transportType: 'walk', note: '步行', description: '🚶 步行：出發前往池袋站。' },
-    { id: '702', date: '2026-12-11', category: 'transport', name: '池袋 ➔ 鎌倉站', time: '08:30', travelTime: 65, transportType: 'transit', note: 'JR 湘南新宿線 直達', description: '🚇 交通：搭乘「JR 湘南新宿線 (往逗子方向)」，免換車直達【鎌倉站】！' },
-    { id: '703', date: '2026-12-11', category: 'attraction', name: '鶴岡八幡宮 & 小町通', time: '09:45', travelTime: 10, transportType: 'walk', note: '古都老街散策', description: '🚶 步行：出站後沿著熱鬧的「小町通」商店街一路吃吃喝喝，散步前往鎌倉最重要的信仰中心「鶴岡八幡宮」參拜。' },
-    { id: '704', date: '2026-12-11', category: 'transport', name: '鎌倉 ➔ 長谷站', time: '13:00', travelTime: 10, transportType: 'transit', note: '搭乘 江之電', description: '🚇 交通：回到鎌倉站，轉乘百年復古的路面電車「江之島電鐵 (江之電)」，在【長谷站】下車。' },
-    { id: '705', date: '2026-12-11', category: 'attraction', name: '長谷寺 & 鎌倉大佛', time: '13:15', travelTime: 10, transportType: 'walk', note: '鎌倉必訪雙景點', description: '🚶 步行：先到長谷寺欣賞唯美日式庭園，接著步行前往高德院，仰望壯觀的國寶青銅大佛。' },
-    { id: '706', date: '2026-12-11', category: 'transport', name: '長谷 ➔ 江之島站', time: '15:15', travelTime: 25, transportType: 'transit', note: '搭乘 江之電', description: '🚇 交通：繼續搭乘江之電，沿途會經過絕美的湘南海岸，最後在【江之島站】下車。' },
-    { id: '707', date: '2026-12-11', category: 'attraction', name: '江之島 (看海與夕陽)', time: '15:45', travelTime: 20, transportType: 'walk', note: '浪漫夕陽海岸', description: '🚶 步行：走過跨海大橋登島，逛江島神社參道吃海鮮仙貝，爬到稚兒之淵看絕美海景與夕陽！' },
-    { id: '708', date: '2026-12-11', category: 'transport', name: '片瀨江之島 ➔ 新宿 ➔ 池袋', time: '18:30', travelTime: 75, transportType: 'transit', note: '小田急線 轉 JR', description: '🚇 交通：走到龍宮造型的「片瀨江之島站」，搭乘小田急線直達【新宿站】，再轉 5 分鐘的山手線回【池袋站】。' },
-    { id: '709', date: '2026-12-11', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:00', travelTime: 5, transportType: 'walk', note: '連住第 3 晚', description: '回池袋吃晚餐、回飯店休息。' },
+    // Day 7 (鎌倉)
+    { id: '701', date: '2026-12-11', category: 'transport', name: '飯店出發 ➔ 北鎌倉站', time: '08:30', travelTime: 65, transportType: 'transit', note: '湘南新宿線 直達', description: '🚇 交通：從池袋搭乘「JR湘南新宿線 (往逗子方向)」，免換車直達【北鎌倉站】！' },
+    { id: '702', date: '2026-12-11', category: 'attraction', name: '北鎌倉 (圓覺寺/建長寺)', time: '09:40', travelTime: 5, transportType: 'walk', note: '古都靜謐禪意', description: '🚶 步行：出站即達。遠離喧囂，感受北鎌倉專屬的寧靜與禪意。' },
+    { id: '703', date: '2026-12-11', category: 'attraction', name: '鶴岡八幡宮', time: '10:40', travelTime: 15, transportType: 'walk', note: '鎌倉最重要神社', description: '🚶 步行：從北鎌倉一路順勢散步到鶴岡八幡宮參拜。' },
+    { id: '704', date: '2026-12-11', category: 'attraction', name: '小町通 漫步吃美食', time: '11:40', travelTime: 5, transportType: 'walk', note: '好吃好逛', description: '🚶 步行：從八幡宮出來就是熱鬧的小町通，沿路吃可麗餅、抹茶冰淇淋當午餐。' },
+    { id: '705', date: '2026-12-11', category: 'transport', name: '鎌倉 ➔ 長谷站', time: '13:00', travelTime: 10, transportType: 'transit', note: '搭乘 江之電', description: '🚇 交通：走到鎌倉站，轉乘百年歷史的「江之電」前往長谷站。' },
+    { id: '706', date: '2026-12-11', category: 'attraction', name: '長谷寺', time: '13:15', travelTime: 5, transportType: 'walk', note: '無敵海景寺廟', description: '🚶 步行：擁有美麗的日式庭園，還可以爬上觀景台遠眺由比濱海岸。' },
+    { id: '707', date: '2026-12-11', category: 'attraction', name: '鎌倉大佛 (高德院)', time: '14:30', travelTime: 10, transportType: 'walk', note: '日本國寶大佛', description: '🚶 步行：距離長谷寺很近，親眼目睹壯觀的青銅大佛！' },
+    { id: '708', date: '2026-12-11', category: 'transport', name: '長谷 ➔ 江之島站', time: '15:30', travelTime: 20, transportType: 'transit', note: '搭乘 江之電', description: '🚇 交通：搭乘江之電前往江之島。' },
+    { id: '709', date: '2026-12-11', category: 'attraction', name: '江之島 (看夕陽)', time: '16:00', travelTime: 15, transportType: 'walk', note: '富士山與夕陽', description: '🚶 步行：漫步過跨海大橋，在稚兒之淵或展望台欣賞夕陽餘暉下的富士山絕景！' },
+    { id: '710', date: '2026-12-11', category: 'transport', name: '江之島 ➔ 池袋站', time: '18:30', travelTime: 75, transportType: 'transit', note: '湘南單軌 / JR', description: '🚇 交通：搭乘湘南單軌電車體驗懸吊式列車到大船，再轉 JR 湘南新宿線回池袋吃晚餐。' },
+    { id: '711', date: '2026-12-11', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:00', travelTime: 5, transportType: 'walk', note: '連住第 3 晚', description: '🚶 步行：回飯店休息。' },
 
-    // Day 8
-    { id: '801', date: '2026-12-12', category: 'transport', name: '飯店出發 ➔ 池袋站', time: '08:15', travelTime: 5, transportType: 'walk', note: '步行', description: '🚶 步行：前往池袋站。' },
-    { id: '802', date: '2026-12-12', category: 'transport', name: '池袋 ➔ 新宿 ➔ 高尾山口站', time: '08:30', travelTime: 65, transportType: 'transit', note: 'JR轉京王線', description: '🚇 交通：搭乘 JR 到【新宿站】，轉乘「京王線特急」直達終點【高尾山口站】。' },
-    { id: '803', date: '2026-12-12', category: 'attraction', name: '高尾山登山纜車/吊椅', time: '10:00', travelTime: 15, transportType: 'transit', note: '輕鬆登半山腰', description: '🚶 搭乘日本最陡的登山纜車或浪漫雙人吊椅前往高尾山半山腰。' },
+    // Day 8 (高尾山 + 歌舞伎町)
+    { id: '801', date: '2026-12-12', category: 'transport', name: '飯店出發 ➔ 池袋站', time: '08:15', travelTime: 5, transportType: 'walk', note: '步行', description: '🚶 步行前往池袋站。' },
+    { id: '802', date: '2026-12-12', category: 'transport', name: '池袋 ➔ 新宿 ➔ 高尾山口站', time: '08:30', travelTime: 65, transportType: 'transit', note: 'JR轉京王線', description: '🚇 交通：搭乘JR到新宿，轉乘「京王線特急」直達【高尾山口站】。' },
+    { id: '803', date: '2026-12-12', category: 'attraction', name: '高尾山登山纜車/吊椅', time: '10:00', travelTime: 15, transportType: 'transit', note: '輕鬆登半山腰', description: '🚇 交通：搭乘日本最陡的登山纜車或浪漫雙人吊椅前往高尾山半山腰。' },
     { id: '804', date: '2026-12-12', category: 'attraction', name: '高尾山藥王院', time: '11:00', travelTime: 20, transportType: 'walk', note: '天狗信仰聖地', description: '🚶 步行：漫步參道前往藥王院參拜，尋找天狗雕像。' },
-    { id: '805', date: '2026-12-12', category: 'attraction', name: '高尾山山頂 & 蕎麥麵', time: '12:00', travelTime: 20, transportType: 'walk', note: '遠眺富士山', description: '🚶 步行：攻頂遠眺富士山，午餐享用名物自然薯蕎麥麵。' },
-    { id: '806', date: '2026-12-12', category: 'transport', name: '高尾山口 ➔ 新宿站', time: '15:00', travelTime: 55, transportType: 'transit', note: '京王線特急', description: '🚇 交通：搭乘纜車下山後，搭乘「京王線特急」直達【新宿站】。' },
-    { id: '807', date: '2026-12-12', category: 'attraction', name: '新宿 歌舞伎町 & 哥吉拉', time: '16:00', travelTime: 10, transportType: 'walk', note: '繁華夜生活', description: '🚶 步行：從新宿東口出站，拍攝歌舞伎町一番街招牌，到 Hotel Gracery 找巨型哥吉拉頭像打卡！並在新宿商圈吃晚餐。' },
-    { id: '808', date: '2026-12-12', category: 'transport', name: '新宿 ➔ 池袋站', time: '19:30', travelTime: 8, transportType: 'transit', note: 'JR 山手線/埼京線', description: '🚇 交通：逛完新宿後，搭乘 JR 只要 1-2 站、約 5-8 分鐘即可回到【池袋站】。' },
-    { id: '809', date: '2026-12-12', category: 'accommodation', name: '返回 東急Stay池袋', time: '20:00', travelTime: 5, transportType: 'walk', note: '連住最後 1 晚', description: '🚶 步行：回飯店休息。明天準備要換飯店囉！' },
+    { id: '805', date: '2026-12-12', category: 'attraction', name: '高尾山山頂 & 下山', time: '12:00', travelTime: 20, transportType: 'walk', note: '遠眺富士山', description: '🚶 步行：攻頂遠眺富士山，午餐享用名物自然薯蕎麥麵，接著慢慢下山。' },
+    { id: '806', date: '2026-12-12', category: 'transport', name: '高尾山 ➔ 新宿站', time: '15:00', travelTime: 55, transportType: 'transit', note: '搭乘 京王線', description: '🚇 交通：搭纜車下山後，搭乘京王線特急直達新宿。' },
+    { id: '807', date: '2026-12-12', category: 'attraction', name: '歌舞伎町 ＆ Godzilla Road', time: '16:00', travelTime: 10, transportType: 'walk', note: '東口漫步', description: '🚶 步行：出新宿東口，拍攝歌舞伎町一番街的紅色拱門，並尋找巨大的哥吉拉頭像！' },
+    { id: '808', date: '2026-12-12', category: 'food', name: '新宿商圈 晚餐', time: '17:30', travelTime: 0, transportType: 'walk', note: '繁華夜生活', description: '🚶 步行：在熱鬧的新宿享受各式美食與逛街。' },
+    { id: '809', date: '2026-12-12', category: 'transport', name: '新宿 ➔ 池袋站', time: '19:30', travelTime: 10, transportType: 'transit', note: 'JR 山手/埼京線', description: '🚇 交通：搭車返回池袋。' },
+    { id: '810', date: '2026-12-12', category: 'accommodation', name: '返回 東急Stay池袋', time: '19:45', travelTime: 5, transportType: 'walk', note: '準備明早退房', description: '🚶 步行：回飯店收拾行李。' },
 
-    // Day 9
-    { id: '901', date: '2026-12-13', category: 'accommodation', name: '退房 東急Stay池袋', time: '09:00', travelTime: 0, transportType: 'walk', note: '大行李寄放池袋', description: '早上辦理退房，**把大件行李寄放在飯店或池袋車站**，輕裝去川越玩！' },
-    { id: '902', date: '2026-12-13', category: 'transport', name: '池袋 ➔ 川越站', time: '09:15', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線', description: '🚇 交通：在池袋搭乘東武東上線 (急行或快速)，一班車直達【川越站】。' },
-    { id: '903', date: '2026-12-13', category: 'attraction', name: '川越 冰川神社', time: '10:30', travelTime: 15, transportType: 'transit', note: '求良緣、釣鯛魚籤', description: '🚌 巴士：在川越站搭乘巴士抵達。\n可以用釣竿釣可愛的「一年安鯛」。' },
-    { id: '904', date: '2026-12-13', category: 'attraction', name: '小江戶 藏造老街 & 時之鐘', time: '12:00', travelTime: 10, transportType: 'walk', note: '江戶風情', description: '🚶 步行：漫步傳統老街，聽鐘塔鐘聲，品嚐川越地瓜。沿路逛到「菓子屋橫丁」。' },
-    { id: '905', date: '2026-12-13', category: 'transport', name: '川越站 ➔ 池袋 領行李', time: '15:00', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線', description: '🚇 交通：搭車回到池袋，領回早上寄放的大行李。' },
-    { id: '906', date: '2026-12-13', category: 'transport', name: '池袋 ➔ 鶯谷站', time: '16:00', travelTime: 20, transportType: 'transit', note: 'JR 山手線 直達', description: '🚇 交通：拿著行李搭乘 JR 山手線前往【鶯谷站】(上野的下一站，飯店所在地)。' },
-    { id: '907', date: '2026-12-13', category: 'accommodation', name: '入住 上野公園光芒酒店', time: '16:30', travelTime: 5, transportType: 'walk', note: '放下行李', description: '🚶 步行：從鶯谷站南口步行約 3 分鐘。辦理 Check-in 放下行李。' },
-    { id: '908', date: '2026-12-13', category: 'transport', name: '鶯谷 ➔ 秋葉原站', time: '17:00', travelTime: 8, transportType: 'transit', note: 'JR 山手線 (3站)', description: '🚇 交通：輕裝出發，搭山手線 3 站就到【秋葉原站】。' },
-    { id: '909', date: '2026-12-13', category: 'food', name: '秋葉原 JR5號月台 喝牛奶', time: '17:15', travelTime: 0, transportType: 'walk', note: '內行儀式感', description: '📍 下車後不要出站！\n如果是搭山手線來，請走到「總武線 5 號月台」，找到傳奇名店【酪農會館 Milk Stand】，買瓶冰涼的玻璃瓶牛奶或咖啡牛奶，站在月台上豪邁乾杯！' },
-    { id: '910', date: '2026-12-13', category: 'shopping', name: '秋葉原 電器與動漫街', time: '17:30', travelTime: 5, transportType: 'walk', note: '御宅族聖地', description: '🚶 步行：從「電器街口」出站。\n朝聖無線電會館 (Radiokaikan)、Animate，逛各家大型模型與扭蛋店！' },
-    { id: '911', date: '2026-12-13', category: 'food', name: '阿美橫丁 (上野) 晚餐', time: '19:30', travelTime: 5, transportType: 'transit', note: '平價海鮮/居酒屋', description: '🚇 交通：從秋葉原搭 2 站回到【御徒町站】或【上野站】。\n在充滿活力的阿美橫丁吃晚餐、買藥妝，結束後走回鶯谷的飯店。' },
+    // Day 9 (川越 + 換飯店 + 秋葉原)
+    { id: '901', date: '2026-12-13', category: 'accommodation', name: '池袋退房與寄放行李', time: '08:30', travelTime: 0, transportType: 'walk', note: '池袋寄放行李', description: '🚶 步行：辦理退房，並將大行李寄放在飯店或池袋車站。' },
+    { id: '902', date: '2026-12-13', category: 'transport', name: '池袋 ➔ 川越站', time: '09:00', travelTime: 35, transportType: 'transit', note: '搭乘 東武東上線', description: '🚇 交通：輕裝搭乘東武東上線前往川越，一班車直達！' },
+    { id: '903', date: '2026-12-13', category: 'attraction', name: '川越 冰川神社', time: '10:00', travelTime: 15, transportType: 'transit', note: '求良緣、釣鯛魚籤', description: '🚌 公車：搭乘巴士抵達，可以用釣竿釣可愛的「一年安鯛」。' },
+    { id: '904', date: '2026-12-13', category: 'attraction', name: '藏造老街 & 時之鐘', time: '11:30', travelTime: 10, transportType: 'walk', note: '江戶風情', description: '🚶 步行：漫步傳統老街，聽鐘塔鐘聲，品嚐川越地瓜與鰻魚飯。' },
+    { id: '905', date: '2026-12-13', category: 'attraction', name: '菓子屋橫丁', time: '14:00', travelTime: 5, transportType: 'walk', note: '懷舊粗點心', description: '🚶 步行：購買各種懷舊古早味零食。' },
+    { id: '906', date: '2026-12-13', category: 'transport', name: '川越 ➔ 池袋(拿行李) ➔ 鶯谷', time: '15:30', travelTime: 65, transportType: 'transit', note: '東武線 轉 JR山手線', description: '🚇 交通：搭車回池袋領取大行李，接著搭乘 JR 山手線前往新飯店所在的【鶯谷站】。' },
+    { id: '907', date: '2026-12-13', category: 'accommodation', name: '入住 Candeo Hotels', time: '16:45', travelTime: 5, transportType: 'walk', note: '上野公園光芒酒店', description: '🚶 步行：放下行李，一身輕準備去逛秋葉原與上野！' },
+    { id: '908', date: '2026-12-13', category: 'transport', name: '鶯谷 ➔ 秋葉原站', time: '17:15', travelTime: 10, transportType: 'transit', note: '搭乘 JR 山手線', description: '🚇 交通：搭乘山手線只要 3 站就到秋葉原。' },
+    { id: '909', date: '2026-12-13', category: 'attraction', name: 'JR秋葉原站 喝牛奶 🥛', time: '17:25', travelTime: 0, transportType: 'walk', note: '內行必喝', description: '🚶 步行：【隱藏儀式】在 JR 總武線(往千葉方向)的 5 號月台上，直接買一瓶玻璃瓶裝的冰牛奶一飲而盡！' },
+    { id: '910', date: '2026-12-13', category: 'attraction', name: '秋葉原 電器街與動漫', time: '17:40', travelTime: 0, transportType: 'walk', note: '御宅族聖地', description: '🚶 步行：出站逛 Radiokaikan（無線電會館）、Animate 與各大電器模型店。' },
+    { id: '911', date: '2026-12-13', category: 'accommodation', name: '返回 上野公園光芒酒店', time: '21:30', travelTime: 15, transportType: 'walk', note: '連住 2 晚', description: '🚇 交通：回飯店休息。' },
 
-    // Day 10
-    { id: '1001', date: '2026-12-14', category: 'transport', name: '飯店出發 ➔ 根津站', time: '09:00', travelTime: 15, transportType: 'transit', note: '公車或步行', description: '🚶 步行/公車：從鶯谷出發前往根津，距離很近，可搭乘都營巴士或直接散步過去。' },
-    { id: '1002', date: '2026-12-14', category: 'attraction', name: '根津神社', time: '09:15', travelTime: 5, transportType: 'walk', note: '絕美千本鳥居', description: '🚶 步行：抵達根津神社。\n參觀這座充滿歷史底蘊的神社，拍攝迷你版的「千本鳥居」，人潮比伏見稻荷少很多，非常好拍！' },
-    { id: '1003', date: '2026-12-14', category: 'attraction', name: '谷中銀座 & 夕陽階梯', time: '11:00', travelTime: 15, transportType: 'walk', note: '貓街與下町風情', description: '🚶 步行：散步前往谷中銀座老街。\n品嚐著名的炸肉餅，走到街尾的「夕やけだんだん (夕陽階梯)」感受濃濃昭和風情。' },
-    { id: '1004', date: '2026-12-14', category: 'transport', name: '日暮里 ➔ 葛西臨海公園', time: '13:00', travelTime: 45, transportType: 'transit', note: 'JR 山手線 轉 京葉線', description: '🚇 交通：從日暮里搭山手線到【東京站】，轉乘「JR 京葉線」抵達【葛西臨海公園站】。' },
-    { id: '1005', date: '2026-12-14', category: 'attraction', name: '葛西臨海水族園', time: '14:00', travelTime: 5, transportType: 'walk', note: '超大鮪魚水槽', description: '🚶 步行：出站進入公園，參觀以巨大玻璃圓頂造型聞名的水族園，看壯觀的黑鮪魚群洄游。' },
-    { id: '1006', date: '2026-12-14', category: 'attraction', name: '葛西臨海公園 (東京灣夕陽)', time: '16:00', travelTime: 5, transportType: 'walk', note: '絕美落日打卡點', description: '🚶 步行：水族館出來後在公園海岸邊散步。\n這裡擁有俯瞰整個東京灣的無敵視野，搭乘日本最大級的「鑽石與花大摩天輪」看夕陽超級浪漫。' },
-    { id: '1007', date: '2026-12-14', category: 'transport', name: '葛西臨海公園 ➔ 東京車站', time: '17:30', travelTime: 15, transportType: 'transit', note: 'JR 京葉線', description: '🚇 交通：搭乘京葉線直達【東京站】。' },
-    { id: '1008', date: '2026-12-14', category: 'attraction', name: '丸之內 浪漫冬季點燈', time: '18:00', travelTime: 5, transportType: 'walk', note: '香檳金行道樹', description: '🚶 步行：從丸之內出口出來，整條街超過百萬顆的香檳金 LED 燈飾閃耀，搭配古典的東京車站紅磚建築，是東京最經典的聖誕夜景！並在此享用晚餐。' },
-    { id: '1009', date: '2026-12-14', category: 'accommodation', name: '返回 上野公園光芒酒店', time: '20:30', travelTime: 15, transportType: 'transit', note: '山手線直達', description: '🚇 交通：搭乘 JR 山手線回到【鶯谷站】，回飯店休息收拾行李。' },
+    // Day 10 (下町風情 + 東京灣夕陽 + 東京車站)
+    { id: '1001', date: '2026-12-14', category: 'transport', name: '飯店出發 ➔ 根津站', time: '09:00', travelTime: 20, transportType: 'transit', note: '千代田線', description: '🚇 交通：步行至鶯谷站周邊搭車前往根津站。' },
+    { id: '1002', date: '2026-12-14', category: 'attraction', name: '根津神社', time: '09:20', travelTime: 5, transportType: 'walk', note: '迷你千本鳥居', description: '🚶 步行：充滿綠意的美麗神社，有著非常適合拍照的千本鳥居。' },
+    { id: '1003', date: '2026-12-14', category: 'attraction', name: '谷中銀座 ＆ 夕やけだんだん', time: '11:00', travelTime: 15, transportType: 'walk', note: '貓咪與下町老街', description: '🚶 步行：漫步充滿昭和風情的老街，吃炸肉餅與貓尾巴甜點，走上著名的夕陽階梯。' },
+    { id: '1004', date: '2026-12-14', category: 'transport', name: '西日暮里 ➔ 葛西臨海公園站', time: '13:00', travelTime: 45, transportType: 'transit', note: 'JR轉京葉線', description: '🚇 交通：從西日暮里搭山手線到東京站，轉乘 JR 京葉線直達【葛西臨海公園站】。' },
+    { id: '1005', date: '2026-12-14', category: 'attraction', name: '葛西臨海水族園', time: '14:00', travelTime: 5, transportType: 'walk', note: '巨大鮪魚水槽', description: '🚶 步行：參觀這座造型特殊的玻璃巨蛋水族館，欣賞成群的鮪魚迴游。' },
+    { id: '1006', date: '2026-12-14', category: 'attraction', name: '葛西臨海公園 (看夕陽)', time: '16:00', travelTime: 5, transportType: 'walk', note: '東京灣絕景', description: '🚶 步行：搭乘日本最大級別的鑽石與花大摩天輪，欣賞東京灣無敵夕陽美景！' },
+    { id: '1007', date: '2026-12-14', category: 'transport', name: '葛西臨海公園 ➔ 東京車站', time: '17:30', travelTime: 20, transportType: 'transit', note: 'JR 京葉線', description: '🚇 交通：搭乘京葉線快速回到東京車站。' },
+    { id: '1008', date: '2026-12-14', category: 'shopping', name: '東京車站 逛街與伴手禮', time: '18:00', travelTime: 5, transportType: 'walk', note: '東京一番街', description: '🚶 步行：抵達東京車站後，先在地下街(如東京一番街、拉麵街)血拼買伴手禮與吃晚餐！' },
+    { id: '1009', date: '2026-12-14', category: 'attraction', name: '丸之內 冬季燈飾 ✨', time: '19:30', travelTime: 5, transportType: 'walk', note: '超浪漫點燈', description: '🚶 步行：出東京車站丸之內口，整條街的樹木都會點上香檳金色的美麗燈光，極度浪漫！' },
+    { id: '1010', date: '2026-12-14', category: 'transport', name: '東京車站 ➔ 鶯谷站', time: '20:15', travelTime: 15, transportType: 'transit', note: 'JR 山手線', description: '🚇 交通：搭車返回飯店。' },
+    { id: '1011', date: '2026-12-14', category: 'accommodation', name: '返回 上野公園光芒酒店', time: '20:45', travelTime: 5, transportType: 'walk', note: '準備明早退房', description: '🚶 步行：回飯店收拾行李。' },
 
-    // Day 11
-    { id: '1101', date: '2026-12-15', category: 'accommodation', name: '退房 上野公園光芒酒店', time: '08:30', travelTime: 5, transportType: 'walk', note: '步行至鶯谷站', description: '早上辦理退房，準備搭車前往成田機場！' },
-    { id: '1102', date: '2026-12-15', category: 'transport', name: '鶯谷 ➔ 日暮里 ➔ 成田機場(T2)', time: '09:00', travelTime: 50, transportType: 'transit', note: '山手線 轉 Skyliner', description: '🚇 交通：搭乘山手線至【日暮里站】，同站輕鬆轉乘「京成 Skyliner」快速直達機場。' },
-    { id: '1103', date: '2026-12-15', category: 'flight', name: '航班 IT-281 NRT ➔ KHH', time: '13:00', travelTime: 280, transportType: 'flight', note: '起飛 13:00 / 抵達 16:40', description: '帶著滿滿的蜜月與雪國回憶準備回家囉！' }
+    // Day 11 (機場)
+    { id: '1101', date: '2026-12-15', category: 'accommodation', name: '退房 上野公園光芒酒店', time: '08:30', travelTime: 5, transportType: 'walk', note: '步行至鶯谷站', description: '🚶 步行：早上辦理退房，準備搭車前往成田機場！' },
+    { id: '1102', date: '2026-12-15', category: 'transport', name: '鶯谷 ➔ 日暮里 ➔ 成田(T2)', time: '09:00', travelTime: 50, transportType: 'transit', note: '山手線 轉 Skyliner', description: '🚇 交通：搭乘山手線至日暮里站，轉乘 Skyliner 快速直達機場。' },
+    { id: '1103', date: '2026-12-15', category: 'flight', name: '航班 IT-281 NRT ➔ KHH', time: '13:00', travelTime: 280, transportType: 'flight', note: '起飛 13:00 / 抵達 16:40', description: '✈️ 帶著滿滿的童話與雪國回憶準備回家囉！' }
   ];
 </script>
 
@@ -1204,9 +1203,6 @@
         { id: 'notebook', name: '筆記', icon: 'fa-solid fa-book' }
       ];
       
-      const bannerImage = ref('https://i.ibb.co/8DnNrpt2/image.png');
-      const handleImageError = () => { bannerImage.value = 'https://placehold.co/800x400/e8f0fe/2b65c3?text=Winter+Fuji'; };
-      
       const tripStartDate = new Date('2026-12-05T00:00:00'); 
       
       const daysUntilTrip = computed(() => {
@@ -1232,17 +1228,17 @@
 
       // 設定 12月份的精準天氣追蹤 (共 11 天)
       const days = [
-        { dateStr: '2026-12-05', displayDate: '12/05', dayOfWeek: '週六', mainCity: '淺草/晴空塔', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-06', displayDate: '12/06', dayOfWeek: '週日', mainCity: '銀座/東京鐵塔', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-07', displayDate: '12/07', dayOfWeek: '週一', mainCity: '品川/台場', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-08', displayDate: '12/08', dayOfWeek: '週二', mainCity: '富士山/河口湖', locations: [{name:'富士山', lat:35.3606, lng:138.7274}] },
-        { dateStr: '2026-12-09', displayDate: '12/09', dayOfWeek: '週三', mainCity: '富士山/池袋', locations: [{name:'富士山', lat:35.3606, lng:138.7274}, {name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-10', displayDate: '12/10', dayOfWeek: '週四', mainCity: '橫濱/紅磚倉庫', locations: [{name:'橫濱', lat:35.4437, lng:139.6380}] },
-        { dateStr: '2026-12-11', displayDate: '12/11', dayOfWeek: '週五', mainCity: '鎌倉/江之島', locations: [{name:'鎌倉', lat:35.3192, lng:139.5467}] },
-        { dateStr: '2026-12-12', displayDate: '12/12', dayOfWeek: '週六', mainCity: '高尾山/新宿', locations: [{name:'高尾山', lat:35.6267, lng:139.2436}, {name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-13', displayDate: '12/13', dayOfWeek: '週日', mainCity: '川越/秋葉原', locations: [{name:'川越', lat:35.9251, lng:139.4858}, {name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-14', displayDate: '12/14', dayOfWeek: '週一', mainCity: '葛西臨海/丸之內', locations: [{name:'東京', lat:35.6895, lng:139.6917}] },
-        { dateStr: '2026-12-15', displayDate: '12/15', dayOfWeek: '週二', mainCity: '上野/賦歸', locations: [{name:'東京', lat:35.6895, lng:139.6917}] }
+        { dateStr: '2026-12-05', displayDate: '12/05', dayOfWeek: '週六', mainCity: '東京(淺草)', locations: [{name:'東京(淺草)', lat:35.7147, lng:139.7966}] },
+        { dateStr: '2026-12-06', displayDate: '12/06', dayOfWeek: '週日', mainCity: '東京(春日部/鐵塔)', locations: [{name:'東京(鐵塔)', lat:35.6585, lng:139.7454}] },
+        { dateStr: '2026-12-07', displayDate: '12/07', dayOfWeek: '週一', mainCity: '東京(品川/台場)', locations: [{name:'大森海岸', lat:35.5878, lng:139.7360}] },
+        { dateStr: '2026-12-08', displayDate: '12/08', dayOfWeek: '週二', mainCity: '富士山', locations: [{name:'富士山', lat:35.3606, lng:138.7274}] },
+        { dateStr: '2026-12-09', displayDate: '12/09', dayOfWeek: '週三', mainCity: '富士山/新宿', locations: [{name:'富士山', lat:35.3606, lng:138.7274}, {name:'東京(新宿)', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-10', displayDate: '12/10', dayOfWeek: '週四', mainCity: '橫濱', locations: [{name:'橫濱', lat:35.4437, lng:139.6380}] },
+        { dateStr: '2026-12-11', displayDate: '12/11', dayOfWeek: '週五', mainCity: '鎌倉/江之島', locations: [{name:'鎌倉', lat:35.3192, lng:139.5522}, {name:'江之島', lat:35.2995, lng:139.4812}] },
+        { dateStr: '2026-12-12', displayDate: '12/12', dayOfWeek: '週六', mainCity: '高尾山/歌舞伎町', locations: [{name:'高尾山', lat:35.6267, lng:139.2436}, {name:'東京(新宿)', lat:35.6895, lng:139.6917}] },
+        { dateStr: '2026-12-13', displayDate: '12/13', dayOfWeek: '週日', mainCity: '川越/秋葉原', locations: [{name:'川越', lat:35.9251, lng:139.4858}, {name:'東京(秋葉原)', lat:35.6983, lng:139.7731}] },
+        { dateStr: '2026-12-14', displayDate: '12/14', dayOfWeek: '週一', mainCity: '東京(日暮里/葛西)', locations: [{name:'東京(葛西臨海)', lat:35.6425, lng:139.8601}, {name:'東京(丸之內)', lat:35.6812, lng:139.7671}] },
+        { dateStr: '2026-12-15', displayDate: '12/15', dayOfWeek: '週二', mainCity: '成田機場', locations: [{name:'東京', lat:35.6895, lng:139.6917}] }
       ];
 
       const selectedDate = ref(days[0].dateStr);
@@ -1264,14 +1260,18 @@
       const newPackingItem = ref('');
 
       // --- 生日驚喜時間鎖定 ---
+      // 鎖定直到 2026/12/10 00:00 才會解開
       const isBirthdayUnlocked = computed(() => {
           const now = new Date();
-          const birthdayStart = new Date('2026-12-10T00:00:00');
-          return now >= birthdayStart;
+          const unlockDate = new Date('2026-12-10T00:00:00');
+          return now >= unlockDate;
       });
 
-      // --- 生日彩帶驚喜特效 ---
-      const triggerConfetti = () => {
+      // --- 生日彩帶驚喜特效與音樂 ---
+      let isMusicPlaying = false;
+      
+      const triggerBirthdaySurprise = async () => {
+          // 1. 放彩帶
           if (typeof confetti === 'function') {
               const duration = 3 * 1000;
               const animationEnd = Date.now() + duration;
@@ -1294,14 +1294,43 @@
                   confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
                   confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
               }, 250);
-          } else {
-              console.error("彩帶套件未載入完成");
+          }
+          
+          // 2. 播放 Tone.js 生日快樂歌
+          if (typeof Tone !== 'undefined' && !isMusicPlaying) {
+              isMusicPlaying = true;
+              await Tone.start();
+              
+              // 建立一個可愛音色的合成器
+              const synth = new Tone.Synth({
+                  oscillator: { type: "triangle" },
+                  envelope: { attack: 0.05, decay: 0.2, sustain: 0.2, release: 1 }
+              }).toDestination();
+              
+              const now = Tone.now();
+              const tempo = 0.5; // 音樂節奏速度
+              
+              // 寫入生日快樂歌的樂譜與時間
+              const melody = [
+                  {t: 0, n: "G4", d: "8n"}, {t: 0.25, n: "G4", d: "8n"}, {t: 0.5, n: "A4", d: "4n"}, {t: 1, n: "G4", d: "4n"}, {t: 1.5, n: "C5", d: "4n"}, {t: 2, n: "B4", d: "2n"},
+                  {t: 3, n: "G4", d: "8n"}, {t: 3.25, n: "G4", d: "8n"}, {t: 3.5, n: "A4", d: "4n"}, {t: 4, n: "G4", d: "4n"}, {t: 4.5, n: "D5", d: "4n"}, {t: 5, n: "C5", d: "2n"},
+                  {t: 6, n: "G4", d: "8n"}, {t: 6.25, n: "G4", d: "8n"}, {t: 6.5, n: "G5", d: "4n"}, {t: 7, n: "E5", d: "4n"}, {t: 7.5, n: "C5", d: "4n"}, {t: 8, n: "B4", d: "4n"}, {t: 8.5, n: "A4", d: "2n"},
+                  {t: 9.5, n: "F5", d: "8n"}, {t: 9.75, n: "F5", d: "8n"}, {t: 10, n: "E5", d: "4n"}, {t: 10.5, n: "C5", d: "4n"}, {t: 11, n: "D5", d: "4n"}, {t: 11.5, n: "C5", d: "2n"}
+              ];
+              
+              // 將樂譜播出來
+              melody.forEach(note => {
+                  synth.triggerAttackRelease(note.n, note.d, now + (note.t * tempo));
+              });
+              
+              // 歌曲結束後解鎖，允許再次播放
+              setTimeout(() => { isMusicPlaying = false; }, 12000 * tempo * 1000);
           }
       };
 
       watch(selectedDate, (newDate) => {
           if (newDate === '2026-12-10' && isBirthdayUnlocked.value) {
-              setTimeout(triggerConfetti, 300);
+              setTimeout(triggerBirthdaySurprise, 300);
           }
       });
 
@@ -1462,21 +1491,6 @@
 
       const modal = reactive({ show: false, type: '', title: '', isEdit: false });
       const formData = reactive({});
-      const cropState = reactive({ show: false, src: '', cropper: null, context: 'form', itemId: null });
-
-      const globalImageInput = ref(null);
-      const uploadTargetId = ref(null);
-
-      const triggerItineraryUpload = (id) => {
-          uploadTargetId.value = id;
-          if (globalImageInput.value) {
-              globalImageInput.value.click();
-          }
-      };
-
-      const handleGlobalImageUpload = (e) => {
-          handleImageUpload(e, 'itinerary', uploadTargetId.value);
-      };
 
       const openModal = (type, item = null) => {
         if (type === 'itinerary' && item) return; 
@@ -1728,74 +1742,16 @@
         const file = e.target.files[0];
         if(!file) return;
 
-        const targetElement = e.target;
         const reader = new FileReader();
         reader.onload = (evt) => {
-            cropState.src = evt.target.result;
-            cropState.show = true;
-            cropState.context = context;
-            cropState.itemId = itemId;
-            
-            setTimeout(() => {
-                const image = document.getElementById('crop-image');
-                if (cropState.cropper) {
-                    cropState.cropper.destroy();
-                }
-                cropState.cropper = new Cropper(image, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    dragMode: 'move',
-                    background: false,
-                    autoCropArea: 0.9,
-                });
-            }, 100);
+            formData.image = evt.target.result;
         };
         reader.readAsDataURL(file);
-        targetElement.value = ''; 
       };
 
-      const confirmCrop = async () => {
-        if (!cropState.cropper) return;
-        const canvas = cropState.cropper.getCroppedCanvas({
-            width: 400,
-            height: 400,
-            imageSmoothingEnabled: true,
-            imageSmoothingQuality: 'high',
-        });
-        const base64Image = canvas.toDataURL('image/jpeg', 0.6); 
-        
-        if (cropState.context === 'itinerary') {
-            try {
-                isSaving.value = true;
-                const docRef = doc(db, 'trips', TRIP_ID, 'itinerary', String(cropState.itemId));
-                await setDoc(docRef, { image: base64Image }, { merge: true });
-                showToast('照片更新成功！');
-            } catch (err) {
-                console.error(err);
-                showToast('照片上傳失敗');
-            } finally {
-                isSaving.value = false;
-            }
-        } else {
-            formData.image = base64Image;
-        }
-        
-        closeCropModal();
-      };
-
-      const closeCropModal = () => {
-        if (cropState.cropper) {
-            cropState.cropper.destroy();
-            cropState.cropper = null;
-        }
-        cropState.show = false;
-        cropState.src = '';
-      };
-      
       const openMap = (name) => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`);
 
       const getCategoryLabel = (c) => ({attraction:'景點',food:'美食',shopping:'購物',transport:'交通',flight:'航班',accommodation:'住宿',other:'其他'}[c]||c);
-      const getCategoryBgColor = (c) => ({attraction:'bg-red-400',food:'bg-orange-400',shopping:'bg-pink-400',flight:'bg-blue-500', transport:'bg-emerald-400', accommodation:'bg-purple-400'}[c]||'bg-gray-400');
       const getCategoryColor = (c) => ({attraction:'bg-red-50 text-red-500 border-red-100',food:'bg-orange-50 text-orange-500 border-orange-100',shopping:'bg-pink-50 text-pink-500 border-pink-100',flight:'bg-blue-50 text-blue-500 border-blue-100', transport:'bg-emerald-50 text-emerald-600 border-emerald-200', accommodation:'bg-purple-50 text-purple-500 border-purple-100'}[c]||'bg-gray-50 text-gray-500 border-gray-200');
       const getCategoryIconClass = (c) => ({attraction:'fa-solid fa-camera',food:'fa-solid fa-utensils',shopping:'fa-solid fa-bag-shopping',transport:'fa-solid fa-train-subway',flight:'fa-solid fa-plane',accommodation:'fa-solid fa-bed',other:'fa-solid fa-star'}[c]||'fa-solid fa-location-dot');
       const getExpenseIcon = (c) => ({food:'fa-solid fa-utensils',transport:'fa-solid fa-train',shopping:'fa-solid fa-bag-shopping',accommodation:'fa-solid fa-bed',ticket:'fa-solid fa-ticket', investment:'fa-solid fa-chart-line'}[c]||'fa-solid fa-yen-sign');
@@ -1830,13 +1786,11 @@
       });
 
       return {
-        showSplash, currentTab, tabs, bannerImage, handleImageError, daysUntilTrip,
+        showSplash, currentTab, tabs, daysUntilTrip,
         days, selectedDate, travelers, packingPeople,
         tripProgress, 
         
         isFlightExpanded, isHotelExpanded,
-
-        globalImageInput, triggerItineraryUpload, handleGlobalImageUpload,
 
         filteredItinerary, filteredShoppingList, expenses, totalExpense, filteredTotalExpense, notebookList, filteredPackingList, filteredExpenses, filteredNotebookList,
         currentPackingFilter, newPackingItem,
@@ -1850,13 +1804,11 @@
 
         weatherData, isWeatherExpanded, toggleWeather, weatherLoading, currentDayCities, changeWeatherCity,
         exchange, currentRate, calcTwd, calcJpy, rateUpdateDate,
-        getCategoryLabel, getCategoryColor, getCategoryBgColor, getCategoryIconClass, getExpenseIcon, getTransportIcon, handleImageUpload, openMap,
+        getCategoryLabel, getCategoryColor, getCategoryIconClass, getExpenseIcon, getTransportIcon, handleImageUpload, openMap,
         firebaseStatus, reconnectFirebase, migrationStatus,
         
-        cropState, confirmCrop, closeCropModal,
         confirmState, toastState, handleConfirm,
-        
-        triggerConfetti, isBirthdayUnlocked
+        triggerBirthdaySurprise, isBirthdayUnlocked
       };
     }
   }).mount('#app');
