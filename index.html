@@ -89,9 +89,19 @@
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .app-container { max-width: 480px; margin: 0 auto; background-color: #fafafa; min-height: 100vh; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); padding-bottom: 80px; }
-    .snowflake { position: absolute; background-color: #ffffff; border-radius: 50%; opacity: 0; top: -20px; box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8); }
+    .snowflake { position: absolute; color: #ffffff; opacity: 0; top: -20px; text-shadow: 0 0 6px rgba(255, 255, 255, 0.8); }
     .blur-sm { filter: blur(1px); }
     .glass-modal { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    
+    /* 專屬走路動畫 */
+    @keyframes walk-cycle {
+      0% { transform: translateY(0) rotate(-12deg); }
+      25% { transform: translateY(-3px) rotate(0deg); }
+      50% { transform: translateY(0) rotate(12deg); }
+      75% { transform: translateY(-3px) rotate(0deg); }
+      100% { transform: translateY(0) rotate(-12deg); }
+    }
+    .animate-walk { animation: walk-cycle 0.9s infinite linear; }
   </style>
 </head>
 
@@ -101,10 +111,10 @@
   <!-- Splash Screen -->
   <div id="splash-screen" v-if="showSplash" class="fixed inset-0 z-[100] bg-gradient-to-b from-[#e8f0fe] to-white flex flex-col items-center justify-center overflow-hidden transition-opacity duration-700">
     <div class="absolute inset-0 pointer-events-none z-10 w-full h-full overflow-hidden">
-      <span class="snowflake w-3 h-3 animate-fall-1" style="--start-left: 15%; animation-duration: 5s;"></span>
-      <span class="snowflake w-4 h-4 animate-fall-1" style="--start-left: 35%; animation-duration: 7s; animation-delay: 1s;"></span>
-      <span class="snowflake w-3 h-3 animate-fall-1" style="--start-left: 65%; animation-duration: 6s; animation-delay: 2s;"></span>
-      <span class="snowflake w-5 h-5 animate-fall-1" style="--start-left: 85%; animation-duration: 8s; animation-delay: 0.5s;"></span>
+      <i class="fa-solid fa-snowflake snowflake text-sm animate-fall-1" style="--start-left: 15%; animation-duration: 5s;"></i>
+      <i class="fa-solid fa-snowflake snowflake text-base animate-fall-1" style="--start-left: 35%; animation-duration: 7s; animation-delay: 1s;"></i>
+      <i class="fa-solid fa-snowflake snowflake text-xs animate-fall-1" style="--start-left: 65%; animation-duration: 6s; animation-delay: 2s;"></i>
+      <i class="fa-solid fa-snowflake snowflake text-lg animate-fall-1" style="--start-left: 85%; animation-duration: 8s; animation-delay: 0.5s;"></i>
     </div>
     <div class="relative z-10 text-center animate-float">
       <div class="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft border-4 border-white">
@@ -122,17 +132,17 @@
   </div>
 
   <!-- 全域飄雪效果 -->
-  <div class="fixed inset-0 pointer-events-none z-[45] overflow-hidden opacity-70 mix-blend-screen" aria-hidden="true">
-    <span class="snowflake w-1.5 h-1.5 animate-fall-1" style="--start-left: 5%; animation-duration: 10s; animation-delay: -2s;"></span>
-    <span class="snowflake w-2.5 h-2.5 animate-fall-1" style="--start-left: 15%; animation-duration: 14s; animation-delay: -6s;"></span>
-    <span class="snowflake w-2 h-2 animate-fall-1" style="--start-left: 25%; animation-duration: 12s; animation-delay: -1s;"></span>
-    <span class="snowflake w-1 h-1 animate-fall-1" style="--start-left: 35%; animation-duration: 9s; animation-delay: -5s;"></span>
-    <span class="snowflake w-3 h-3 animate-fall-1" style="--start-left: 45%; animation-duration: 15s; animation-delay: -8s;"></span>
-    <span class="snowflake w-1.5 h-1.5 animate-fall-1" style="--start-left: 55%; animation-duration: 11s; animation-delay: -3s;"></span>
-    <span class="snowflake w-2 h-2 animate-fall-1" style="--start-left: 65%; animation-duration: 13s; animation-delay: -7s;"></span>
-    <span class="snowflake w-2.5 h-2.5 animate-fall-1" style="--start-left: 75%; animation-duration: 16s; animation-delay: -4s;"></span>
-    <span class="snowflake w-1 h-1 animate-fall-1" style="--start-left: 85%; animation-duration: 10s; animation-delay: -9s;"></span>
-    <span class="snowflake w-2 h-2 animate-fall-1" style="--start-left: 95%; animation-duration: 14s; animation-delay: -2s;"></span>
+  <div class="fixed inset-0 pointer-events-none z-[45] overflow-hidden opacity-60 mix-blend-screen" aria-hidden="true">
+    <i class="fa-solid fa-snowflake snowflake text-[10px] animate-fall-1" style="--start-left: 5%; animation-duration: 10s; animation-delay: -2s;"></i>
+    <i class="fa-solid fa-snowflake snowflake text-[14px] animate-fall-1" style="--start-left: 15%; animation-duration: 14s; animation-delay: -6s;"></i>
+    <i class="fa-solid fa-snowflake snowflake text-[12px] animate-fall-1" style="--start-left: 25%; animation-duration: 12s; animation-delay: -1s;"></i>
+    <i class="fa-solid fa-snowflake snowflake text-[8px] animate-fall-1" style="--start-left: 35%; animation-duration: 9s; animation-delay: -5s;"></i>
+    <i class="fa-solid fa-snowflake snowflake text-[16px] animate-fall-1" style="--start-left: 45%; animation-duration: 15s; animation-delay: -8s;"></i>
+    <i class="fa-solid fa-snowflake snowflake text-[10px] animate-fall-1" style="--start-left: 55%; animation-duration: 11s; animation-delay: -3s;"></i>
+    <i class="fa-solid fa-snowflake snowflake text-[12px] animate-fall-1" style="--start-left: 65%; animation-duration: 13s; animation-delay: -7s;"></i>
+    <i class="fa-solid fa-snowflake snowflake text-[14px] animate-fall-1" style="--start-left: 75%; animation-duration: 16s; animation-delay: -4s;"></i>
+    <i class="fa-solid fa-snowflake snowflake text-[8px] animate-fall-1" style="--start-left: 85%; animation-duration: 10s; animation-delay: -9s;"></i>
+    <i class="fa-solid fa-snowflake snowflake text-[12px] animate-fall-1" style="--start-left: 95%; animation-duration: 14s; animation-delay: -2s;"></i>
   </div>
 
   <!-- Top Bar -->
@@ -154,17 +164,10 @@
 
   <!-- 用於行程景點上傳照片的隱藏按鈕 -->
   <input type="file" ref="globalImageInput" class="hidden" accept="image/*" @change="handleGlobalImageUpload">
-  <input type="file" ref="bannerInput" class="hidden" accept="image/*" @change="handleBannerUpload">
 
   <!-- Header Banner -->
-  <header class="relative h-[200px] w-full overflow-hidden bg-gray-100 group cursor-pointer" @click="triggerBannerUpload">
-    <img :src="bannerImage" class="w-full h-full object-cover object-bottom origin-center opacity-100 transition-opacity duration-300 group-hover:opacity-80" @error="handleImageError">
-    
-    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-        <div class="text-white text-sm font-bold flex items-center bg-black/50 px-4 py-2 rounded-full backdrop-blur-sm">
-            <i class="fa-solid fa-camera mr-2"></i>點擊更換封面圖片
-        </div>
-    </div>
+  <header class="relative h-[200px] w-full overflow-hidden bg-gray-100">
+    <img :src="bannerImage" class="w-full h-full object-cover object-bottom origin-center opacity-100" @error="handleImageError">
     
     <!-- Countdown Badge -->
     <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/50 shadow-lg flex items-center gap-3 z-20">
@@ -200,29 +203,39 @@
     <div v-if="currentTab === 'itinerary'">
       
       <!-- Stylish Date Selector (Dropdown) -->
-      <div class="mb-6 relative mt-4">
-        <!-- 可愛裝飾：彈跳小雪人與漂浮雪花 -->
-        <div class="absolute -top-4 -left-2 z-20 animate-bounce" style="animation-duration: 2.5s;">
-            <div class="bg-white text-winter-dark w-8 h-8 rounded-full flex items-center justify-center shadow-md border border-winter-light">
-                <i class="fa-solid fa-snowman text-sm"></i>
+      <div class="mb-6 relative mt-6 px-1">
+        <!-- 可愛裝飾：左上的小雪人 -->
+        <div class="absolute -top-5 -left-1 z-20 animate-bounce" style="animation-duration: 2.5s;">
+            <div class="bg-white text-blue-400 w-11 h-11 rounded-full flex items-center justify-center shadow-[0_4px_10px_rgba(109,163,235,0.3)] border-2 border-blue-100 text-xl transform -rotate-12">
+                ⛄
             </div>
         </div>
-        <div class="absolute -top-3 right-0 z-20 animate-float" style="animation-duration: 3s; animation-delay: 1s;">
-            <i class="fa-solid fa-snowflake text-blue-300 text-xl opacity-80 drop-shadow-sm"></i>
+        <!-- 可愛裝飾：右上的閃亮亮 -->
+        <div class="absolute -top-3 right-1 z-20 animate-pulse-fast">
+            <span class="text-2xl drop-shadow-sm opacity-90">✨</span>
         </div>
 
-        <div class="absolute inset-0 bg-gradient-to-r from-winter-light/40 to-blue-50/40 rounded-2xl blur-md"></div>
-        <div class="relative bg-white/70 backdrop-blur-xl border border-white/60 shadow-sm rounded-2xl p-1.5 flex items-center transition-transform active:scale-[0.98] group">
-          <div class="w-10 h-10 bg-gradient-to-br from-winter to-winter-dark rounded-xl flex items-center justify-center text-white shadow-sm shrink-0 relative overflow-hidden">
-            <i class="fa-regular fa-calendar-days text-lg relative z-10"></i>
+        <!-- 柔和漸層背景光暈 -->
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-100 to-pink-100 rounded-full blur-md opacity-70"></div>
+        
+        <!-- 圓潤可愛的膠囊選單 -->
+        <div class="relative bg-white/95 backdrop-blur-xl border-2 border-white shadow-[0_2px_12px_rgba(109,163,235,0.15)] rounded-full p-1.5 flex items-center transition-transform active:scale-[0.98] group cursor-pointer hover:shadow-[0_4px_16px_rgba(109,163,235,0.25)]">
+          
+          <!-- 左側圓形圖示 -->
+          <div class="w-10 h-10 bg-gradient-to-br from-blue-200 to-blue-400 rounded-full flex items-center justify-center text-white shadow-inner shrink-0 relative overflow-hidden">
+            <i class="fa-solid fa-person-walking text-lg relative z-10 animate-walk"></i>
             <div class="absolute inset-0 bg-white/20 animate-pulse"></div>
           </div>
-          <select v-model="selectedDate" class="appearance-none bg-transparent w-full px-3 py-2 text-gray-800 font-bold text-[15px] outline-none cursor-pointer relative z-10">
+          
+          <!-- 下拉選單本體 -->
+          <select v-model="selectedDate" class="appearance-none bg-transparent w-full px-2 py-2 text-gray-700 font-bold text-[15px] outline-none cursor-pointer relative z-10 tracking-wide text-center text-ellipsis">
             <option v-for="(day, index) in days" :key="index" :value="day.dateStr">
-              Day {{ index + 1 }} ❄️ {{ day.displayDate }} ({{ day.dayOfWeek }}) @ {{ day.mainCity }}
+              Day {{ index + 1 }} ❄️ {{ day.displayDate }} ({{ day.dayOfWeek }}) 📍 {{ day.mainCity }}
             </option>
           </select>
-          <div class="w-8 h-8 bg-blue-50/80 rounded-full flex items-center justify-center text-winter mr-1 shrink-0 pointer-events-none transition-colors shadow-inner">
+          
+          <!-- 右側粉嫩下拉箭頭 -->
+          <div class="w-10 h-10 bg-pink-50 rounded-full flex items-center justify-center text-pink-400 shrink-0 pointer-events-none transition-colors shadow-sm border border-pink-100">
             <i class="fa-solid fa-chevron-down text-sm"></i>
           </div>
         </div>
@@ -1191,7 +1204,7 @@
         { id: 'notebook', name: '筆記', icon: 'fa-solid fa-book' }
       ];
       
-      const bannerImage = ref('https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=1200&q=80');
+      const bannerImage = ref('https://i.ibb.co/8DnNrpt2/image.png');
       const handleImageError = () => { bannerImage.value = 'https://placehold.co/800x400/e8f0fe/2b65c3?text=Winter+Fuji'; };
       
       const tripStartDate = new Date('2026-12-05T00:00:00'); 
@@ -1452,19 +1465,12 @@
       const cropState = reactive({ show: false, src: '', cropper: null, context: 'form', itemId: null });
 
       const globalImageInput = ref(null);
-      const bannerInput = ref(null);
       const uploadTargetId = ref(null);
 
       const triggerItineraryUpload = (id) => {
           uploadTargetId.value = id;
           if (globalImageInput.value) {
               globalImageInput.value.click();
-          }
-      };
-
-      const triggerBannerUpload = () => {
-          if (bannerInput.value) {
-              bannerInput.value.click();
           }
       };
 
@@ -1786,18 +1792,6 @@
         cropState.src = '';
       };
       
-      const handleBannerUpload = (e) => {
-        const file = e.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-            bannerImage.value = evt.target.result;
-            localStorage.setItem('trip_banner_image_winter_v8', evt.target.result);
-        };
-        reader.readAsDataURL(file);
-        if(e.target) e.target.value = ''; // 加上這行以便可以重複選取同一張圖
-      };
-
       const openMap = (name) => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`);
 
       const getCategoryLabel = (c) => ({attraction:'景點',food:'美食',shopping:'購物',transport:'交通',flight:'航班',accommodation:'住宿',other:'其他'}[c]||c);
@@ -1809,9 +1803,6 @@
 
       onMounted(() => {
         setTimeout(() => showSplash.value = false, 3000);
-        
-        const savedBanner = localStorage.getItem('trip_banner_image_winter_v8');
-        if(savedBanner) bannerImage.value = savedBanner;
         
         try {
             signInAnonymously(auth).then(async () => {
@@ -1845,7 +1836,7 @@
         
         isFlightExpanded, isHotelExpanded,
 
-        globalImageInput, bannerInput, triggerItineraryUpload, handleGlobalImageUpload, triggerBannerUpload,
+        globalImageInput, triggerItineraryUpload, handleGlobalImageUpload,
 
         filteredItinerary, filteredShoppingList, expenses, totalExpense, filteredTotalExpense, notebookList, filteredPackingList, filteredExpenses, filteredNotebookList,
         currentPackingFilter, newPackingItem,
@@ -1861,7 +1852,6 @@
         exchange, currentRate, calcTwd, calcJpy, rateUpdateDate,
         getCategoryLabel, getCategoryColor, getCategoryBgColor, getCategoryIconClass, getExpenseIcon, getTransportIcon, handleImageUpload, openMap,
         firebaseStatus, reconnectFirebase, migrationStatus,
-        handleBannerUpload,
         
         cropState, confirmCrop, closeCropModal,
         confirmState, toastState, handleConfirm,
