@@ -30,38 +30,6 @@
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons --><!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>關東之旅</title>
-
-  <!-- Global Error Handler -->
-  <script>
-    window.addEventListener('error', function(e) {
-      console.error("Global Error:", e.error);
-      setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        if (splash) splash.style.display = 'none';
-      }, 1000);
-    });
-
-    setTimeout(() => {
-      const splash = document.getElementById('splash-screen');
-      if (splash && splash.style.display !== 'none') {
-        splash.style.display = 'none';
-      }
-    }, 4000);
-  </script>
-
-  <!-- Preconnect -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <!-- Google Fonts -->
@@ -187,9 +155,17 @@
   <!-- 用於行程景點上傳照片的隱藏按鈕 -->
   <input type="file" ref="globalImageInput" class="hidden" accept="image/*" @change="handleGlobalImageUpload">
 
+  <!-- 用於更換橫幅的隱藏按鈕 -->
+  <input type="file" id="bannerUploadInput" class="hidden" accept="image/*" @change="handleBannerUpload">
+
   <!-- Header Banner -->
-  <header class="relative h-[200px] w-full overflow-hidden bg-gray-100 group">
-    <img :src="bannerImage" class="w-full h-full object-cover object-bottom origin-center opacity-100" @error="handleImageError">
+  <header class="relative h-[200px] w-full overflow-hidden bg-gray-100 group cursor-pointer" onclick="document.getElementById('bannerUploadInput').click()">
+    <!-- 滑鼠移過去顯示更換圖片的遮罩 -->
+    <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-30 duration-300">
+        <i class="fa-solid fa-camera text-3xl text-white drop-shadow-md mb-2"></i>
+        <span class="text-white font-bold tracking-widest text-sm drop-shadow-md">更換橫幅圖片</span>
+    </div>
+    <img :src="bannerImage" class="w-full h-full object-cover object-center origin-center opacity-100 transition-transform duration-700 group-hover:scale-105" @error="handleImageError">
     
     <!-- Countdown Badge -->
     <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/50 shadow-lg flex items-center gap-3 z-20">
